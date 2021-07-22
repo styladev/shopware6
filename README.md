@@ -100,6 +100,6 @@ In order to include Modular Content, please:
 4. Once on the list, click **the cog icon** top-right of the widget and enter the **Slot Id** you get from your **Styla Editor > Slots Manager**. Alternatively, you can click the **replace** icon next to the cog and select the **Styla Modular Content** from the elements list. You can do this wherever the Shopware's rich text editor is used. 
 5. Publish the changes. From this moment on all pages using this specific layout will include the Styla https://engine.styla.com/init.js script rendering Styla content based on the `<div data-styla-slot="${slot-id}"></div>` tag rendered in the page’s HTML.
 
-![Styla Modular Content added on a Shopware layout](/images/shopware-extension-modular-content)
+![Styla Modular Content added on a Shopware layout](/images/shopware-extension-modular-content.png)
 
 This way you can have a Styla slot included on a thousand category pages at once. You can still define a different content for each path on which the slot is included using the **Custom Path** field for your slot in Styla Editor.
