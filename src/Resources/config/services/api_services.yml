@@ -1,0 +1,13 @@
+services:
+    Styla\CmsIntegration\Styla\Api\ProductDetailsTranslator:
+        arguments:
+            - '@product.repository'
+            - '@currency.repository'
+
+    Styla\CmsIntegration\Styla\Api\CategoryInfoTranslator:
+        - '@category.repository'
+
+    Styla\CmsIntegration\Styla\Api\ProductInfoTranslator:
+        arguments:
+            - '@router'
+            - '@product_media.repository'

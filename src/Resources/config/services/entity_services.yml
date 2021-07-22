@@ -1,0 +1,23 @@
+services:
+    Styla\CmsIntegration\Entity\StylaPage\StylaPageDefinition:
+        tags:
+            - { name: 'shopware.entity.definition', entity: 'styla_cms_page' }
+
+    Styla\CmsIntegration\Entity\StylaIntegration\StylaPagesSynchronizationDefinition:
+        tags:
+            - { name: 'shopware.entity.definition', entity: 'styla_cms_pages_synchronization' }
+
+    Styla\CmsIntegration\Entity\Specification\StuckSyncSpecification:
+        arguments:
+            - '@Styla\CmsIntegration\Entity\Specification\SyncNotStartedTillNextScheduleSpecification'
+            - '%styla.cms_integration.page_list.synchronization.maximum_execution_time%'
+
+    Styla\CmsIntegration\Entity\Specification\SyncNotStartedTillNextScheduleSpecification:
+        arguments:
+            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+
+    Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper:
+        arguments:
+            - '@Doctrine\DBAL\Connection'
+            - '@styla_cms_pages_synchronization.repository'
+            - '@logger'

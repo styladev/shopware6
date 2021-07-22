@@ -1,0 +1,30 @@
+parameters:
+    styla.cms_integration.pages_list.api_endpoint.url: 'https://paths.styla.com'
+    styla.cms_integration.page_details.api_endpoint.url: 'https://seoapi.styla.com'
+
+services:
+    styla.cms_integration.guzzle_client:
+        class: GuzzleHttp\ClientInterface
+        factory: [ '@Styla\CmsIntegration\Styla\Client\Guzzle\ClientFactory', 'create' ]
+
+    Styla\CmsIntegration\Styla\Client\Guzzle\ClientFactory: ~
+
+    Styla\CmsIntegration\Styla\Client\ClientRegistry:
+        factory: [ '@Styla\CmsIntegration\Styla\Client\ClientRegistryFactory', 'create' ]
+        lazy: true
+
+    Styla\CmsIntegration\Styla\Client\ClientRegistryFactory:
+        arguments:
+            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+            - '@styla.cms_integration.guzzle_client'
+            - '@Styla\CmsIntegration\Styla\Client\Translator\PagesListResponseDataTranslator'
+            - '@Styla\CmsIntegration\Styla\Client\Translator\PageDetailsResponseDataTranslator'
+            - '@logger'
+            - '%styla.cms_integration.pages_list.api_endpoint.url%'
+            - '%styla.cms_integration.page_details.api_endpoint.url%'
+
+    Styla\CmsIntegration\Styla\Client\Translator\PagesListResponseDataTranslator:
+        arguments:
+            - '@logger'
+
+    Styla\CmsIntegration\Styla\Client\Translator\PageDetailsResponseDataTranslator: ~

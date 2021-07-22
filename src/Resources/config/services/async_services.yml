@@ -1,0 +1,31 @@
+services:
+    Styla\CmsIntegration\Async\StylaPagesListSynchronizationMessageHandler:
+        arguments:
+            - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
+            - '@logger'
+        tags:
+            - { name: 'messenger.message_handler' }
+
+    Styla\CmsIntegration\Async\StylaPagesListSyncScheduledTask:
+        tags:
+            - { name: 'shopware.scheduled.task' }
+
+    Styla\CmsIntegration\Async\StylaPagesListSyncScheduledTaskHandler:
+        arguments:
+            - '@scheduled_task.repository'
+            - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
+            - '@logger'
+        tags:
+            - { name: 'messenger.message_handler' }
+
+    Styla\CmsIntegration\Async\StylaPagesSyncOldRecordsClearTask:
+        tags:
+            - { name: 'shopware.scheduled.task' }
+
+    Styla\CmsIntegration\Async\StylaPagesSyncOldRecordsClearTaskHandler:
+        arguments:
+            - '@scheduled_task.repository'
+            - '@Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper'
+            - '@logger'
+        tags:
+            - { name: 'messenger.message_handler' }

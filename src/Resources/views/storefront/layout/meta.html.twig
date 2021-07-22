@@ -1,0 +1,8 @@
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+{%  block layout_head_javascript_feature %}
+    {% if has_styla_elements(page) %}
+        <script type="text/javascript" src="https://engine.styla.com/init.js" async></script>
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}

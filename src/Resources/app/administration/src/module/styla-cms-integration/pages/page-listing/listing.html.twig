@@ -1,0 +1,41 @@
+{% block styla_pages_listing %}
+    <sw-page class="overdose-contact-list">
+        <template #smart-bar-actions> {# slots check vue.js documentation #}
+            <div v-if="lastSuccessSynchronizationDate" style="margin-top: 10px">
+                <sw-label variant="info" :dismissable="false">
+                    {{ $tc('styla-cms-integration-plugin.actions.get-last-success-date.text', 0, {'dateTime': lastSuccessSynchronizationDate}) }}
+                </sw-label>
+            </div>
+            <sw-button-process variant="ghost"
+                               :isLoading="scheduleSynchronizationProcessing"
+                               :processSuccess="scheduleSynchronizationSuccess"
+                               @process-finish="resetScheduleSynchronizationState"
+                               @click="scheduleSynchronization"
+            >
+                {{ $tc('styla-cms-integration-plugin.actions.schedule-pages-synchronization.button.label') }}
+            </sw-button-process>
+        </template>
+        <template #content>
+            <sw-entity-listing
+                v-if="pages"
+                :items="pages"
+                :repository="repository"
+                :showSelection="false"
+                :allowColumnEdit="false"
+                :allowDelete="false"
+                :allowEdit="false"
+                :columns="columns">
+                <template #actions="{ item }">
+                    <sw-context-menu-item @click="refreshPageDetails(item)">
+                        {{ $tc('styla-cms-integration-plugin.actions.refresh-page-details.button.label') }}
+                    </sw-context-menu-item>
+                </template>
+
+                <template v-slot:column-path="{item, column, url}">
+                    <a v-bind:href="computePathLink(item)" v-if="computePathLink(item)" target="_blank"> {{ computePathLink(item) }} </a>
+                    <span v-else>{{ item.path }}</span>
+                </template>
+            </sw-entity-listing>
+        </template>
+    </sw-page>
+{% endblock %}

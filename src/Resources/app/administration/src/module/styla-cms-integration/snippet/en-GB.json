@@ -1,0 +1,83 @@
+{
+    "styla-cms-integration-plugin": {
+        "configuration": {
+            "field":{
+                "account_names": {
+                    "default": {
+                        "label": "Default account name",
+                        "error": {
+                            "empty": "Default account name is required"
+                        }
+                    },
+                    "language_specific_account_name":{
+                        "label": "{name} account name"
+                    }
+                }
+            }
+        },
+        "blocks": {
+            "module-content":{
+                "label": "Styla Modular Content"
+            }
+        },
+        "element": {
+            "module-content": {
+                "text": "Styla Modular Content, id: \"{id}\"",
+                "label": "Styla Modular Content",
+                "configuration": {
+                    "slot-id": {
+                        "label": "Slot Id (assigned at https://editor.styla.com/)"
+                    }
+                }
+            }
+        },
+        "page": {
+            "listing": {
+                "title": "Styla Pages",
+                "description": "List of Styla Pages",
+                "grid": {
+                    "column": {
+                        "title": "Page title",
+                        "path": "Page path",
+                        "account-name": "Account name",
+                        "created-at": "Created at"
+                    }
+                }
+            }
+        },
+        "actions": {
+            "schedule-pages-synchronization": {
+                "button": {
+                    "label": "Schedule pages synchronization"
+                },
+                "message": {
+                    "success": "Pages synchronization scheduled",
+                    "failed": "Failed to schedule pages synchronization",
+                    "is-running": "Pages synchronization was not scheduled because another synchronization is already running",
+                    "was-not-scheduled": "Pages synchronization was not scheduled"
+                }
+            },
+            "refresh-page-details": {
+                "button": {
+                    "label": "Refresh page details"
+                },
+                "message": {
+                    "success": "Page details refreshed",
+                    "failed": "Failed to refresh page details",
+                    "page-not-found": "Page with such name was not found. Please schedule pages synchronization (button above)",
+                    "scheduled": "Page details refresh scheduled"
+                }
+            },
+            "get-last-success-date": {
+                "not_available": "N/A",
+                "text": "Last successful synchronization: \"{dateTime}\"",
+                "message": {
+                    "failed": "Failed to fetch last successful synchronization date"
+                }
+            }
+        },
+        "menu": {
+            "title": "Styla CMS"
+        }
+    }
+}

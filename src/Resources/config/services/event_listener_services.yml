@@ -1,0 +1,14 @@
+services:
+    Styla\CmsIntegration\EventSubscriber\StorefrontRequestControllerSubstituteEventSubscriber:
+        arguments:
+            - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
+            - '@Styla\CmsIntegration\Controller\Storefront\StylaPageController'
+            - '@logger'
+        tags:
+            - { 'name': 'kernel.event_subscriber' }
+
+    Styla\CmsIntegration\EventSubscriber\RestartConsumerAfterPluginConfigChangedEventSubscriber:
+        arguments:
+            - '@cache.messenger.restart_workers_signal'
+        tags:
+            - { 'name': 'kernel.event_subscriber' }

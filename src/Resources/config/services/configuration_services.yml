@@ -1,0 +1,8 @@
+services:
+    Styla\CmsIntegration\Configuration\ConfigurationInterface:
+        factory: [ '@Styla\CmsIntegration\Configuration\ConfigurationFactory', 'createConfigurationForCurrentContext' ]
+        lazy: true
+
+    Styla\CmsIntegration\Configuration\ConfigurationFactory:
+        arguments:
+            - '@Shopware\Core\System\SystemConfig\SystemConfigService'

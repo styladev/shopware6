@@ -1,0 +1,36 @@
+services:
+    Styla\CmsIntegration\Styla\Page\Guesser\VirtualStylaPageToReplaceGuesser:
+        arguments:
+            - !tagged_iterator 'styla.cms_integration.styla_page_to_replace.guesser'
+
+    Styla\CmsIntegration\Styla\Page\Guesser\CategoryPagesReplaceGuesser:
+        parent: Styla\CmsIntegration\Styla\Page\Guesser\AbstractStylaPageToReplaceGuesser
+        tags:
+            - { name: 'styla.cms_integration.styla_page_to_replace.guesser', priority: 10 }
+
+    Styla\CmsIntegration\Styla\Page\Guesser\ConfiguredPagesReplaceGuesser:
+        parent: Styla\CmsIntegration\Styla\Page\Guesser\AbstractStylaPageToReplaceGuesser
+        tags:
+            - { name: 'styla.cms_integration.styla_page_to_replace.guesser', priority: 20 }
+
+    Styla\CmsIntegration\Styla\Page\Guesser\HomePageReplaceGuesser:
+        parent: Styla\CmsIntegration\Styla\Page\Guesser\AbstractStylaPageToReplaceGuesser
+        tags:
+            - { name: 'styla.cms_integration.styla_page_to_replace.guesser', priority: 30 }
+
+    Styla\CmsIntegration\Styla\Page\Guesser\NoRouteFoundStylaPageGuesser:
+        parent: Styla\CmsIntegration\Styla\Page\Guesser\AbstractStylaPageToReplaceGuesser
+        tags:
+            - { name: 'styla.cms_integration.styla_page_to_replace.guesser', priority: 40 }
+
+    Styla\CmsIntegration\Styla\Page\PageCacheInteractor:
+        arguments:
+            - '@cache.object'
+            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+            - '@logger'
+
+    Styla\CmsIntegration\Styla\Page\Guesser\AbstractStylaPageToReplaceGuesser:
+        arguments:
+            - '@styla_cms_page.repository'
+            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+        abstract: true

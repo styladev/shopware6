@@ -1,0 +1,19 @@
+services:
+    Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor:
+        arguments:
+            - '@Styla\CmsIntegration\Styla\Client\ClientRegistry'
+            - '@Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper'
+            - '@styla_cms_page.repository'
+            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+            - '@Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory'
+            - '@Styla\CmsIntegration\Styla\Synchronization\PageDataMapper'
+            - '@logger'
+
+    Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory:
+        arguments:
+            - '@Styla\CmsIntegration\Styla\Page\PageCacheInteractor'
+            - '@Shopware\Storefront\Framework\Cache\CacheStore'
+            - '@logger'
+            - '@sales_channel_domain.repository'
+
+    Styla\CmsIntegration\Styla\Synchronization\PageDataMapper: ~

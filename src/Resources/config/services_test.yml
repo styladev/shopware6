@@ -1,0 +1,10 @@
+services:
+    styla.cms_integration.guzzle_client.test:
+        class: Styla\CmsIntegration\Test\Stub\GuzzleClientTestProxy
+        decorates: styla.cms_integration.guzzle_client
+        decoration_inner_name: styla.cms_integration.guzzle_client.test.inner
+        calls:
+            - ['setProxiedClient', ['@styla.cms_integration.guzzle_client.test.inner']]
+
+
+

@@ -1,0 +1,76 @@
+parameters:
+    styla.cms_integration.page_list.synchronization.maximum_execution_time: 10
+
+services:
+    Styla\CmsIntegration\Controller\StylaPageController:
+        arguments:
+            - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
+            - '@styla_cms_page.repository'
+            - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
+            - '@logger'
+        public: true
+
+    Styla\CmsIntegration\Controller\StylaSynchronizationController:
+        arguments:
+            - '@styla_cms_pages_synchronization.repository'
+            - '@logger'
+        public: true
+
+
+    Styla\CmsIntegration\Controller\Storefront\StylaPageController:
+        public: true
+        arguments:
+            - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
+            - '@Shopware\Storefront\Page\GenericPageLoader'
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    Styla\CmsIntegration\Controller\Storefront\StylaApiController:
+        public: true
+        arguments:
+            - '@Styla\CmsIntegration\UseCase\CategoryApiActionsInteractor'
+            - '@Styla\CmsIntegration\UseCase\ProductApiActionsInteractor'
+
+    Styla\CmsIntegration\Controller\Storefront\StylaShoppingCartController:
+        public: true
+        arguments:
+            - '@Styla\CmsIntegration\UseCase\ShoppingCartInteractor'
+
+    Styla\CmsIntegration\UseCase\CategoryApiActionsInteractor:
+        arguments:
+            - '@category.repository'
+            - '@Styla\CmsIntegration\Styla\Api\CategoryInfoTranslator'
+            - '@logger'
+
+    Styla\CmsIntegration\UseCase\ProductApiActionsInteractor:
+        arguments:
+            - '@product.repository'
+            - '@sales_channel.product.repository'
+            - '@Styla\CmsIntegration\Styla\Api\ProductDetailsTranslator'
+            - '@Styla\CmsIntegration\Styla\Api\ProductInfoTranslator'
+            - '@logger'
+
+    Styla\CmsIntegration\UseCase\ShoppingCartInteractor:
+        arguments:
+            - '@Shopware\Core\Checkout\Cart\LineItemFactoryRegistry'
+            - '@event_dispatcher'
+            - '@Shopware\Core\Checkout\Cart\CartCalculator'
+            - '@Shopware\Core\Checkout\Cart\CartPersister'
+            - '@logger'
+
+    Styla\CmsIntegration\UseCase\StylaPagesInteractor:
+        arguments:
+            - '@Styla\CmsIntegration\Styla\Client\ClientRegistry'
+            - '@Styla\CmsIntegration\Styla\Page\Guesser\VirtualStylaPageToReplaceGuesser'
+            - '@Styla\CmsIntegration\Styla\Page\PageCacheInteractor'
+            - '@logger'
+
+    Styla\CmsIntegration\UseCase\StylaPagesSynchronizer:
+        public: true
+        arguments:
+            - '@Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper'
+            - '@Styla\CmsIntegration\Entity\Specification\StuckSyncSpecification'
+            - '@Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor'
+            - '@messenger.bus.shopware'
+            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+            - '@logger'

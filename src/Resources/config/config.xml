@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>Styla CMS integration plugin Settings</title>
+
+        <component name="styla-account-name-settings">
+            <name>accountNames</name>
+            <label>Account Names</label>
+            <required>true</required>
+            <helpText>The name of your Styla account for each language created in the system. You can override it for a specific language in the fields just below. If you don't know your account names, ask your contact at Styla.</helpText>
+        </component>
+        <input-field type="textarea">
+            <name>extraPagesAllowedToOverride</name>
+            <label>List of Shopware paths the plugin can override</label>
+            <helpText>
+                The plugin per default can only take over the home page and category pages' paths.
+                If you publish pages with matching paths (blank path for the home page) in Styla Editor then the plugin will display the Styla content on these Shopware paths.
+                If you want to achieve this for other Shopware paths (like a PDP) then you need to add it on the list below, each one in a new row.
+                Examples:
+                /foo-example-path/
+                /foo-example-path/bar-example-path/
+            </helpText>
+            <min>1</min>
+        </input-field>
+        <input-field type="int">
+            <name>pagesListSynchronizationInterval</name>
+            <label>Interval of the pages list synchronization (in minutes)</label>
+            <defaultValue>10</defaultValue>
+            <required>true</required>
+            <helpText>This setting defines how often the plugin checks Styla API for page updates. You can see these updates in the Content > Styla CMS > Styla Pages tab. The lower the value the more Shopware resources will be used. The minimum value is 1 minute. The default is 10 minutes.</helpText>
+            <min>1</min>
+        </input-field>
+        <input-field type="int">
+            <name>pageCacheDuration</name>
+            <label>Page details cache lifetime (in seconds)</label>
+            <defaultValue>3600</defaultValue>
+            <required>true</required>
+            <helpText>This setting defines for how long Shopware caches Styla page content. The lower the value the more Shopware resources will be used. The minimum value is 1 second. The default is 3600 seconds (one hour).</helpText>
+            <min>1</min>
+        </input-field>
+    </card>
+</config>
