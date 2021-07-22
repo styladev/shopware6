@@ -1,5 +1,15 @@
 # Styla Shopware 6 extension
 
+## Table of Contents  
+[About the plugin](#about-the-plugin)   
+[Installation (on-premise)](#installation-on-premise)   
+[Activation](#activation)   
+[Configuration](#configuration)   
+[Creating pages in Styla Editor](#creating-pages-in-styla-editor)   
+[How does syncing work](#how-does-syncing-work)     
+[Debugging](#debugging)   
+[Modular Content](#modular-content)    
+
 ## About the plugin
 
 The plugin lets you automatically include Styla content created with [Styla Editor](https://editor.styla.com/)(an external CMS) on your Shopware 6 frontend. [Styla Pages] (https://docs.styla.com/styla-pages) are included automatically as new Shopware pages and can take over some Shopware paths. [Styla Modular Content] (https://docs.styla.com/styla-modular-content) can be added to Shopware page templates manually by using the Shopping Experiences editor available in Shopware backend. 
@@ -10,7 +20,7 @@ In addition, the plugin provides product data over an API with three endpoints s
 
 Upload the plugin file downloaded from this GitHub repository (the **Releases** tab) to the location where all plugin files are stored.
 
-**The plugin has not been tested on a Shopware 6 hosted in a public/private cloud, so it's not covered in these instructions.** 
+**IMPORTANT:** The plugin has not been tested on a Shopware 6 hosted in a public/private cloud, so it's not covered in these instructions. 
 
 ## Activation
 
@@ -43,7 +53,7 @@ SCREENSHOT
 
 You need to create and publish the content you want the plugin to sync in the Styla Editor at https://editor.styla.com/. What you enter in the **Page URL path** in Styla page’s settings will define where your page will show up when synced to your Shopware. If a specific path is already taken by an Shopware path other than the home page or a category page and you don’t have the path in the **List of overridable pages** in the plugin settings, your Styla page won’t show up.
 
-**IMPORTANT**: If you publish a page with **a blank path**, this page **will override your default Shopware home page**. If you then unpublish this Styla page or change its path, the default Shopware home page will come back after a delay related to the sync process. This logic also applies to other paths serving native Shopware content. They will appear again if you unpublish Styla pages matching their paths. 
+**IMPORTANT:** If you publish a page with **a blank path**, this page **will override your default Shopware home page**. If you then unpublish this Styla page or change its path, the default Shopware home page will come back after a delay related to the sync process. This logic also applies to other paths serving native Shopware content. They will appear again if you unpublish Styla pages matching their paths. 
 
 ## Styla pages list
 
@@ -73,7 +83,7 @@ If you don’t see your Styla pages published on your Shopware frontend, try deb
 * Check for conflicts with other Shopware extensions or with customisations like any out-of-the-box caching,
 * Describe your problem in details, attach screenshots, include steps to reproduce and pass to your Styla Integration Manager or to support@styla.com.
 
-**IMPORTANT**: Please test any potentially breaking changes on your **local/test/stage environment before releasing them on your production**. Especially, check if Styla content is still visible. Do this before updating Shopware version too. 
+**IMPORTANT:** Please test any potentially breaking changes on your **local/test/stage environment before releasing them on your production**. Especially, check if Styla content is still visible. Do this before updating Shopware version too. 
 
 ## Modular Content
 
