@@ -39,7 +39,7 @@ On the resulting form with the plugin settings do the following:
 5. If need be, update the **Interval of the Pages list synchronisation** field. This setting defines how often the plugin picks up page updates from a Styla API endpoint. This in turn triggers page content update. The default 10 minutes give you a solid balance between the speed and using your resources but if you want to get your Styla content updated as soon as possible and don’t care about your resources usage, decrease the delay. 
 6. If need be, update the **Page details cache duration** field. The default 60 minutes give you a solid balance between the speed and using your resources but if you want to cache page content for a shorter time and and don’t care about your resources usage, decrease the delay.
 
-SCREENSHOT 
+![Styla plugin configuration/settings](/images/shopware-extension-options.png)
 
 Click the **Save** button every time you change the settings and want the plugin to use them. 
 
@@ -47,17 +47,21 @@ Every time you **change Styla account names**, the plugin **will remove all Shop
 
 **IMPORTANT**: If you want to have your Shopware products available in Styla content, please pass the **API access key** value to your Styla Integration Manager. You can find it in your Shopware backend in **Sales Channels > Name > API access**. A Styla app will use this credential to access an API providing your product data. 
 
-SCREENSHOT  
+![Please pass this API key to Styla to be able to integrate with Shopware's product data](/images/shopware-extension-sales-channel-api-key.png)
 
 ## Creating pages in Styla Editor
 
 You need to create and publish the content you want the plugin to sync in the Styla Editor at https://editor.styla.com/. What you enter in the **Page URL path** in Styla page’s settings will define where your page will show up when synced to your Shopware. If a specific path is already taken by an Shopware path other than the home page or a category page and you don’t have the path in the **List of overridable pages** in the plugin settings, your Styla page won’t show up.
+
+![Page URL Path setting defining Styla page's location on Shopware](/images/editor-page-url-path.png)
 
 **IMPORTANT:** If you publish a page with **a blank path**, this page **will override your default Shopware home page**. If you then unpublish this Styla page or change its path, the default Shopware home page will come back after a delay related to the sync process. This logic also applies to other paths serving native Shopware content. They will appear again if you unpublish Styla pages matching their paths. 
 
 ## Styla pages list
 
 You can always check list of your Styla pages synced to your Shopware in **Content > Styla CMS > Styla Pages**. The list shows them with title, path, Styla account name from which they are synced and update time stamp. In general, this list should include all pages you have published with Styla Editor for this account - unless some of them had not been synced/updated yet due to queuing/caching times. 
+
+![Shopware pages synced from Styla in the plugin's pages list](/images/shopware-extension-styla-pages.png)
 
 The list is actionable too. You can do the following:
 * click the **Schedule pages synchronization** top of the list to force the page synced, overriding the interval set per default to 10 minutes,
@@ -90,12 +94,12 @@ If you don’t see your Styla pages published on your Shopware frontend, try deb
 The plugin enables you to include pieces of Styla content inside Shopware full-page content too. As opposed to syncing Styla Pages, this is not a Styla full-page content and is rendered with JavaScript only, not server-side as a static HTML. 
 
 In order to include Modular Content, please:
-1. Create your pieces of Modular Content in Styla Editor and assign them Slots, as described [in Styla documentation here](https://docs.styla.com/styla-modular-content).
+1. Create your pieces of Modular Content in Styla Editor and assign them Slots, as described [in Styla documentation here](https://docs.styla.com/styla-modular-content.png).
 2. Go to **Content > Shopping Experiences** in your Shopware backend and enter a layout you want to add a Modular Content on.
 3. Click the **+** icon in the right sidebar and drag&drop the **Styla Module Content** (bottom of the list) widget on your content.
 4. Once on the list, click **the cog icon** top-right of the widget and enter the **Slot Id** you get from your **Styla Editor > Slots Manager**. Alternatively, you can click the **replace** icon next to the cog and select the **Styla Modular Content** from the elements list. You can do this wherever the Shopware's rich text editor is used. 
 5. Publish the changes. From this moment on all pages using this specific layout will include the Styla https://engine.styla.com/init.js script rendering Styla content based on the `<div data-styla-slot="${slot-id}"></div>` tag rendered in the page’s HTML.
 
-SCREENSHOT
+![Styla Modular Content added on a Shopware layout](/images/shopware-extension-modular-content)
 
 This way you can have a Styla slot included on a thousand category pages at once. You can still define a different content for each path on which the slot is included using the **Custom Path** field for your slot in Styla Editor.
