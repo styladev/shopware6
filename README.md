@@ -12,7 +12,7 @@
 
 ## About the plugin
 
-The plugin lets you automatically include Styla content created with [Styla Editor](https://editor.styla.com/)(an external CMS) on your Shopware 6 frontend. [Styla Pages] (https://docs.styla.com/styla-pages) are included automatically as new Shopware pages and can take over some Shopware paths. [Styla Modular Content] (https://docs.styla.com/styla-modular-content) can be added to Shopware page templates manually by using the Shopping Experiences editor available in Shopware backend. 
+The plugin lets you automatically include Styla content created with [Styla Editor](https://editor.styla.com/)(an external CMS) on your Shopware 6 frontend. [Styla Pages](https://docs.styla.com/styla-pages) are included automatically as new Shopware pages and can take over some Shopware paths. [Styla Modular Content](https://docs.styla.com/styla-modular-content) can be added to Shopware page templates manually by using the Shopping Experiences editor available in Shopware backend. 
 
 In addition, the plugin provides product data over an API with three endpoints so that products from S6 can be used in Styla content created in Styla Editor. It also provides one additional endpoint to add products from Styla content to Shopware cart.  
 
