@@ -1,0 +1,27 @@
+{
+    "version": "1.0",
+    "name": "styla/cms-integration",
+    "description": "Plugin for integration between Styla CMS and shopware 6",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Styla\\CmsIntegration\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Styla\\CmsIntegration\\StylaCmsIntegrationPlugin",
+        "plugin-icon": "src/Resources/config/plugin.png",
+        "label": {
+            "de-DE": "Styla CMS integration plugin",
+            "en-GB": "Styla CMS integration plugin"
+        }
+    },
+    "require": {
+        "php": "~7.4",
+        "shopware/administration": "v6.4.*",
+        "shopware/core": "v6.4.*",
+        "shopware/recovery": "v6.4.*",
+        "shopware/storefront": "v6.4.*"
+    }
+}
