@@ -8,7 +8,8 @@
 [Creating pages in Styla Editor](#creating-pages-in-styla-editor)   
 [How does syncing work](#how-does-syncing-work)     
 [Debugging](#debugging)   
-[Modular Content](#modular-content)    
+[Modular Content](#modular-content)   
+[Additional technical details](#additional-technical-details)
 
 ## About the plugin
 
@@ -18,7 +19,7 @@ In addition, the plugin provides product data over an API with three endpoints s
 
 ## Installation (on-premise)
 
-Upload the plugin file downloaded from this GitHub repository (the **Releases** tab) to the location where all plugin files are stored.
+[Read about installation with Shopware web UI and server command line here](/src/Resources/doc/installation.md).
 
 **IMPORTANT:** The plugin has not been tested on a Shopware 6 hosted in a public/private cloud, so it's not covered in these instructions. 
 
@@ -103,3 +104,8 @@ In order to include Modular Content, please:
 ![Styla Modular Content added on a Shopware layout](/images/shopware-extension-modular-content.png)
 
 This way you can have a Styla slot included on a thousand category pages at once. You can still define a different content for each path on which the slot is included using the **Custom Path** field for your slot in Styla Editor.
+
+## Additional technical details
+
+[Capabilities and restrictions](/src/Resources/doc/capabilities_and_restrictions.md)   
+[Implementation overview](/src/Resources/doc/plugin_implementation_overview.md)
