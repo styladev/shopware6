@@ -11,6 +11,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\Language\LanguageEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
+use Styla\CmsIntegration\Configuration\ConfigurationFactory;
 use Styla\CmsIntegration\Test\DataFixtures\LoadCategoryData;
 use Styla\CmsIntegration\Test\DataFixtures\LoadStylaPages;
 use Styla\CmsIntegration\Test\DataFixtures\TestDataFixturesInterface;
@@ -32,7 +33,7 @@ class ShopwarePagesRenderingTest extends AbstractStorefrontPageRenderingTestCase
         $germanLanguage = $this->getLanguageByName('Deutsch');
         $this->systemConfigService
             ->set(
-                'StylaCmsIntegrationPlugin.config.accountNames',
+                ConfigurationFactory::PREFIX . 'accountNames',
                 ['default' => 'foo_account', $germanLanguage->getId() => 'bar_account']
             );
     }
@@ -59,7 +60,7 @@ class ShopwarePagesRenderingTest extends AbstractStorefrontPageRenderingTestCase
 
         // Allow to override shopping cart page
         $this->systemConfigService
-            ->set('StylaCmsIntegrationPlugin.config.extraPagesAllowedToOverride', '/checkout/cart');
+            ->set(ConfigurationFactory::PREFIX . 'extraPagesAllowedToOverride', '/checkout/cart');
 
         $this->guzzleClient->expects($this->once())
             ->method('send')

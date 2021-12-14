@@ -7,8 +7,8 @@ use Styla\CmsIntegration\Exception\InvalidConfigurationException;
 
 class ConfigurationFactory
 {
-    public const PAGES_LIST_SYNCHRONIZATION_INTERVAL_CONFIG_KEY =
-        'StylaCmsIntegrationPlugin.config.pagesListSynchronizationInterval';
+    public const PREFIX = 'StylaCmsIntegration.settings.';
+    public const PAGES_LIST_SYNCHRONIZATION_INTERVAL_CONFIG_KEY = self::PREFIX . 'pagesListSynchronizationInterval';
 
     private SystemConfigService $systemConfigService;
 
@@ -19,20 +19,14 @@ class ConfigurationFactory
 
     public function createConfigurationForCurrentContext(): ConfigurationInterface
     {
-        $accountNamesHashMap = $this->systemConfigService->get('StylaCmsIntegrationPlugin.config.accountNames');
-        if (!$accountNamesHashMap) {
-            throw new InvalidConfigurationException(
-                'Styla CMS Integration Account Names configuration is not defined'
-            );
-        }
+        $accountNamesHashMap = $this->systemConfigService->get(self::PREFIX . 'accountNames');
+        $defaultAccountName = trim($this->systemConfigService->getString(self::PREFIX . 'defaultAccountName'));
 
-        if (!isset($accountNamesHashMap['default']) || trim($accountNamesHashMap['default']) === '') {
+        if ($defaultAccountName === '') {
             throw new InvalidConfigurationException(
                 'Styla CMS Integration Default Account Name configuration is not defined'
             );
         }
-        $defaultAccountName = trim($accountNamesHashMap['default']);
-        unset($accountNamesHashMap['default']);
 
         $accountNameByLanguageIdMap = [];
         foreach ($accountNamesHashMap as $languageId => $accountName) {
@@ -43,13 +37,13 @@ class ConfigurationFactory
             $accountNameByLanguageIdMap[$languageId] = $accountName;
         }
 
-        $pageDetailsCacheDuration = $this->systemConfigService
-            ->getString('StylaCmsIntegrationPlugin.config.pageCacheDuration');
+        $pageDetailsCacheDuration = $this->systemConfigService->getInt(self::PREFIX . 'pageCacheDuration');
         if (!$pageDetailsCacheDuration) {
             throw new InvalidConfigurationException(
                 'Styla CMS Integration Page details Cache Duration configuration is not defined'
             );
         }
+
         $pagesListSynchronizationInterval = $this->systemConfigService
             ->getString(self::PAGES_LIST_SYNCHRONIZATION_INTERVAL_CONFIG_KEY);
         if (!$pagesListSynchronizationInterval) {
@@ -59,9 +53,8 @@ class ConfigurationFactory
         }
 
         $listOfExtraPagesToOverride = [];
-
         $listOfExtraPagesToOverrideString = $this->systemConfigService
-            ->getString('StylaCmsIntegrationPlugin.config.extraPagesAllowedToOverride');
+            ->getString(self::PREFIX . 'extraPagesAllowedToOverride');
         if ($listOfExtraPagesToOverrideString) {
             $listOfExtraPagesToOverride = explode("\n", $listOfExtraPagesToOverrideString);
             $listOfExtraPagesToOverride = array_map('trim', $listOfExtraPagesToOverride);

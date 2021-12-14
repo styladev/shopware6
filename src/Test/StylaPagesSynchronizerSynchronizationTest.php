@@ -7,6 +7,7 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Test\TestCaseBase\KernelLifecycleManager;
+use Styla\CmsIntegration\Configuration\ConfigurationFactory;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPageCollection;
 use Styla\CmsIntegration\Test\Constraint\StylaPagesMatchConstraint;
 use Styla\CmsIntegration\Test\Constraint\StylaSynchronizationMatchConstraint;
@@ -129,7 +130,7 @@ class StylaPagesSynchronizerSynchronizationTest extends AbstractStylaPagesSynchr
     {
         $this->systemConfigService
             ->set(
-                'StylaCmsIntegrationPlugin.config.accountNames',
+                ConfigurationFactory::PREFIX . 'accountNames',
                 ['default' => 'foo_account', 'de_DE' => 'bar_account']
             );
 

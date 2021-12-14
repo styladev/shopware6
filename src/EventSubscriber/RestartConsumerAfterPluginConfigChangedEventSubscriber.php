@@ -20,7 +20,7 @@ class RestartConsumerAfterPluginConfigChangedEventSubscriber implements EventSub
     public function onSystemConfigurationChange(SystemConfigChangedEvent $systemConfigChangedEvent)
     {
         $key = $systemConfigChangedEvent->getKey();
-        if (strpos($key, 'StylaCmsIntegrationPlugin.config') === 0) {
+        if (strpos($key, 'StylaCmsIntegration.settings') === 0) {
             $this->restartConsumers();
         }
     }
