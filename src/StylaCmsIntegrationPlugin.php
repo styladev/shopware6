@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class StylaCmsIntegrationPlugin extends Plugin
 {

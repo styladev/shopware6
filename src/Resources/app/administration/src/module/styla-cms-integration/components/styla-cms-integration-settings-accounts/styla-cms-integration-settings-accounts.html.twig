@@ -1,0 +1,58 @@
+{% block styla_cmsintegration_content_card_channel_config_accounts_card %}
+    <sw-card class="sw-card--grid"
+             :title="$tc('styla-cms-integration-plugin.configuration.group.accounts.title')">
+
+        {% block styla_cmsintegration_content_card_channel_config_accounts_card_container %}
+            <sw-container>
+
+                {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings %}
+                    <div v-if="actualConfigData" class="card-container">
+
+                        {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_default %}
+                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultAccountName']"
+                                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultAccountName']"
+                                                :customInheritationCheckFunction="checkTextFieldInheritance">
+                                <template #content="props">
+                                    <sw-text-field name="StylaCmsIntegration.settings.defaultAccountName"
+                                                   :mapInheritance="props"
+                                                   :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.default.label')"
+                                                   :disabled="props.isInherited"
+                                                   :value="props.currentValue"
+                                                   :error="defaultAccountNameErrorState"
+                                                   :required="true"
+                                                   @change="props.updateCurrentValue">
+                                    </sw-text-field>
+                                </template>
+                            </sw-inherit-wrapper>
+                        {% endblock %}
+
+                        {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_language_accounts %}
+                            <template v-for="language in systemLanguages">
+
+                                <sw-inherit-wrapper v-model="accountNames[language.id]"
+                                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.accountNames'][language.id]"
+                                                    :customInheritationCheckFunction="checkTextFieldInheritance">
+                                    <template #content="props">
+                                        <sw-text-field :mapInheritance="props"
+                                                       :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.language_specific_account_name.label', 0, { name: language.name })"
+                                                       :disabled="props.isInherited"
+                                                       :value="props.currentValue"
+                                                       @change="props.updateCurrentValue">
+                                        </sw-text-field>
+                                    </template>
+                                </sw-inherit-wrapper>
+
+                            </template>
+                        {% endblock %}
+
+                    </div>
+                {% endblock %}
+            </sw-container>
+        {% endblock %}
+
+        {% block styla_cmsintegration_content_card_channel_config_accounts_card_loading %}
+            <sw-loader v-if="isLoading"></sw-loader>
+        {% endblock %}
+
+    </sw-card>
+{% endblock %}

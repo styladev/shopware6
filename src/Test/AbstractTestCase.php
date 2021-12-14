@@ -11,6 +11,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\KernelLifecycleManager;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Styla\CmsIntegration\Configuration\ConfigurationFactory;
 use Styla\CmsIntegration\Test\DataFixtures\DataFixturesExecutor;
 use Styla\CmsIntegration\Test\DataFixtures\ReferencesRegistry;
 use Styla\CmsIntegration\Test\Stub\GuzzleClientTestProxy;
@@ -62,7 +63,7 @@ abstract class AbstractTestCase extends TestCase
     private function setStylaSystemSettings()
     {
         $this->systemConfigService
-            ->set('StylaCmsIntegrationPlugin.config.accountNames', ['default' => 'foo_account']);
+            ->set(ConfigurationFactory::PREFIX . 'accountNames', ['default' => 'foo_account']);
     }
 
     protected function getByReference(string $reference): Entity
