@@ -1,5 +1,5 @@
 {
-    "version": "1.1",
+    "version": "1.2",
     "name": "styla/cms-integration",
     "description": "Plugin for integration between Styla CMS and shopware 6",
     "type": "shopware-platform-plugin",
