@@ -1,30 +1,46 @@
 services:
-    Styla\CmsIntegration\Twig\Extension\StylaModuleContentTwigExtension:
-        arguments:
-            - '@logger'
-        tags:
-            - { name: "twig.extension" }
+  Styla\CmsIntegration\Twig\Extension\StylaModuleContentTwigExtension:
+    arguments:
+      - '@logger'
+    tags:
+      - { name: "twig.extension" }
 
-    Styla\CmsIntegration\ArgumentValueResolver\StylaPageArgumentValueResolver:
-        tags:
-            - { name: controller.argument_value_resolver, priority: 25 }
+  Styla\CmsIntegration\Twig\Extension\StylaSlotCacheTwigExtension:
+    arguments:
+      - '@Styla\CmsIntegration\Service\GetStylaModularContentService'
+    tags:
+      - { name: "twig.extension" }
 
-    Styla\CmsIntegration\UrlProvider\StylaPagesUrlProvider:
-        arguments:
-            - '@styla_cms_page.repository'
-            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
-        tags:
-            - { name: shopware.sitemap_url_provider }
+  Styla\CmsIntegration\ArgumentValueResolver\StylaPageArgumentValueResolver:
+    tags:
+      - { name: controller.argument_value_resolver, priority: 25 }
 
-    styla_cms_integration.routing.router.default:
-        class: Styla\CmsIntegration\Routing\StylaDefaultRouterDecorator
-        decorates: 'router.default'
-        parent: 'router.default'
-        calls:
-            - ['setGeneratorDecoratorFactory', ['@Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory']]
+  Styla\CmsIntegration\UrlProvider\StylaPagesUrlProvider:
+    arguments:
+      - '@styla_cms_page.repository'
+      - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+    tags:
+      - { name: shopware.sitemap_url_provider }
 
-    Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory:
-        arguments:
-            - '@request_stack'
-            - '@styla_cms_page.repository'
-            - '@logger'
+  styla_cms_integration.routing.router.default:
+    class: Styla\CmsIntegration\Routing\StylaDefaultRouterDecorator
+    decorates: 'router.default'
+    parent: 'router.default'
+    calls:
+      - [ 'setGeneratorDecoratorFactory', [ '@Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory' ] ]
+
+  Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory:
+    arguments:
+      - '@request_stack'
+      - '@styla_cms_page.repository'
+      - '@logger'
+
+  styla.cache:
+    parent: "cache.adapter.filesystem"
+
+  Styla\CmsIntegration\Service\GetStylaModularContentService:
+    arguments:
+      - '@styla.cache'
+      - '@Styla\CmsIntegration\Styla\Client\ClientRegistryFactory'
+      - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+    public: true

@@ -1,8 +1,12 @@
 .cms-element-styla-module-content-preview{
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .cms-element-styla-module-content-preview-image{
-    height: 100%;
-    margin: auto;
-    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
 }

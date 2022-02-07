@@ -1,1 +1,5 @@
-<div data-styla-slot="{{ element.config.slotId.value }}"></div>
+<div>
+    {% set stylaContent = get_styla_cached_content(element.config.slotId.value) %}
+
+    {{ stylaContent|raw }}
+</div>
