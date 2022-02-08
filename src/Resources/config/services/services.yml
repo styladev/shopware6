@@ -35,12 +35,9 @@ services:
       - '@styla_cms_page.repository'
       - '@logger'
 
-  styla.cache:
-    parent: "cache.adapter.filesystem"
-
   Styla\CmsIntegration\Service\GetStylaModularContentService:
     arguments:
-      - '@styla.cache'
-      - '@Styla\CmsIntegration\Styla\Client\ClientRegistryFactory'
+      - '@cache.object'
+      - '@Styla\CmsIntegration\Styla\Client\ClientRegistry'
       - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
     public: true

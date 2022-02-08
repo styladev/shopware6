@@ -3,6 +3,7 @@
 namespace Styla\CmsIntegration\Twig\Extension;
 
 use Psr\Cache\InvalidArgumentException;
+use Shopware\Core\Framework\Context;
 use Styla\CmsIntegration\Service\GetStylaModularContentService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -24,11 +25,11 @@ class StylaSlotCacheTwigExtension extends AbstractExtension
         ];
     }
 
-    public function getStylaCachedContent($id)
+    public function getStylaCachedContent(Context $context, $id)
     {
 
         try {
-            return $this->slotCacheService->checkSlotCash($id);
+            return $this->slotCacheService->execute($context, $id);
         } catch (InvalidArgumentException $e) {
 
         }
