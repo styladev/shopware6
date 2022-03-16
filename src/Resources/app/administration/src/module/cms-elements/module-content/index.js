@@ -14,6 +14,10 @@ Shopware.Service('cmsService').registerCmsElement(
                 source: 'static',
                 value: '',
                 required: true
+            },
+            enableCaching: {
+                source: 'static',
+                value: false
             }
         }
     }

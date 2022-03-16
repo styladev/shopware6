@@ -1,3 +1,9 @@
-<sw-field v-model="element.config.slotId.value"
-          :label="$tc('styla-cms-integration-plugin.element.module-content.configuration.slot-id.label')">
-</sw-field>
+{% block style_element_config_base %}
+    <div class="style-cms-configuration-container">
+        <sw-field v-model="element.config.slotId.value"
+                  :label="$tc('styla-cms-integration-plugin.element.module-content.configuration.slot-id.label')">
+        </sw-field>
+
+        <sw-switch-field label="Enable caching" v-model="element.config.enableCaching.value"></sw-switch-field>
+    </div>
+{% endblock %}
