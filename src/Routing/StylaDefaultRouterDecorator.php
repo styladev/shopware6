@@ -3,6 +3,8 @@
 namespace Styla\CmsIntegration\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory;
 
 /**
  * Direct inheritance because of the typehint in Shopware\Storefront\Framework\Routing\Router
@@ -14,7 +16,7 @@ class StylaDefaultRouterDecorator extends Router
 {
     private StylaUrlGeneratorFactory $generatorDecoratorFactory;
 
-    public function getGenerator()
+    public function getGenerator(): UrlGeneratorInterface
     {
         if (null === $this->generator) {
             $generator = parent::getGenerator();

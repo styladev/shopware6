@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Controller;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Styla\CmsIntegration\Exception\PageNotFoundException;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @RouteScope(scopes={"api"})
+ * use RouteScope(scopes={"api"})
  * @Route(
  *     "api/styla/page"
  * )
@@ -25,12 +25,12 @@ class StylaPageController
 {
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
-    private EntityRepositoryInterface $repository;
+    private EntityRepository $repository;
     private LoggerInterface $logger;
 
     public function __construct(
         StylaPagesInteractor $interactor,
-        EntityRepositoryInterface $repository,
+        EntityRepository $repository,
         StylaPagesSynchronizer $stylaPagesSynchronizer,
         LoggerInterface $logger
     ) {

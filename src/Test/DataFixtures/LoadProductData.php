@@ -7,7 +7,7 @@ use Shopware\Core\Content\Product\Aggregate\ProductVisibility\ProductVisibilityD
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 
 class LoadProductData extends AbstractTestDataFixture
@@ -69,7 +69,7 @@ class LoadProductData extends AbstractTestDataFixture
         ProductEntity $product,
         SalesChannelEntity $salesChannel
     ) {
-        /** @var EntityRepositoryInterface $repository */
+        /** @var EntityRepository $repository */
         $repository = $container->get('product_visibility.repository');
 
         $productVisibilityData = [

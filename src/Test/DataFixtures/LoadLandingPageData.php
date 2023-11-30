@@ -3,7 +3,7 @@
 namespace Styla\CmsIntegration\Test\DataFixtures;
 
 use Psr\Container\ContainerInterface;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 
 class LoadLandingPageData extends AbstractTestDataFixture
 {
@@ -21,7 +21,7 @@ class LoadLandingPageData extends AbstractTestDataFixture
 
     public function execute(ContainerInterface $container, ReferencesRegistry $referencesRegistry)
     {
-        /** @var EntityRepositoryInterface $landingPagesRepository */
+        /** @var EntityRepository $landingPagesRepository */
         $landingPagesRepository = $container->get('landing_page.repository');
         foreach ($this->data as $reference => $record) {
             $this->resolveReferencesAsIdsIfExists($referencesRegistry, $record, ['cmsPageId', 'salesChannels']);

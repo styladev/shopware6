@@ -5,7 +5,7 @@ namespace Styla\CmsIntegration\Test\DataFixtures;
 use Psr\Container\ContainerInterface;
 use Shopware\Core\Content\Cms\CmsPageEntity;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
@@ -44,7 +44,7 @@ class LoadCmsPageData extends AbstractTestDataFixture
 
     public function execute(ContainerInterface $container, ReferencesRegistry $referencesRegistry)
     {
-        /** @var EntityRepositoryInterface $cmsPageRepository */
+        /** @var EntityRepository $cmsPageRepository */
         $cmsPageRepository = $container->get('cms_page.repository');
 
         foreach ($this->data as $reference => $record) {
@@ -56,7 +56,7 @@ class LoadCmsPageData extends AbstractTestDataFixture
         $referencesRegistry->setReference('styla_cms_integration.page.default_listing', $page);
     }
 
-    private function getDefaultCmsListingPage(EntityRepositoryInterface $cmsPageRepository): CmsPageEntity
+    private function getDefaultCmsListingPage(EntityRepository $cmsPageRepository): CmsPageEntity
     {
         $criteria = new Criteria();
 

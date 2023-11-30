@@ -3,10 +3,10 @@
 namespace Styla\CmsIntegration\Async;
 
 use Psr\Log\LoggerInterface;
-use Shopware\Core\Framework\MessageQueue\Handler\AbstractMessageHandler;
+use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
 
-class StylaPagesListSynchronizationMessageHandler extends AbstractMessageHandler
+class StylaPagesListSynchronizationMessageHandler implements MessageSubscriberInterface
 {
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
     private LoggerInterface $logger;
@@ -17,7 +17,7 @@ class StylaPagesListSynchronizationMessageHandler extends AbstractMessageHandler
         $this->logger = $logger;
     }
 
-    public function handle($message): void
+    public function __invoke($message): void
     {
         try {
             if (!$message instanceof StylaPagesListSynchronizationMessage) {

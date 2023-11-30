@@ -7,7 +7,7 @@ use GuzzleHttp\ClientInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\KernelLifecycleManager;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
@@ -22,7 +22,7 @@ abstract class AbstractTestCase extends TestCase
 
     protected SystemConfigService $systemConfigService;
     protected Connection $connection;
-    protected EntityRepositoryInterface $stylaPagesRepository;
+    protected EntityRepository $stylaPagesRepository;
     protected MockObject $guzzleClient;
     protected DataFixturesExecutor $dataFixturesExecutor;
     protected ReferencesRegistry $referenceRegistry;
@@ -42,7 +42,7 @@ abstract class AbstractTestCase extends TestCase
         $systemConfigService = $this->getContainer()->get(SystemConfigService::class);
         $this->systemConfigService = $systemConfigService;
 
-        /** @var EntityRepositoryInterface $repository */
+        /** @var EntityRepository $repository */
         $repository = $this->getContainer()->get('styla_cms_page.repository');
         $this->stylaPagesRepository = $repository;
 

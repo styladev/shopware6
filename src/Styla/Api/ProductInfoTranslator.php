@@ -7,7 +7,7 @@ use Shopware\Core\Content\Product\Aggregate\ProductMedia\ProductMediaEntity;
 use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Styla\CmsIntegration\Styla\Api\DTO\Product\ProductInfo;
@@ -17,9 +17,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ProductInfoTranslator
 {
     protected UrlGeneratorInterface $urlGenerator;
-    protected EntityRepositoryInterface $productMediaRepository;
+    protected EntityRepository $productMediaRepository;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, EntityRepositoryInterface $productMediaRepository)
+    public function __construct(UrlGeneratorInterface $urlGenerator, EntityRepository $productMediaRepository)
     {
         $this->urlGenerator = $urlGenerator;
         $this->productMediaRepository = $productMediaRepository;

@@ -6,7 +6,7 @@ use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\Language\LanguageEntity;
@@ -119,7 +119,7 @@ class ShopwarePagesRenderingTest extends AbstractStorefrontPageRenderingTestCase
         $language = $this->getLanguageByName($language);
 
 
-        /** @var EntityRepositoryInterface $salesChannelRepository */
+        /** @var EntityRepository $salesChannelRepository */
         $salesChannelRepository = $this->getContainer()->get('sales_channel.repository');
 
         $criteria = new Criteria();
@@ -132,7 +132,7 @@ class ShopwarePagesRenderingTest extends AbstractStorefrontPageRenderingTestCase
             Context::createDefaultContext()
         );
 
-        /** @var EntityRepositoryInterface $domainsRepository */
+        /** @var EntityRepository $domainsRepository */
         $domainsRepository = $this->getContainer()->get('sales_channel_domain.repository');
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('salesChannelId', $salesChannel->getId()));
@@ -166,7 +166,7 @@ class ShopwarePagesRenderingTest extends AbstractStorefrontPageRenderingTestCase
 
     private function getLanguageByName(string $name): LanguageEntity
     {
-        /** @var EntityRepositoryInterface $languageRepository */
+        /** @var EntityRepository $languageRepository */
         $languageRepository = $this->getContainer()->get('language.repository');
 
         $criteria = new Criteria();

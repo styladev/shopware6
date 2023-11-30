@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @RouteScope(scopes={"storefront"})
+ * use RouteScope(scopes={"storefront"})
  * @Route(
  *     "styla/page"
  * )

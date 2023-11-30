@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Controller;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
@@ -15,17 +15,17 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @RouteScope(scopes={"api"})
+ * use RouteScope(scopes={"api"})
  * @Route(
  *     "api/styla/synchronization"
  * )
  */
 class StylaSynchronizationController
 {
-    private EntityRepositoryInterface $synchronizationRepository;
+    private EntityRepository $synchronizationRepository;
     private LoggerInterface $logger;
 
-    public function __construct(EntityRepositoryInterface $synchronizationRepository, LoggerInterface $logger)
+    public function __construct(EntityRepository $synchronizationRepository, LoggerInterface $logger)
     {
         $this->synchronizationRepository = $synchronizationRepository;
         $this->logger = $logger;

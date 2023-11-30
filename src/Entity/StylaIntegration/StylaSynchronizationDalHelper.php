@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Exception\InvalidAggregationQueryException;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Aggregation\Metric\CountAggregation;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -21,12 +21,12 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 class StylaSynchronizationDalHelper
 {
     private Connection $connection;
-    private EntityRepositoryInterface $synchronizationsRepository;
+    private EntityRepository $synchronizationsRepository;
     private LoggerInterface $logger;
 
     public function __construct(
         Connection $connection,
-        EntityRepositoryInterface $synchronizationsRepository,
+        EntityRepository $synchronizationsRepository,
         LoggerInterface $logger
     ) {
         $this->connection = $connection;

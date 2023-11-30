@@ -1,7 +1,7 @@
 services:
     Styla\CmsIntegration\Twig\Extension\StylaModuleContentTwigExtension:
         arguments:
-            - '@logger'
+            $logger: '@logger'
         tags:
             - { name: "twig.extension" }
 
@@ -11,20 +11,24 @@ services:
 
     Styla\CmsIntegration\UrlProvider\StylaPagesUrlProvider:
         arguments:
-            - '@styla_cms_page.repository'
-            - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
+            $stylaPagesRepository: '@styla_cms_page.repository'
+            $configuration: '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
         tags:
             - { name: shopware.sitemap_url_provider }
 
     styla_cms_integration.routing.router.default:
-        class: Styla\CmsIntegration\Routing\StylaDefaultRouterDecorator
+        class: 'Styla\CmsIntegration\Routing\StylaDefaultRouterDecorator'
         decorates: 'router.default'
         parent: 'router.default'
         calls:
-            - ['setGeneratorDecoratorFactory', ['@Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory']]
+            - method: 'setGeneratorDecoratorFactory'
+              arguments:
+                $generatorDecoratorFactory: '@Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory'
+        arguments:
+            $container: '@service_container'
 
     Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory:
         arguments:
-            - '@request_stack'
-            - '@styla_cms_page.repository'
-            - '@logger'
+            $requestStack: '@request_stack'
+            $stylaPageRepository: '@styla_cms_page.repository'
+            $logger: '@logger'
