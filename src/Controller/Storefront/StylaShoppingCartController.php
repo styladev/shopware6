@@ -2,7 +2,6 @@
 
 namespace Styla\CmsIntegration\Controller\Storefront;
 
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Styla\CmsIntegration\UseCase\ShoppingCartInteractor;
@@ -13,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- *  @RouteScope(scopes={"storefront"})
+ *  @Route(defaults={"_routeScope"={"storefront"}})
  */
 class StylaShoppingCartController
 {

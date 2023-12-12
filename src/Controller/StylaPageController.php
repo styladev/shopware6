@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Styla\CmsIntegration\Exception\PageNotFoundException;
 use Styla\CmsIntegration\Exception\SynchronizationIsAlreadyRunning;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
@@ -14,14 +13,12 @@ use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route(defaults={"_routeScope"={"api"}})
- * @Route(
- *     "api/styla/page"
- * )
  */
-class StylaPageController
+class StylaPageController extends AbstractController
 {
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
@@ -40,13 +37,12 @@ class StylaPageController
         $this->logger = $logger;
     }
 
-     /**
+    /**
      * @Route(
-     *     "/_action/schedule-pages-synchronization",
+     *     "api/styla/page/_action/schedule-pages-synchronization",
      *     name="api.styla.page.schedule-pages-synchronization",
      *     methods={"POST"},
-     *     requirements={"version"="\d+"},
-     *     defaults={"_routeScope"={"api"}}
+     *     requirements={"version"="\d+"}
      * )
      * @return JsonResponse
      */
@@ -75,7 +71,7 @@ class StylaPageController
 
     /**
      * @Route(
-     *     "/_action/refresh-details/{pageId}",
+     *     "api/styla/page/_action/refresh-details/{pageId}",
      *     name="api.styla.page.refresh-details",
      *     methods={"POST"},
      *     requirements={"version"="\d+"}

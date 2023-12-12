@@ -2,7 +2,6 @@
 
 namespace Styla\CmsIntegration\Controller\Storefront;
 
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Controller\StorefrontController;
 use Shopware\Storefront\Page\GenericPageLoaderInterface;
@@ -12,10 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @RouteScope(scopes={"storefront"})
- * @Route(
- *     "styla/page"
- * )
+ * @Route(defaults={"_routeScope"={"storefront"}})
  */
 class StylaPageController extends StorefrontController
 {
@@ -30,7 +26,7 @@ class StylaPageController extends StorefrontController
 
     /**
      * @Route(
-     *     "/render",
+     *     "styla/page/render",
      *     name="styla.page.storefront.render",
      *     methods={"GET"}
      * )
