@@ -14,11 +14,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 /**
- * use RouteScope(scopes={"api"})
- * @Route(
- *     "api/styla/synchronization"
- * )
+ * @Route(defaults={"_routeScope"={"api"}})
  */
 class StylaSynchronizationController
 {
@@ -33,13 +31,15 @@ class StylaSynchronizationController
 
     /**
      * @Route(
-     *     "/page/_action/get_last_success_date_time",
+     *     "/page/_action/get_last_success_date_time", 
      *     name="api.styla.synchronization.page.get-last-success-date-time",
      *     methods={"GET"},
-     *     requirements={"version"="\d+"}
+     *     requirements={"version"="\d+"},
+     *     defaults={"_routeScope"={"storefront"}}
      * )
      * @return JsonResponse
      */
+
     public function getLastsSuccessPageSynchronizationDateAction(Context $context)
     {
         try {

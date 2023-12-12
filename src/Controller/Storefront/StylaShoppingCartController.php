@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * use RouteScope(scopes={"storefront"})
+ *  @RouteScope(scopes={"storefront"})
  */
 class StylaShoppingCartController
 {

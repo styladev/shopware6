@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * use RouteScope(scopes={"api"})
+ * @Route(defaults={"_routeScope"={"api"}})
  * @Route(
  *     "api/styla/page"
  * )
@@ -40,12 +40,13 @@ class StylaPageController
         $this->logger = $logger;
     }
 
-    /**
+     /**
      * @Route(
      *     "/_action/schedule-pages-synchronization",
      *     name="api.styla.page.schedule-pages-synchronization",
      *     methods={"POST"},
-     *     requirements={"version"="\d+"}
+     *     requirements={"version"="\d+"},
+     *     defaults={"_routeScope"={"api"}}
      * )
      * @return JsonResponse
      */

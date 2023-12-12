@@ -43,7 +43,7 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
         $this->innerGenerator->setStrictRequirements($enabled);
     }
 
-    public function isStrictRequirements()
+    public function isStrictRequirements(): ?bool
     {
         return $this->innerGenerator->isStrictRequirements();
     }
@@ -53,12 +53,12 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
         $this->innerGenerator->setContext($context);
     }
 
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->innerGenerator->getContext();
     }
 
-    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH)
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         $implementedReferenceTypes = [
             self::ABSOLUTE_URL,
