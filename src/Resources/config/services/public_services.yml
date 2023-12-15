@@ -8,6 +8,10 @@ services:
             - '@styla_cms_page.repository'
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
             - '@logger'
+        tags:
+            - { name: 'controller.service_arguments' }
+        calls:
+            - [setContainer, ["@service_container"]]
         public: true
 
     Styla\CmsIntegration\Controller\StylaSynchronizationController:

@@ -64,7 +64,7 @@ Component.register(
                 )
 
                 let systemConfigurationFetchPromise = this.systemConfigApiService
-                    .getValues('StylaCmsIntegrationPlugin');
+                    .getValues('StylaCmsIntegration');
                 systemConfigurationFetchPromise.then(
                     (result) => {
                         this.settings = result;

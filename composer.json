@@ -10,7 +10,7 @@
         }
     },
     "extra": {
-        "shopware-plugin-class": "Styla\\CmsIntegration\\StylaCmsIntegrationPlugin",
+        "shopware-plugin-class": "Styla\\CmsIntegration\\StylaCmsIntegration",
         "plugin-icon": "src/Resources/config/plugin.png",
         "label": {
             "de-DE": "Styla CMS integration plugin",
