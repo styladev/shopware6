@@ -178,15 +178,29 @@ class StylaSynchronizationDalHelper
     public function tryMarkSynchronizationAsPending($createdSynchronizationId, Context $context): void
     {
         try {
-            $this->synchronizationsRepository->update(
-                [
+            // Fixed race condition
+            // If it's already set as success before even setting it to pending
+            $criteria = new Criteria();
+            $criteria->setLimit(1);
+            $criteria->addFilter(new EqualsFilter('id', $createdSynchronizationId));
+            $existingSync = $this->synchronizationsRepository->search($criteria, $context)
+                ->getEntities()
+                ->first();
+            if ($existingSync && $existingSync->getStatus() === StylaPagesSynchronization::STATUS_SUCCESS) {
+                $this->logger->info(
+                    sprintf('Synchronization %s status is already SUCCESS', $createdSynchronizationId)
+                );
+            } else {
+                $this->synchronizationsRepository->update(
                     [
-                        'id' => $createdSynchronizationId,
-                        'status' => StylaPagesSynchronization::STATUS_PENDING,
-                    ]
-                ],
-                $context
-            );
+                        [
+                            'id' => $createdSynchronizationId,
+                            'status' => StylaPagesSynchronization::STATUS_PENDING,
+                        ]
+                    ],
+                    $context
+                );
+            }
         } catch (\Throwable $throwable) {
             $this->logger->error(
                 sprintf('Failed to change synchronization %s status to PENDING', $createdSynchronizationId),

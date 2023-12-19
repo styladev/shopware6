@@ -66,7 +66,7 @@ class StylaPageController extends AbstractController
             $this->logger->error('Pages Synchronization schedule failed', ['exception' => $exception]);
         }
 
-        return new JsonResponse(['isScheduled' => $isScheduled, 'errorCode' => $errorCode], $responseCode);
+        return new JsonResponse(['isScheduled' => $isScheduled, 'responseCode' => $responseCode, 'errorCode' => $errorCode], $responseCode);
     }
 
     /**

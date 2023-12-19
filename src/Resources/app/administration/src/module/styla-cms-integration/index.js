@@ -14,7 +14,7 @@ Module.register('styla-cms-integration', {
     title: 'styla-cms-integration-plugin.configuration.label',
     description: 'styla-cms-integration-plugin.page.listing.description',
     color: '#ffd53d',
-    icon: 'small-default-stack-line2',
+    icon: 'regular-cog',
 
     snippets: {
         'en-GB': enGB,
@@ -39,14 +39,14 @@ Module.register('styla-cms-integration', {
             id: 'styla-cms-integration-general', // Id will be used to link navigation menu hierarchy
             label: 'styla-cms-integration-plugin.menu.title', // The name of the node menu point
             color: '#ffd53d',
-            icon: 'small-default-stack-line2',
+            icon: 'regular-cog',
             parent: 'sw-content',
             position: 100
         },
         {
             label: 'styla-cms-integration-plugin.page.listing.title',
             color: '#77ff3d',
-            icon: 'small-default-stack-line2',
+            icon: 'solid-grip-lines',
             path: 'styla.cms.integration.pages-list',
             parent: 'styla-cms-integration-general',
             position: 100
