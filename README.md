@@ -29,7 +29,7 @@ Once you upload the plugin files, it becomes visible on the **My Extensions** li
 
 ## Configuration
 
-Click the **…** button on the right of the extensions list and then **Configuration** to set up the plugin. 
+Go to the **Settings** -> **Extensions** -> **Styla** menu to set up the plugin. 
 
 On the resulting form with the plugin settings do the following: 
 
@@ -109,3 +109,8 @@ This way you can have a Styla slot included on a thousand category pages at once
 
 [Capabilities and restrictions](/src/Resources/doc/capabilities_and_restrictions.md)   
 [Implementation overview](/src/Resources/doc/plugin_implementation_overview.md)
+
+## Local Environment Setup
+
+[Dockware + shopware6 repo](/src/Resources/doc/local_dev_setup.md)
+<br /><br />

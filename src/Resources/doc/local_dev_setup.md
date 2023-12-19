@@ -24,6 +24,7 @@ services:
          - "22:22"
          - "8888:8888"
          - "9999:9999"
+         - "443:443"
       volumes:
          - "db_volume:/var/lib/mysql"
          - "shop_volume:/var/www/html"
@@ -68,4 +69,28 @@ Port: `3306`
 [https://docs.dockware.io/use-dockware/default-credentials](https://docs.dockware.io/use-dockware/default-credentials)
 
 For plugin installation on shopware6: [Installation instruction](./Resources/doc/installation.md)
+
+### Using HTTPS
+
+To use https on your local, just add port `- "443:443"`, there will be warning on your browser but it's safe to ignore.
+
+### Using Ngrok to expose your local Shopware publicly
+
+To expose your local Shopware publicly, you can use [ngrok](https://ngrok.com/).
+There will be an issue with admin panel if you just do `ngrok http 80`, to avoid this please follow this steps:
+
+1. Use `https`` instead of `http`` otherwise you'll get `insecure https from http` kind of error. Follow above step.
+2. Install ngrok
+3. Open terminal and run `ngrok http https://localhost`
+4. Copy the newly generated ngrok url
+
+Now we need to use ngrok url on the sales channel so we don't run into this error:
+```
+Unable to find a matching sales channel for the request: "https://b50f-110-137-194-52.ngrok-free.app/". Please make sure the domain mapping is correct.
+```
+To fix this:
+1. Go to http://localhost/adminer.php to open mysql database editor
+2. Click `select sales_channel_domain`
+3. Find the one with url `localhost` and replace with ngrok generated tunnel url (for eg. `https://b50f-110-137-194-52.ngrok-free.app`) DON'T ADD TRAILING SLASH
+4. Try opening the ngrok url again
 <br /><br />
