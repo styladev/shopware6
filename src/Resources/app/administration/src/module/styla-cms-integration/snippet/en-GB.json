@@ -96,6 +96,17 @@
                 "message": {
                     "failed": "Failed to fetch last successful synchronization date"
                 }
+            },
+            "reset-synchronization": {
+                "button": {
+                    "label": "Reset sync status"
+                },
+                "message": {
+                    "none": "No stuck synchronization processes",
+                    "success": "Synchronization status reset successfully",
+                    "partial": "Some synchronization processes cleared",
+                    "failed": "Synchronization status reset failed"
+                }
             }
         },
         "menu": {

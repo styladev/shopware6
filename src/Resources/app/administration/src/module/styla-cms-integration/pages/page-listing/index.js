@@ -1,4 +1,5 @@
 import template from './listing.html.twig';
+import './listing.scss';
 
 const {Component, Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
@@ -27,6 +28,8 @@ Component.register(
                 lastSuccessSynchronizationDate: null,
                 scheduleSynchronizationSuccess: false,
                 scheduleSynchronizationProcessing: false,
+                resetSynchronizationSuccess: false,
+                resetSynchronizationProcessing: false,
             }
         },
 
@@ -145,6 +148,54 @@ Component.register(
                         allowResize: true
                     },
                 ];
+            },
+
+            resetSynchronizationStatus() {
+                this.resetSynchronizationProcessing = true;
+                const promise = this.stylaSynchronizationApiService.resetSynchronizationStatus();
+
+                promise.then(function (response) {
+                    this.resetSynchronizationProcessing = false;
+                    if (response.data.stuck <= 0) {
+                        this.createNotificationSuccess({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.none'
+                            )
+                        });
+                    } else if (response.data.stuck > 0 && response.data.stuck === response.data.cleared) {
+                        this.createNotificationSuccess({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.success'
+                            )
+                        });
+                    } else if (response.data.stuck > 0 && response.data.cleared > 0 && response.data.stuck > response.data.cleared) {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.partial'
+                            )
+                        });
+                    } else {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.failed'
+                            )
+                        });
+                    }
+                }.bind(this)).catch(function (error) {
+                    this.resetSynchronizationProcessing = false;
+                    if (error.response.data.errorCode !== undefined) {
+                        console.error(
+                            'Failed to reset synchronization status, error code: '
+                            + error.response.data.errorCode
+                        )
+                    }
+
+                    this.createNotificationError({
+                        message: this.$tc(
+                            'styla-cms-integration-plugin.actions.reset-synchronization.message.failed'
+                        )
+                    });
+                }.bind(this));
             },
 
             scheduleSynchronization() {
@@ -276,6 +327,10 @@ Component.register(
             resetScheduleSynchronizationState() {
                 this.scheduleSynchronizationSuccess = false;
                 this.scheduleSynchronizationProcessing = false;
+            },
+            resetTheResetSynchronizationState() {
+                this.resetSynchronizationSuccess = false;
+                this.resetSynchronizationProcessing = false;
             }
         }
     }

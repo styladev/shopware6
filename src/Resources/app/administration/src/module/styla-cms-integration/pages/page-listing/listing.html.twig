@@ -4,6 +4,15 @@
             <div v-if="lastSuccessSynchronizationDate" style="margin-top: 10px">
                 <sw-label variant="info" :dismissable="false">
                     {{ $tc('styla-cms-integration-plugin.actions.get-last-success-date.text', 0, {'dateTime': lastSuccessSynchronizationDate}) }}
+                    <sw-button-process id="reset-sync-button" variant="ghost" size="x-small"
+                        style="padding:0 5px;line-height:12px;font-size:8px;"
+                        :isLoading="resetSynchronizationProcessing"
+                        :processSuccess="resetSynchronizationSuccess"
+                        @process-finish="resetTheResetSynchronizationState"
+                        @click="resetSynchronizationStatus"
+                    >
+                        {{ $tc('styla-cms-integration-plugin.actions.reset-synchronization.button.label') }}
+                    </sw-button-process>
                 </sw-label>
             </div>
             <sw-button-process variant="ghost"
