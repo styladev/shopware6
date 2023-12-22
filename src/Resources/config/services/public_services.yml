@@ -28,6 +28,7 @@ services:
             - '@Shopware\Storefront\Page\GenericPageLoader'
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
+            - [ 'setTwig' , [ '@twig' ] ]
 
     Styla\CmsIntegration\Controller\Storefront\StylaApiController:
         public: true

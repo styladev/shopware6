@@ -26,13 +26,17 @@ class StylaPageController extends StorefrontController
 
     /**
      * @Route(
-     *     "styla/page/render",
+     *     "/styla/page/render",
      *     name="styla.page.storefront.render",
      *     methods={"GET"}
      * )
      */
-    public function renderStylaPage(StylaPage $stylaPage, Request $request, SalesChannelContext $context)
+    public function renderStylaPage(StylaPage|null $stylaPage, Request $request, SalesChannelContext $context)
     {
+        if (!$stylaPage) {
+            return $this->renderStorefront('@StylaCmsIntegrationPlugin/storefront/styla_page/not_found.html.twig', []);
+        }
+
         $page = $this->genericLoader->load($request, $context);
 
         $pageDetails = $this->stylaPagesInteractor->getPageDetails($stylaPage);

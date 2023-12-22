@@ -166,11 +166,13 @@ class ProductApiActionsInteractor
         }
 
         $parentProductEntitiesHashMap = [];
-        $parentProductsSearchResult = $this->productRepository
-            ->search(new Criteria($parentEntitiesIds), $salesChannelContext->getContext());
-        /** @var ProductEntity $parentProduct */
-        foreach ($parentProductsSearchResult->getEntities() as $parentProduct) {
-            $parentProductEntitiesHashMap[$parentProduct->getId()] = $parentProduct;
+        if (count($parentEntitiesIds) > 0) {
+            $parentProductsSearchResult = $this->productRepository
+                ->search(new Criteria($parentEntitiesIds), $salesChannelContext->getContext());
+            /** @var ProductEntity $parentProduct */
+            foreach ($parentProductsSearchResult->getEntities() as $parentProduct) {
+                $parentProductEntitiesHashMap[$parentProduct->getId()] = $parentProduct;
+            }
         }
 
         $matchedProductsCollection = new ProductCollection();

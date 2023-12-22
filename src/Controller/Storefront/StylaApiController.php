@@ -29,7 +29,7 @@ class StylaApiController
 
     /**
      * @Route(
-     *     "store-api/styla/categories",
+     *     "/store-api/styla/categories",
      *     name="styla.api.categories",
      *     methods={"GET"}
      * )

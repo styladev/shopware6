@@ -6,7 +6,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartCalculator;
-use Shopware\Core\Checkout\Cart\CartPersisterInterface;
+use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\Event\AfterLineItemAddedEvent;
 use Shopware\Core\Checkout\Cart\Event\BeforeLineItemAddedEvent;
 use Shopware\Core\Checkout\Cart\Event\CartChangedEvent;
@@ -20,14 +20,14 @@ class ShoppingCartInteractor
     private LineItemFactoryRegistry $lineItemFactory;
     private EventDispatcherInterface $eventDispatcher;
     private CartCalculator $cartCalculator;
-    private CartPersisterInterface $cartPersister;
+    private CartPersister $cartPersister;
     private LoggerInterface $logger;
 
     public function __construct(
         LineItemFactoryRegistry $lineItemFactory,
         EventDispatcherInterface $eventDispatcher,
         CartCalculator $cartCalculator,
-        CartPersisterInterface $cartPersister,
+        CartPersister $cartPersister,
         LoggerInterface $logger
     ) {
         $this->lineItemFactory = $lineItemFactory;

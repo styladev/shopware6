@@ -93,4 +93,29 @@ To fix this:
 2. Click `select sales_channel_domain`
 3. Find the one with url `localhost` and replace with ngrok generated tunnel url (for eg. `https://b50f-110-137-194-52.ngrok-free.app`) DON'T ADD TRAILING SLASH
 4. Try opening the ngrok url again
+
+### Testing Styla API endpoint `/styla/page/render`
+
+Render method is called from a job queue.
+To quickly test how the render works, please follow these steps:
+* On `public_services.yml` file, on the `Styla\CmsIntegration\Controller\Storefront\StylaPageController:` -> `arguments:`<br />
+  add `- '@styla_cms_page.repository'`
+* On `StylaPageController.php` add these uses:
+  * `use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;`
+  * `use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;`
+* Declare these variables:
+  * `private EntityRepository $pageRepository;`
+* On the `__construct` param,<br />
+  add `EntityRepository $stylaPageRepository`<br />
+  and inside also add `$this->stylaPageRepository = $stylaPageRepository;`
+* Comment out `StylaPage $stylaPage` and add these as replacement of getting styla page object:
+```
+$criteria = new Criteria();
+$criteria->setLimit(1);
+$stylaPage = $this->stylaPageRepository->search(
+    $criteria,
+    $context->getContext()
+)->getEntities()->first();
+```
+
 <br /><br />
