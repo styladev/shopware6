@@ -37,9 +37,9 @@ class ProductDetailsTranslator
         ProductEntity $productEntity,
         Context $context
     ): ProductDetailInfo {
-
+        
         $priceEntity = $productEntity->getCurrencyPrice($context->getCurrencyId());
-
+        
         $currencySymbol = $this->getCurrencySymbol($context);
 
         $oldPrice = null;
@@ -66,7 +66,7 @@ class ProductDetailsTranslator
         if ($productEntity->getManufacturer()) {
             $brand = $productEntity->getManufacturer()->getName();
         }
-
+       
         return new ProductDetailInfo(
             $productEntity->getId(),
             $productEntity->getActive(),
@@ -114,19 +114,19 @@ class ProductDetailsTranslator
             $options = $productVariant->getOptions();
             if ($options) {
                 foreach ($options as $option) {
-                    $availablePropertyGroups[$option->getGroup()->getId()] = $option->getGroup()->getName();
+                        $availablePropertyGroups[$option->getGroup()->getId()] = $option->getGroup()->getName();
                 }
             }
         }
-
-        foreach ($availablePropertyGroups as $groupId => $groupLabel) {
-            $attribute = new ProductAttributeInfo(
-                $groupId,
-                $groupLabel,
-                $this->translateOptions($groupId, $productVariants, $context)
-            );
-            $attributeList->add($attribute);
-        }
+       
+            foreach ($availablePropertyGroups as $groupId => $groupLabel) {
+                $attribute = new ProductAttributeInfo(
+                    $groupId,
+                    $groupLabel,
+                    $this->translateOptions($groupId, $productVariants, $context)
+                );
+                $attributeList->add($attribute);
+            }    
 
         return $attributeList;
     }
@@ -175,7 +175,7 @@ class ProductDetailsTranslator
      * @return ProductAttributeOption
      */
     private function translateProductAttributeOption(PropertyGroupOptionEntity $option, array $products, Context $context): ProductAttributeOption
-    {
+    {   
         return new ProductAttributeOption(
             $option->getId(),
             $option->getName() ?? '',
@@ -194,14 +194,19 @@ class ProductDetailsTranslator
         Context $context
     ): ProductReferenceInfoList {
         $list = new ProductReferenceInfoList();
-
+        
         foreach ($products as $product) {
             $price = $product->getCurrencyPrice($context->getCurrencyId());
-
+    
             $oldPrice = null;
-            if ($product->getCheapestPrice()) {
+            
+            /*
+            shopware6 product entity does no longer have the cheapest price property
+             Refer: https://github.com/shopware/shopware/blob/trunk/src/Core/Content/Product/ProductEntity.php
+            */
+            /*if ($product->getCheapestPrice()) {
                 $oldPrice = $product->getCheapestPrice()->getCurrencyPrice($context->getCurrencyId());
-            }
+            }*/
 
             $list->add(
                 new ProductReferenceInfo(
@@ -220,7 +225,7 @@ class ProductDetailsTranslator
     {
         $criteria = new Criteria();
 
-        $criteria
+         $criteria
             ->addAssociation('categories')
             ->addAssociation('cover.media')
             ->addAssociation('prices')
