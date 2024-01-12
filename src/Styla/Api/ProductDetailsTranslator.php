@@ -199,9 +199,9 @@ class ProductDetailsTranslator
             $price = $product->getCurrencyPrice($context->getCurrencyId());
 
             $oldPrice = null;
-            if ($product->getCheapestPrice()) {
+            /*if ($product->getCheapestPrice()) {
                 $oldPrice = $product->getCheapestPrice()->getCurrencyPrice($context->getCurrencyId());
-            }
+            }*/
 
             $list->add(
                 new ProductReferenceInfo(
