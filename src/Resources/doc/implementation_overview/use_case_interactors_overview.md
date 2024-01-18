@@ -24,6 +24,9 @@ Methods definition:
 
   Method supposed to be called on demand when client want to schedule pages
   synchronization out of the schedule
+* **resetSynchronizationStatus** - Resseting any running or stuck synchronization if there is.
+  In case if synchronization status on database is active but there are actually no process running and user wanted
+  to forcefully clear the status, because default mark as failed for stuck status is 60 minutes.
 * **scheduleAutomaticPagesSynchronizationIfNeeded** - Schedule `StylaPage` entities synchronization if 
   last finished synchronization was scheduled more than `StylaCmsIntegrationPlugin.config.pagesListSynchronizationInterval`
   minutes ago(check plugin configuration). Method will check if stuck synchronizations are present

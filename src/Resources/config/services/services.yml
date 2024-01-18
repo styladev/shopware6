@@ -17,7 +17,7 @@ services:
             - { name: shopware.sitemap_url_provider }
 
     styla_cms_integration.routing.router.default:
-        class: 'Styla\CmsIntegration\Routing\StylaDefaultRouterDecorator'
+        class: Styla\CmsIntegration\Routing\StylaDefaultRouterDecorator
         decorates: 'router.default'
         parent: 'router.default'
         calls:

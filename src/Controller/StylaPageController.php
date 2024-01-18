@@ -44,9 +44,8 @@ class StylaPageController extends AbstractController
      *     methods={"POST"},
      *     requirements={"version"="\d+"}
      * )
-     * @return JsonResponse
      */
-    public function schedulePagesSynchronizationAction(Context $context)
+    public function schedulePagesSynchronizationAction(Context $context): JsonResponse
     {
         $errorCode = '';
         $isScheduled = false;
@@ -76,9 +75,8 @@ class StylaPageController extends AbstractController
      *     methods={"POST"},
      *     requirements={"version"="\d+"}
      * )
-     * @return JsonResponse
      */
-    public function refreshPageDetailsAction(string $pageId, Context $context)
+    public function refreshPageDetailsAction(string $pageId, Context $context): JsonResponse
     {
         $errorCode = '';
         $isSuccess = false;

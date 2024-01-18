@@ -37,10 +37,8 @@ class StylaSynchronizationController
      *     methods={"GET"},
      *     requirements={"version"="\d+"}
      * )
-     * @return JsonResponse
      */
-
-    public function getLastsSuccessPageSynchronizationDateAction(Context $context)
+    public function getLastsSuccessPageSynchronizationDateAction(Context $context): JsonResponse
     {
         try {
             $criteria = new Criteria();
@@ -79,9 +77,8 @@ class StylaSynchronizationController
      *     methods={"GET"},
      *     requirements={"version"="\d+"}
      * )
-     * @return JsonResponse
      */
-    public function resetSynchronizationStatus(Context $context)
+    public function resetSynchronizationStatus(Context $context): JsonResponse
     {
         $stuck = 0;
         $cleared = 0;

@@ -139,6 +139,8 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         $previousAttributes['_controller'] = sprintf('%s::%s', StylaPageController::class, 'renderStylaPage');
         // Added to avoid problems with redirects to this page
         $previousAttributes['_route'] = StylaUrlGenerator::STYLA_CMS_PAGES_ROUTE_PREFIX . $stylaPage->getId();
+        // Force storefront route scope as we never hit the controller to get this route scope
+        $previousAttributes['_routeScope'] = ['storefront'];
         $previousAttributes[self::STYLA_PAGE_INSTANCE_ARGUMENT] = $stylaPage;
 
         $request = $request->duplicate(null, null, $previousAttributes);
