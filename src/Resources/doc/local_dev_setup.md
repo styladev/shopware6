@@ -15,8 +15,8 @@ version: "3"
 services:
 
     shopware:
-      # use either tag "latest" or any other version like "6.5.3.0", ...
-      image: dockware/dev:latest
+      # use either tag "latest" or any other version like "6.5.7.3", ...
+      image: dockware/dev:6.5.7.3
       container_name: shopware
       ports:
          - "80:80"
