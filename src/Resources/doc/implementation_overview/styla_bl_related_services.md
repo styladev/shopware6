@@ -26,7 +26,7 @@ registered in the Symfony container.
 ##### ClientRegistry
 This service is stateful and contains the list of the "Client" instances
 configured to work with different accounts, there are will be single instance for each
-account defined in the `StylaCmsIntegrationPlugin.config.accountNames` plugin configuration.
+account defined in the `StylaCmsIntegration.settings.accountNames` plugin configuration.
 Registry contain a public method **getClientByAccountName** that could be used to get an appropriate
 Client instance for the Styla CMS account
 
@@ -73,7 +73,7 @@ page replacement logic, as an example Guessers could be used to:
 * **NoRouteFoundStylaPageGuesser** - Supports only 404 page. This guesser will work only in case if there are no
 native Shopware page by this path, so any `StylaPage` entity with the same path could be loaded instead 
 * **ConfiguredPagesReplaceGuesser** - Supports only pages configured in 
-  `StylaCmsIntegrationPlugin.config.extraPagesAllowedToOverride` plugin configuration.
+  `StylaCmsIntegration.settings.extraPagesAllowedToOverride` plugin configuration.
 
 ### API DTO translators
 Instances of those classes are used to translate(or convert, especially I, like metaphor: "translate" so it is used everywhere) 

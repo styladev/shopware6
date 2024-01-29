@@ -34,7 +34,7 @@ class StylaPageController extends StorefrontController
     public function renderStylaPage(StylaPage|null $stylaPage, Request $request, SalesChannelContext $context)
     {
         if (!$stylaPage) {
-            return $this->renderStorefront('@StylaCmsIntegrationPlugin/storefront/styla_page/not_found.html.twig', []);
+            return $this->renderStorefront('@Storefront/storefront/page/error/error-404.html.twig', []);
         }
 
         $page = $this->genericLoader->load($request, $context);
@@ -43,7 +43,13 @@ class StylaPageController extends StorefrontController
 
         return $this->renderStorefront(
             '@StylaCmsIntegrationPlugin/storefront/styla_page/page.html.twig',
-            ['stylaPage' => $stylaPage, 'stylaPageDetails' => $pageDetails, 'page' => $page]
+            [
+                'page' => $page,
+                'client' => $stylaPage->getAccountName(),
+                'path' => ltrim($stylaPage->getPath(), '/'),
+                'head' => $pageDetails->getHead(),
+                'body' => $pageDetails->getBody()
+            ]
         );
     }
 }

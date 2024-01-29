@@ -45,8 +45,8 @@ in order for the plugin to work properly, so we need to fill this configuration 
   --------------------------- -------------------------------- --------- ----------------- ------------- ----------- -------- ------------- 
   Plugin                      Label                            Version   Upgrade version   Author        Installed   Active   Upgradeable  
  --------------------------- -------------------------------- --------- ----------------- ------------- ----------- -------- ------------- 
-  StylaCmsIntegrationPlugin   Styla CMS integration plugin     1.0.0                                     No          No       No           
+  StylaCmsIntegration        Styla CMS integration plugin     1.0.0                                     No          No       No           
       
 ```
-4. Execute next command `bin/console plugin:install --activate StylaCmsIntegrationPlugin` then continue from 
+4. Execute next command `bin/console plugin:install --activate StylaCmsIntegration` then continue from 
    the point 10 of the first approach description

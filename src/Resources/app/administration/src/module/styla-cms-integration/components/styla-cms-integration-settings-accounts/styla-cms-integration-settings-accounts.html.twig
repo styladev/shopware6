@@ -9,39 +9,76 @@
                     <div v-if="actualConfigData" class="card-container">
 
                         {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_default %}
-                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultAccountName']"
-                                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultAccountName']"
-                                                :customInheritationCheckFunction="checkTextFieldInheritance">
-                                <template #content="props">
-                                    <sw-text-field name="StylaCmsIntegration.settings.defaultAccountName"
-                                                   :mapInheritance="props"
-                                                   :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.default.label')"
-                                                   :disabled="props.isInherited"
-                                                   :value="props.currentValue"
-                                                   :error="defaultAccountNameErrorState"
-                                                   :required="true"
-                                                   @change="props.updateCurrentValue">
-                                    </sw-text-field>
-                                </template>
-                            </sw-inherit-wrapper>
-                        {% endblock %}
-
-                        {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_language_accounts %}
-                            <template v-for="language in systemLanguages">
-
-                                <sw-inherit-wrapper v-model="accountNames[language.id]"
-                                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.accountNames'][language.id]"
+                            <div style="display: grid; grid-template-columns: 2fr 2fr; grid-column-gap: 5px">
+                                <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultAccountName']"
+                                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultAccountName']"
                                                     :customInheritationCheckFunction="checkTextFieldInheritance">
                                     <template #content="props">
-                                        <sw-text-field :mapInheritance="props"
-                                                       :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.language_specific_account_name.label', 0, { name: language.name })"
-                                                       :disabled="props.isInherited"
-                                                       :value="props.currentValue"
-                                                       @change="props.updateCurrentValue">
+                                        <sw-text-field
+                                                    name="StylaCmsIntegration.settings.defaultAccountName"
+                                                    :mapInheritance="props"
+                                                    :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.default.label')"
+                                                    :disabled="props.isInherited"
+                                                    :value="props.currentValue"
+                                                    :error="defaultAccountNameErrorState"
+                                                    :required="true"
+                                                    @change="props.updateCurrentValue">
                                         </sw-text-field>
                                     </template>
                                 </sw-inherit-wrapper>
 
+                                <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultDomainUrl']"
+                                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultDomainUrl']"
+                                                    :customInheritationCheckFunction="checkTextFieldInheritance">
+                                    <template #content="props">
+                                        <sw-single-select
+                                                    name="StylaCmsIntegration.settings.defaultDomainUrl"
+                                                    :label="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.default.label')"
+                                                    :disabled="props.isInherited"
+                                                    :value="props.currentValue"
+                                                    labelProperty="label"
+                                                    valueProperty="value"
+                                                    :options="salesChannelDomains"
+                                                    @change="props.updateCurrentValue">
+                                        </sw-single-select>
+                                    </template>
+                                </sw-inherit-wrapper>
+                            </div>
+                        {% endblock %}
+
+                        {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_language_accounts %}
+                            <template v-for="language in systemLanguages">
+                                <div style="display: grid; grid-template-columns: 2fr 2fr; grid-column-gap: 5px">
+                                    <sw-inherit-wrapper v-model="accountNames[language.id]"
+                                                        :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.accountNames'][language.id]"
+                                                        :customInheritationCheckFunction="checkTextFieldInheritance">
+                                        <template #content="props">
+                                            <sw-text-field
+                                                        :mapInheritance="props"
+                                                        :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.language_specific_account_name.label', 0, { name: language.name })"
+                                                        :disabled="props.isInherited"
+                                                        :value="props.currentValue"
+                                                        @change="props.updateCurrentValue">
+                                            </sw-text-field>
+                                        </template>
+                                    </sw-inherit-wrapper>
+
+                                    <sw-inherit-wrapper v-model="domainUrls[language.id]"
+                                                        :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.domainUrls'][language.id]"
+                                                        >
+                                        <template #content="props">
+                                            <sw-single-select
+                                                        :label="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.language_specific_domain_url.label', 0, { name: language.name })"
+                                                        :disabled="props.isInherited"
+                                                        labelProperty="label"
+                                                        valueProperty="value"
+                                                        :options="salesChannelDomains"
+                                                        :value="props.currentValue"
+                                                        @change="props.updateCurrentValue">
+                                            </sw-single-select>
+                                        </template>
+                                    </sw-inherit-wrapper>
+                                </div>
                             </template>
                         {% endblock %}
 

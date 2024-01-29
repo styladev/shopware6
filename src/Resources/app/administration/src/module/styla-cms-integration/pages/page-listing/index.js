@@ -290,9 +290,9 @@ Component.register(
                 }
 
                 let matchedLanguageId = null;
-                const accountNames = this.settings['StylaCmsIntegrationPlugin.config.accountNames'];
+                const accountNames = this.settings['StylaCmsIntegration.settings.accountNames'];
                 for (let languageId in accountNames) {
-                    if (value.accountName === accountNames[languageId]) {
+                    if (value.accountName === accountNames[languageId] && accountNames[languageId]) {
                         matchedLanguageId = languageId;
                         break;
                     }
@@ -308,12 +308,28 @@ Component.register(
                 }
 
                 if (!domainEntity) {
-                    domainEntity = this.domainsList[0]
+                    domainEntity = this.domainsList[0];
                 }
 
-                let pathString = '' + value.path;
+                let domainUrl = domainEntity.url;
+                const defaultDomainUrl = this.settings['StylaCmsIntegration.settings.defaultDomainUrl'];
+                if (defaultDomainUrl) {
+                    domainUrl = defaultDomainUrl;
+                }
 
-                const url = domainEntity.url.replace(/\/$/, '') //Trim "/" at the end of the url
+                const domainUrls = this.settings['StylaCmsIntegration.settings.domainUrls'];
+                if (domainUrls && matchedLanguageId) {
+                    for (let languageId in domainUrls) {
+                        if (matchedLanguageId === matchedLanguageId && domainUrls[languageId]) {
+                            domainUrl = domainUrls[languageId];
+                            break;
+                        }
+                    }
+                }
+
+                let pathString = `${value.path}`;
+
+                const url = domainUrl.replace(/\/$/, '') //Trim "/" at the end of the url
                     + '/'
                     + pathString.replace(/^\//, '') // Trim "/" at the beginning of the path
 

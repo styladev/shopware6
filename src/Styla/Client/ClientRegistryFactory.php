@@ -41,21 +41,27 @@ class ClientRegistryFactory
     {
         $registry = new ClientRegistry();
 
-        foreach ($this->configuration->getDefinedAccountNames() as $accountName) {
-            $configuration = new ClientConfiguration(
-                $this->stylaPagesListEndpoint,
-                $this->stylaPageDetailsEndpoint,
-                $accountName
-            );
+        $domainUrls = $this->configuration->getDefinedDomainUrls();
 
-            $client = new Client(
-                $configuration,
-                $this->guzzleClient,
-                $this->listResponseDataTranslator,
-                $this->pageDetailsResponseDataTranslator,
-                $this->logger
-            );
-            $registry->registerClient($client);
+        foreach ($this->configuration->getDefinedAccountNames() as $index => $accountName) {
+            if ($accountName && $accountName !== '') {
+                $domainUrl = isset($domainUrls[$index]) ? $domainUrls[$index] : '';
+                $configuration = new ClientConfiguration(
+                    $this->stylaPagesListEndpoint,
+                    $this->stylaPageDetailsEndpoint,
+                    $accountName,
+                    $domainUrl
+                );
+
+                $client = new Client(
+                    $configuration,
+                    $this->guzzleClient,
+                    $this->listResponseDataTranslator,
+                    $this->pageDetailsResponseDataTranslator,
+                    $this->logger
+                );
+                $registry->registerClient($client);
+            }
         }
 
         return $registry;

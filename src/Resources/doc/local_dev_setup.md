@@ -118,4 +118,16 @@ $stylaPage = $this->stylaPageRepository->search(
 )->getEntities()->first();
 ```
 
+### Run message queue
+
+`bin/console messenger:consume async low_priority``
+
+### Editing process
+
+Everytime we edit the js file please always run:
+```
+bin/build-administration.sh;bin/console cache:clear
+```
+It's to rebuild the js and clear cache
+
 <br /><br />
