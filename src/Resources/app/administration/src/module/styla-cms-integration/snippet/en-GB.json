@@ -23,6 +23,18 @@
                         "label": "{name} account name"
                     }
                 },
+                "domainUrls": {
+                    "default": {
+                        "label": "Override default domain URL",
+                        "error": {
+                            "invalid": "Invalid domain URL format"
+                        }
+                    },
+                    "language_specific_domain_url": {
+                        "label": "Override {name} domain URL"
+                    },
+                    "no_override": "No override"
+                },
                 "extraPages": {
                     "label": "List of Shopware paths the plugin can override",
                     "helpText": "The plugin per default can only take over the home page and category pages' paths.\nIf you publish pages with matching paths (blank path for the home page) in Styla Editor then the plugin will display the Styla content on these Shopware paths.\nIf you want to achieve this for other Shopware paths (like a PDP) then you need to add it on the list below, each one in a new row.\nExamples:\n/foo-example-path/\n/foo-example-path/bar-example-path/"
@@ -34,6 +46,10 @@
                 "pageCache": {
                     "label": "Page details cache lifetime (in seconds)",
                     "helpText": "This setting defines for how long Shopware caches Styla page content. The lower the value the more Shopware resources will be used. The minimum value is 1 second. The default is 3600 seconds (one hour)."
+                },
+                "overrideDomainUrl": {
+                    "label": "Override domain url",
+                    "helpText": "This setting overrides the automatic domain url selection."
                 }
             }
         },

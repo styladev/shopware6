@@ -15,8 +15,8 @@ version: "3"
 services:
 
     shopware:
-      # use either tag "latest" or any other version like "6.5.3.0", ...
-      image: dockware/dev:latest
+      # use either tag "latest" or any other version like "6.5.7.3", ...
+      image: dockware/dev:6.5.7.3
       container_name: shopware
       ports:
          - "80:80"
@@ -117,5 +117,17 @@ $stylaPage = $this->stylaPageRepository->search(
     $context->getContext()
 )->getEntities()->first();
 ```
+
+### Run message queue
+
+`bin/console messenger:consume async low_priority``
+
+### Editing process
+
+Everytime we edit the js file please always run:
+```
+bin/build-administration.sh;bin/console cache:clear
+```
+It's to rebuild the js and clear cache
 
 <br /><br />
