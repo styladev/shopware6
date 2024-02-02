@@ -1,8 +1,8 @@
 {% block styla_pages_listing %}
     <sw-page class="overdose-contact-list">
         <template #smart-bar-actions> {# slots check vue.js documentation #}
-            <div v-if="lastSuccessSynchronizationDate" style="margin-top: 10px">
-                <sw-label variant="info" :dismissable="false">
+            <div v-if="lastSuccessSynchronizationDate">
+                <sw-label id="last-sync-info" variant="info" :dismissable="false">
                     {{ $tc('styla-cms-integration-plugin.actions.get-last-success-date.text', 0, {'dateTime': lastSuccessSynchronizationDate}) }}
                     <sw-button-process id="reset-sync-button" variant="ghost" size="x-small"
                         style="padding:0 5px;line-height:12px;font-size:8px;"
@@ -15,14 +15,56 @@
                     </sw-button-process>
                 </sw-label>
             </div>
-            <sw-button-process variant="ghost"
-                               :isLoading="scheduleSynchronizationProcessing"
-                               :processSuccess="scheduleSynchronizationSuccess"
-                               @process-finish="resetScheduleSynchronizationState"
-                               @click="scheduleSynchronization"
+
+            <sw-button-group
+                :split-button="true"
             >
-                {{ $tc('styla-cms-integration-plugin.actions.schedule-pages-synchronization.button.label') }}
-            </sw-button-process>
+                <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+                {% block styla_page_actions_sync %}
+                <sw-button-process
+                    :disabled="scheduleSynchronizationProcessing"
+                    @process-finish="resetScheduleSynchronizationState"
+                    @click="scheduleSynchronization"
+                    :isLoading="scheduleSynchronizationProcessing"
+                    variant="primary"
+                >
+                    {{ $tc('styla-cms-integration-plugin.actions.schedule-pages-synchronization.button.label') }}
+                </sw-button-process>
+                {% endblock %}
+
+                <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+                {% block styla_page_actions_sync_context_menu %}
+                <sw-context-button>
+                    <template #button>
+                        <sw-button
+                            square
+                            variant="primary"
+                            :isLoading="synchronizationProcessing"
+                            :disabled="synchronizationProcessing"
+                        >
+                            <sw-icon
+                                name="regular-chevron-down-xs"
+                                size="16"
+                            />
+                        </sw-button>
+                    </template>
+
+                    <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+                    {% block styla_page_actions_save_context_menu_actions %}
+                        <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+                        {% block styla_page_actions_duplicate %}
+                        <sw-context-menu-item
+                            :disabled="synchronizationProcessing"
+                            @process-finish="resetSynchronizationState"
+                            @click="synchronization"
+                        >
+                            {{ $tc('styla-cms-integration-plugin.actions.pages-synchronization.button.label') }}
+                        </sw-context-menu-item>
+                        {% endblock %}
+                    {% endblock %}
+                </sw-context-button>
+                {% endblock %}
+            </sw-button-group>
         </template>
         <template #content>
             <sw-entity-listing

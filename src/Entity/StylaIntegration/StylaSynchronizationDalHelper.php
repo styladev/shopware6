@@ -74,7 +74,7 @@ class StylaSynchronizationDalHelper
 
     public function createSynchronization(Context $context): string
     {
-        $createEntityResult =$this->synchronizationsRepository->create(
+        $createEntityResult = $this->synchronizationsRepository->create(
             [
                 [
                     'status' => StylaPagesSynchronization::STATUS_NEW,

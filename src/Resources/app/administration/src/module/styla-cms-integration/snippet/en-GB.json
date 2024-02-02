@@ -86,13 +86,23 @@
         "actions": {
             "schedule-pages-synchronization": {
                 "button": {
-                    "label": "Schedule pages synchronization"
+                    "label": "Schedule Pages Sync"
                 },
                 "message": {
                     "success": "Pages synchronization scheduled",
                     "failed": "Failed to schedule pages synchronization",
                     "is-running": "Pages synchronization was not scheduled because another synchronization is already running",
                     "was-not-scheduled": "Pages synchronization was not scheduled"
+                }
+            },
+            "pages-synchronization": {
+                "button": {
+                    "label": "Synchronize Now"
+                },
+                "message": {
+                    "success": "Pages synchronization succeed",
+                    "failed": "Failed to sync pages",
+                    "is-running": "Pages synchronization was not run because another synchronization is already running"
                 }
             },
             "refresh-page-details": {

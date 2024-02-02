@@ -11,6 +11,7 @@ use Styla\CmsIntegration\Exception\SynchronizationIsAlreadyRunning;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
 use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
+use Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +23,7 @@ class StylaPageController extends AbstractController
 {
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
+    private PagesListSynchronizationProcessor $pagesListSynchronizationProcessor;
     private EntityRepository $repository;
     private LoggerInterface $logger;
 
@@ -29,12 +31,44 @@ class StylaPageController extends AbstractController
         StylaPagesInteractor $interactor,
         EntityRepository $repository,
         StylaPagesSynchronizer $stylaPagesSynchronizer,
+        PagesListSynchronizationProcessor $pagesListSynchronizationProcessor,
         LoggerInterface $logger
     ) {
         $this->stylaPagesInteractor = $interactor;
         $this->repository = $repository;
         $this->stylaPagesSynchronizer = $stylaPagesSynchronizer;
+        $this->pagesListSynchronizationProcessor = $pagesListSynchronizationProcessor;
         $this->logger = $logger;
+    }
+
+    /**
+     * @Route(
+     *     "api/styla/page/_action/synchronize-pages",
+     *     name="api.styla.page.synchronize-pages",
+     *     methods={"POST"},
+     *     requirements={"version"="\d+"}
+     * )
+     */
+    public function pagesSynchronizationAction(Context $context): JsonResponse
+    {
+        set_time_limit(300);
+        $errorCode = '';
+        $isSynced = false;
+        $responseCode = 200;
+        try {
+            $this->pagesListSynchronizationProcessor->synchronizePages(null, $context);
+            $isSynced = true;
+        } catch (UseCaseInteractorException $exception) {
+            $errorCode = $exception->getErrorCode();
+            $responseCode = 501;
+        } catch (\Throwable $exception) {
+            $errorCode = 'SYNCHRONIZATION_IS_FAILED';
+            $responseCode = 503;
+
+            $this->logger->error('Pages Synchronization failed', ['exception' => $exception]);
+        }
+
+        return new JsonResponse(['isSynced' => $isSynced, 'responseCode' => $responseCode, 'errorCode' => $errorCode], $responseCode);
     }
 
     /**
