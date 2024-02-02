@@ -26,6 +26,8 @@ Component.register(
                 repository: null,
                 pages: null,
                 lastSuccessSynchronizationDate: null,
+                synchronizationSuccess: false,
+                synchronizationProcessing: false,
                 scheduleSynchronizationSuccess: false,
                 scheduleSynchronizationProcessing: false,
                 resetSynchronizationSuccess: false,
@@ -95,7 +97,7 @@ Component.register(
                     .getLastSuccessSynchronizationDate()
                     .then(
                         (result) => {
-                            if (result.data.result) {
+                            if (result?.data?.result) {
                                 this.lastSuccessSynchronizationDate = date(
                                     result.data.result,
                                     {
@@ -198,10 +200,54 @@ Component.register(
                 }.bind(this));
             },
 
+            synchronization() {
+                this.synchronizationProcessing = true;
+                const promise = this.stylaPageApiService.doSynchronization();
+
+                promise.then(function (response) {
+                    this.synchronizationProcessing = false;
+                    if (response.data.isSynced) {
+                        this.createNotificationSuccess({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.pages-synchronization.message.success'
+                            )
+                        });
+                    } else if (response.data.errorCode === 'SYNCHRONIZATION_IS_ALREADY_RUNNING') {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.pages-synchronization.message.is-running'
+                            )
+                        });
+                    } else {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.pages-synchronization.message.failed'
+                            )
+                        });
+                    }
+                }.bind(this)).catch(function (error) {
+                    this.synchronizationProcessing = false;
+                    if (error.response.data.errorCode !== undefined) {
+                        console.error(
+                            'Failed to sync styla pages, error code: '
+                            + error.response.data.errorCode
+                        )
+                    }
+
+                    this.createNotificationError({
+                        message: this.$tc(
+                            'styla-cms-integration-plugin.actions.pages-synchronization.message.failed'
+                        )
+                    });
+                }.bind(this));
+            },
+
             scheduleSynchronization() {
+                this.scheduleSynchronizationProcessing = true;
                 const promise = this.stylaPageApiService.scheduleSynchronization();
 
                 promise.then(function (response) {
+                    this.scheduleSynchronizationProcessing = false;
                     if (response.data.isScheduled) {
                         this.createNotificationSuccess({
                             message: this.$tc(
@@ -222,6 +268,7 @@ Component.register(
                         });
                     }
                 }.bind(this)).catch(function (error) {
+                    this.scheduleSynchronizationProcessing = false;
                     if (error.response.data.errorCode !== undefined) {
                         console.error(
                             'Failed to schedule styla pages synchronization, error code: '
@@ -339,6 +386,10 @@ Component.register(
                 this.pagesPathHashMap[value.id] = url;
 
                 return url;
+            },
+            resetSynchronizationState() {
+                this.synchronizationSuccess = false;
+                this.synchronizationProcessing = false;
             },
             resetScheduleSynchronizationState() {
                 this.scheduleSynchronizationSuccess = false;

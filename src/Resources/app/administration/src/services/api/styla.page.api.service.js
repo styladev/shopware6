@@ -5,6 +5,11 @@ class StylaPageApiService {
         this.name = 'stylaPageApiService';
     }
 
+    doSynchronization() {
+        const headers = this.getHeaders();
+        return this.httpClient.post('/styla/page/_action/synchronize-pages', {}, { headers });
+    }
+
     scheduleSynchronization() {
         const headers = this.getHeaders();
         return this.httpClient.post('/styla/page/_action/schedule-pages-synchronization', {}, { headers });

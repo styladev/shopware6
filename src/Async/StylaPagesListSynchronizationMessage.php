@@ -3,8 +3,9 @@
 namespace Styla\CmsIntegration\Async;
 
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\MessageQueue\AsyncMessageInterface;
 
-class StylaPagesListSynchronizationMessage
+class StylaPagesListSynchronizationMessage implements AsyncMessageInterface
 {
     private string $stylaSynchronizationId;
     private Context $context;

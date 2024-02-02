@@ -56,10 +56,13 @@ class PagesListSynchronizationProcessor
      *
      * @throws \Throwable
      */
-    public function synchronizePages(StylaPagesSynchronization $synchronization, Context $context): void
+    public function synchronizePages(StylaPagesSynchronization $synchronization = null, Context $context): void
     {
-        $this->assertSynchronizationEntity($synchronization);
-
+        if (!$synchronization) {
+            $synchronizationId = $this->stylaSynchronizationDalHelper->createSynchronization($context);
+            $synchronization = $this->stylaSynchronizationDalHelper->getSynchronizationById($synchronizationId, $context);
+        }
+        
         $this->stylaSynchronizationDalHelper->markSynchronizationAsInProgress($synchronization, $context);
 
         $isSuccess = true;
