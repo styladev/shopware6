@@ -48,7 +48,8 @@ class StylaPageController extends StorefrontController
                 'client' => $stylaPage->getAccountName(),
                 'path' => ltrim($stylaPage->getPath(), '/'),
                 'head' => $pageDetails->getHead(),
-                'body' => $pageDetails->getBody()
+                'body' => $pageDetails->getBody(),
+                'fullpath' => $stylaPage->getUseFullPath()
             ]
         );
     }

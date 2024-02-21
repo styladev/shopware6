@@ -63,7 +63,7 @@ class ShopwarePageDetails implements \JsonSerializable
      *
      * @return ShopwarePageDetails
      */
-    public static function createFromRequest(Request $request, LoggerInterface $logger): ?ShopwarePageDetails
+    public static function createFromRequest(Request $request, LoggerInterface $logger, ?bool $useFullPath = false): ?ShopwarePageDetails
     {
         try {
             $pathInfo = $request->getPathInfo();
@@ -71,6 +71,13 @@ class ShopwarePageDetails implements \JsonSerializable
 
             $pathBeforeShopwareRewrite = $request->get(RequestTransformer::ORIGINAL_REQUEST_URI);
             $decodedPathBeforeShopwareRewrite = urldecode($pathBeforeShopwareRewrite);
+
+            // Shopware always take the sales channel domain url first
+            // In that case path already sliced
+            // so we need to use full path
+            if ($useFullPath) {
+                $decodedPath = $pathBeforeShopwareRewrite;
+            }
 
             $route = $request->get('_route');
 

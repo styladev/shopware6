@@ -31,7 +31,8 @@
                         }
                     },
                     "language_specific_domain_url": {
-                        "label": "Override {name} domain URL"
+                        "label": "Override {name} domain URL",
+                        "name": "overried-lang-{id}"
                     },
                     "no_override": "No override"
                 },
@@ -50,6 +51,12 @@
                 "overrideDomainUrl": {
                     "label": "Override domain url",
                     "helpText": "This setting overrides the automatic domain url selection."
+                },
+                "useFullPath": {
+                    "label": "Use full path as styla page path",
+                    "helpText": "This setting allow using full path as styla page path instead of path after sales channel url. For eg. https://yourdomain.de/de/magazine/the-page-path will use /de/magazine/the-page-path as styla page path. This to support using multiple sales channel domains",
+                    "optionYes": "Yes",
+                    "optionNo": "No"
                 }
             }
         },
