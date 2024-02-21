@@ -1,4 +1,5 @@
 import template from './styla-cms-integration-settings-accounts.html.twig';
+import './styla-cms-integration-settings-accounts.scss';
 
 const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
@@ -48,6 +49,7 @@ Component.register('styla-cms-integration-settings-accounts', {
             // ---
             isLoading: false,
             systemLanguages: [],
+            searchDomainUrlValue: '',
         };
     },
 
@@ -69,6 +71,12 @@ Component.register('styla-cms-integration-settings-accounts', {
         domainUrls: {
             get: function () {
                 return this.allConfigs[this.selectedSalesChannelId][this.configDomainUrl] || {};
+            }
+        },
+
+        searchDomainUrl: {
+            get: function () {
+                return this.searchDomainUrlValue;
             }
         }
     },
@@ -115,5 +123,16 @@ Component.register('styla-cms-integration-settings-accounts', {
 
             return value.length <= 0;
         },
+
+        toggleDomainSearch(value) {
+            if (
+                this.searchDomainUrlValue === '' ||
+                (value !== '' && this.searchDomainUrlValue !== value)
+            ) {
+                this.searchDomainUrlValue = value;
+            } else {
+                this.searchDomainUrlValue = '';
+            }
+        }
     },
 });

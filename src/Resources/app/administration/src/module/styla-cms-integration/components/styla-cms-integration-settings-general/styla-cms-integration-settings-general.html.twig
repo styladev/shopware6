@@ -9,17 +9,20 @@
                     <div v-if="actualConfigData" class="card-container">
 
                         {% block styla_cmsintegration_content_card_channel_config_pages %}
-                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
-                                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
-                                                :customInheritationCheckFunction="checkTextFieldInheritance">
+                            <sw-inherit-wrapper
+                                v-model="actualConfigData['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
+                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
+                                :customInheritationCheckFunction="checkTextFieldInheritance"
+                            >
                                 <template #content="props">
-                                    <sw-textarea-field name="StylaCmsIntegration.settings.extraPagesAllowedToOverride"
-                                                       :mapInheritance="props"
-                                                       :label="$tc('styla-cms-integration-plugin.configuration.field.extraPages.label')"
-                                                       :helpText="$tc('styla-cms-integration-plugin.configuration.field.extraPages.helpText')"
-                                                       :disabled="props.isInherited"
-                                                       :value="props.currentValue"
-                                                       @change="props.updateCurrentValue">
+                                    <sw-textarea-field
+                                        name="StylaCmsIntegration.settings.extraPagesAllowedToOverride"
+                                        :mapInheritance="props"
+                                        :label="$tc('styla-cms-integration-plugin.configuration.field.extraPages.label')"
+                                        :helpText="$tc('styla-cms-integration-plugin.configuration.field.extraPages.helpText')"
+                                        :disabled="props.isInherited"
+                                        :value="props.currentValue"
+                                        @change="props.updateCurrentValue">
                                     </sw-textarea-field>
                                 </template>
                             </sw-inherit-wrapper>
@@ -29,16 +32,16 @@
                                                 :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.pagesListSynchronizationInterval']">
                                 <template #content="props">
                                     <sw-field name="StylaCmsIntegration.settings.pagesListSynchronizationInterval"
-                                              type="number"
-                                              number-type="int"
-                                              :min="1"
-                                              :mapInheritance="props"
-                                              :label="$tc('styla-cms-integration-plugin.configuration.field.syncInterval.label')"
-                                              :helpText="$tc('styla-cms-integration-plugin.configuration.field.syncInterval.helpText')"
-                                              :disabled="props.isInherited"
-                                              :value="props.currentValue"
-                                              :required="true"
-                                              @change="props.updateCurrentValue">
+                                        type="number"
+                                        number-type="int"
+                                        :min="1"
+                                        :mapInheritance="props"
+                                        :label="$tc('styla-cms-integration-plugin.configuration.field.syncInterval.label')"
+                                        :helpText="$tc('styla-cms-integration-plugin.configuration.field.syncInterval.helpText')"
+                                        :disabled="props.isInherited"
+                                        :value="props.currentValue"
+                                        :required="true"
+                                        @change="props.updateCurrentValue">
                                     </sw-field>
                                 </template>
                             </sw-inherit-wrapper>
@@ -48,17 +51,35 @@
                                                 :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.pageCacheDuration']">
                                 <template #content="props">
                                     <sw-field name="StylaCmsIntegration.settings.pageCacheDuration"
-                                              type="number"
-                                              number-type="int"
-                                              :min="1"
-                                              :mapInheritance="props"
-                                              :label="$tc('styla-cms-integration-plugin.configuration.field.pageCache.label')"
-                                              :helpText="$tc('styla-cms-integration-plugin.configuration.field.pageCache.helpText')"
-                                              :disabled="props.isInherited"
-                                              :value="props.currentValue"
-                                              :required="true"
-                                              @change="props.updateCurrentValue">
+                                        type="number"
+                                        number-type="int"
+                                        :min="1"
+                                        :mapInheritance="props"
+                                        :label="$tc('styla-cms-integration-plugin.configuration.field.pageCache.label')"
+                                        :helpText="$tc('styla-cms-integration-plugin.configuration.field.pageCache.helpText')"
+                                        :disabled="props.isInherited"
+                                        :value="props.currentValue"
+                                        :required="true"
+                                        @change="props.updateCurrentValue">
                                     </sw-field>
+                                </template>
+                            </sw-inherit-wrapper>
+                        {% endblock %}
+                        {% block styla_cmsintegration_content_card_channel_config_use_full_path %}
+                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.useFullPath']"
+                                            :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.useFullPath']">
+                                <template #content="props">
+                                    <sw-single-select
+                                        :label="$tc('styla-cms-integration-plugin.configuration.field.useFullPath.label')"
+                                        :helpText="$tc('styla-cms-integration-plugin.configuration.field.useFullPath.helpText')"
+                                        :disabled="props.isInherited"
+                                        labelProperty="label"
+                                        valueProperty="value"
+                                        :options="useFullPathOptions"
+                                        :value="props.currentValue"
+                                        :disableSearchFunction="true"
+                                        @change="props.updateCurrentValue"
+                                    />
                                 </template>
                             </sw-inherit-wrapper>
                         {% endblock %}

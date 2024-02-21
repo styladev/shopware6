@@ -22,13 +22,13 @@
                 <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
                 {% block styla_page_actions_sync %}
                 <sw-button-process
-                    :disabled="scheduleSynchronizationProcessing"
-                    @process-finish="resetScheduleSynchronizationState"
-                    @click="scheduleSynchronization"
-                    :isLoading="scheduleSynchronizationProcessing"
+                    :disabled="synchronizationProcessing"
+                    @process-finish="resetSynchronizationState"
+                    @click="synchronization"
+                    :isLoading="synchronizationProcessing"
                     variant="primary"
                 >
-                    {{ $tc('styla-cms-integration-plugin.actions.schedule-pages-synchronization.button.label') }}
+                    {{ $tc('styla-cms-integration-plugin.actions.pages-synchronization.button.label') }}
                 </sw-button-process>
                 {% endblock %}
 
@@ -39,8 +39,7 @@
                         <sw-button
                             square
                             variant="primary"
-                            :isLoading="synchronizationProcessing"
-                            :disabled="synchronizationProcessing"
+                            :disabled="scheduleSynchronizationProcessing"
                         >
                             <sw-icon
                                 name="regular-chevron-down-xs"
@@ -54,11 +53,12 @@
                         <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
                         {% block styla_page_actions_duplicate %}
                         <sw-context-menu-item
-                            :disabled="synchronizationProcessing"
-                            @process-finish="resetSynchronizationState"
-                            @click="synchronization"
+                            :disabled="scheduleSynchronizationProcessing"
+                            :isLoading="scheduleSynchronizationProcessing"
+                            @process-finish="resetScheduleSynchronizationState"
+                            @click="scheduleSynchronization"
                         >
-                            {{ $tc('styla-cms-integration-plugin.actions.pages-synchronization.button.label') }}
+                            {{ $tc('styla-cms-integration-plugin.actions.schedule-pages-synchronization.button.label') }}
                         </sw-context-menu-item>
                         {% endblock %}
                     {% endblock %}

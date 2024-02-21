@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Styla\CmsIntegration\Configuration\ConfigurationFactory;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubscriberInterface
 {
@@ -28,15 +30,20 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPageController $stylaPageController;
     private LoggerInterface $logger;
+    private SystemConfigService $systemConfigService;
+    private bool $useFullPath = false;
 
     public function __construct(
         StylaPagesInteractor $stylaPagesInteractor,
         StylaPageController $stylaPageController,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SystemConfigService $systemConfigService
     ) {
         $this->stylaPagesInteractor = $stylaPagesInteractor;
         $this->stylaPageController = $stylaPageController;
         $this->logger = $logger;
+        $this->systemConfigService = $systemConfigService;
+        $this->useFullPath = $this->systemConfigService->getBool(ConfigurationFactory::PREFIX.'useFullPath') || false;
     }
 
     public function resolveControllerArguments(ControllerArgumentsEvent $controllerArgumentsEvent)
@@ -52,11 +59,12 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             return;
         }
 
-        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger);
+        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger, $this->useFullPath);
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
         if (!$stylaPage) {
             return;
         }
+        $stylaPage->setUseFullPath($this->useFullPath);
 
         $salesChannelContext = null;
         foreach ($controllerArgumentsEvent->getArguments() as $argument) {
@@ -110,11 +118,12 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             return;
         }
 
-        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($event->getRequest(), $this->logger);
+        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($event->getRequest(), $this->logger, $this->useFullPath);
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
         if (!$stylaPage) {
             return;
         }
+        $stylaPage->setUseFullPath($this->useFullPath);
 
         try {
             $request = $this->duplicateRequest($event->getRequest(), $stylaPage);

@@ -5,5 +5,9 @@
 {% endblock %}
 
 {% block base_content %}
-    <div data-styla-client="{{ client }}" data-styla-content="{{ path }}">{{ body|raw }}</div>
+    {% if fullpath %}
+        <div data-styla-client="{{ client }}">{{ body|raw }}</div>
+    {% else %}
+        <div data-styla-client="{{ client }}" data-styla-content="{{ path }}">{{ body|raw }}</div>
+    {% endif %}
 {% endblock %}

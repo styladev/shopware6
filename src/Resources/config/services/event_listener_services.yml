@@ -4,6 +4,7 @@ services:
             - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
             - '@Styla\CmsIntegration\Controller\Storefront\StylaPageController'
             - '@logger'
+            - '@Shopware\Core\System\SystemConfig\SystemConfigService'
         tags:
             - { 'name': 'kernel.event_subscriber' }
 
