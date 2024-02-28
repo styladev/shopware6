@@ -6,9 +6,9 @@ Shopware.Service('cmsService').registerCmsElement(
     {
         name: 'styla-module-content',
         label: 'styla-cms-integration-plugin.element.module-content.label',
-        component: 'cms-element-styla-module-content',
-        configComponent: 'cms-element-styla-module-content-config',
-        previewComponent: 'cms-element-styla-module-content-preview',
+        component: 'sw-cms-el-styla-module-content',
+        configComponent: 'sw-cms-el-styla-module-content-config',
+        previewComponent: 'sw-cms-el-styla-module-content-preview',
         defaultConfig: {
             slotId: {
                 source: 'static',

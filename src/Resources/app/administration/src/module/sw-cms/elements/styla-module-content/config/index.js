@@ -1,8 +1,8 @@
-import template from './cms-element-styla-module-content-config.html.twig';
+import template from './sw-cms-el-styla-module-content-config.html.twig';
 
 const { Component, Mixin } = Shopware;
 
-Component.register('cms-element-styla-module-content-config', {
+Component.register('sw-cms-el-styla-module-content-config', {
     template,
 
     mixins: [

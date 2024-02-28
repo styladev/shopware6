@@ -1,2 +1,1 @@
-{% set element = block.slots.getSlot('content') %}
-{% sw_include "@Storefront/storefront/element/cms-element-" ~ element.type ~ ".html.twig" ignore missing %}
+{% sw_extends "@Storefront/storefront/block/cms-block-text.html.twig" %}
