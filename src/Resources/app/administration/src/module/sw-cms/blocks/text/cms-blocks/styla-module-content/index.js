@@ -4,10 +4,10 @@ import './preview';
 Shopware.Service('cmsService').registerCmsBlock(
     {
         name: 'styla-module-content',
-        category: 'text',
         label: 'styla-cms-integration-plugin.blocks.module-content.label',
-        component: 'cms-block-styla-module-content',
-        previewComponent: 'cms-block-styla-module-content-preview',
+        category: 'text',
+        component: 'sw-cms-block-styla-module-content',
+        previewComponent: 'sw-cms-preview-styla-module-content',
         defaultConfig: {},
         slots: {
             content: {

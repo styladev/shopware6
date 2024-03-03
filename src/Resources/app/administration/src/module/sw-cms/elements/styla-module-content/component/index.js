@@ -1,9 +1,9 @@
-import template from './cms-element-styla-module-content.html.twig';
+import template from './sw-cms-el-styla-module-content.html.twig';
 import './styles.scss';
 
 const { Component, Mixin } = Shopware;
 
-Component.register('cms-element-styla-module-content', {
+Component.register('sw-cms-el-styla-module-content', {
     template,
 
     mixins: [

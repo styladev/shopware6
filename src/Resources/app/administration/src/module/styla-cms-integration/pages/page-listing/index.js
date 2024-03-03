@@ -367,7 +367,7 @@ Component.register(
                 const domainUrls = this.settings['StylaCmsIntegration.settings.domainUrls'];
                 if (domainUrls && matchedLanguageId) {
                     for (let languageId in domainUrls) {
-                        if (matchedLanguageId === matchedLanguageId && domainUrls[languageId]) {
+                        if (matchedLanguageId === languageId && domainUrls[languageId]) {
                             domainUrl = domainUrls[languageId];
                             break;
                         }

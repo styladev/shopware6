@@ -108,11 +108,11 @@ class ShopwarePageDetails implements \JsonSerializable
      */
     private static function resolveContextFromRequest(Request $request): Context
     {
+        $swLanguage = $language = $request->headers->get(PlatformRequest::HEADER_LANGUAGE_ID);
         $languages = [Defaults::LANGUAGE_SYSTEM];
-        if ($request->headers->get(PlatformRequest::HEADER_LANGUAGE_ID)) {
-            $currentLanguageId = $request->headers->get(PlatformRequest::HEADER_LANGUAGE_ID);
-            if (trim($currentLanguageId)) {
-                array_unshift($languages, $currentLanguageId);
+        if ($swLanguage) {
+            if (trim($swLanguage)) {
+                array_unshift($languages, $swLanguage);
             }
         }
 
