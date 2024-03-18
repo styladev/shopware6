@@ -66,17 +66,28 @@ class ShopwarePageDetails implements \JsonSerializable
     public static function createFromRequest(Request $request, LoggerInterface $logger, ?bool $useFullPath = false): ?ShopwarePageDetails
     {
         try {
-            $pathInfo = $request->getPathInfo();
-            $decodedPath = urldecode($pathInfo);
-
+            // Original request uri full path
             $pathBeforeShopwareRewrite = $request->get(RequestTransformer::ORIGINAL_REQUEST_URI);
+
+            // Parsed storefront url with path from shopware
+            $storefrontUrl = $request->get(RequestTransformer::STOREFRONT_URL);
+
+            // Get base path from storefront (for saleschannel url with path)
+            $url = parse_url(isset($storefrontUrl) && $storefrontUrl !== '' ? $storefrontUrl : '');
+            $baseUri = isset($url['path']) ? $url['path'] : '';
+            
+            // Get clean path after saleschannel url with path
+            $hasScBaseUri = $baseUri !== "" && strpos($pathBeforeShopwareRewrite, $baseUri) === 0;
+            $path = $hasScBaseUri ? substr($pathBeforeShopwareRewrite, strlen($baseUri)) : $pathBeforeShopwareRewrite;
+            $decodedPath = urldecode($path);
+
             $decodedPathBeforeShopwareRewrite = urldecode($pathBeforeShopwareRewrite);
 
             // Shopware always take the sales channel domain url first
             // In that case path already sliced
             // so we need to use full path
             if ($useFullPath) {
-                $decodedPath = $pathBeforeShopwareRewrite;
+                $decodedPath = urldecode($pathBeforeShopwareRewrite);
             }
 
             $route = $request->get('_route');
