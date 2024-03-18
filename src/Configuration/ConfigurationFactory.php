@@ -20,7 +20,7 @@ class ConfigurationFactory
     public function createConfigurationForCurrentContext(): ConfigurationInterface
     {
         $accountNamesHashMap = $this->systemConfigService->get(self::PREFIX . 'accountNames') ?? [];
-        $domainUrlsHashMap = $this->systemConfigService->get(self::PREFIX . 'domainUrley') ?? [];
+        $domainUrlsHashMap = $this->systemConfigService->get(self::PREFIX . 'domainUrls') ?? [];
         $defaultAccountName = trim($this->systemConfigService->getString(self::PREFIX . 'defaultAccountName'));
         $defaultDomainUrl = trim($this->systemConfigService->getString(self::PREFIX . 'defaultDomainUrl'));
 
