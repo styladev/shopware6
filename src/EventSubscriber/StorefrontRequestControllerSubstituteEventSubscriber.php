@@ -60,6 +60,9 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
 
         $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger, $this->useFullPath);
+        if ($shopwarePageDetails === null) {
+            return;
+        }
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
         if (!$stylaPage) {
             return;
@@ -119,6 +122,9 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
 
         $shopwarePageDetails = ShopwarePageDetails::createFromRequest($event->getRequest(), $this->logger, $this->useFullPath);
+        if ($shopwarePageDetails === null) {
+            return;
+        }
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
         if (!$stylaPage) {
             return;
