@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Routing;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Storefront\Framework\Routing\RequestTransformer;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
@@ -23,13 +23,13 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
      */
     private UrlGeneratorInterface $innerGenerator;
     private RequestStack $requestStack;
-    private EntityRepositoryInterface $stylaPageRepository;
+    private EntityRepository $stylaPageRepository;
     private LoggerInterface $logger;
 
     public function __construct(
         $innerGenerator,
         RequestStack $requestStack,
-        EntityRepositoryInterface $stylaPageRepository,
+        EntityRepository $stylaPageRepository,
         LoggerInterface $logger
     ) {
         $this->innerGenerator = $innerGenerator;
@@ -43,7 +43,7 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
         $this->innerGenerator->setStrictRequirements($enabled);
     }
 
-    public function isStrictRequirements()
+    public function isStrictRequirements(): ?bool
     {
         return $this->innerGenerator->isStrictRequirements();
     }
@@ -53,12 +53,12 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
         $this->innerGenerator->setContext($context);
     }
 
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->innerGenerator->getContext();
     }
 
-    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH)
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         $implementedReferenceTypes = [
             self::ABSOLUTE_URL,

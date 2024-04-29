@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Test;
 
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Styla\CmsIntegration\Entity\StylaIntegration\StylaPagesSynchronization;
@@ -16,7 +16,7 @@ abstract class AbstractStylaPagesSynchronizationTestCase extends AbstractTestCas
 {
     protected StylaSynchronizationDalHelper $synchronizationDalHelper;
     protected StylaPagesSynchronizer $stylaPagesSynchronizer;
-    protected EntityRepositoryInterface $stylaSynchronizationRepository;
+    protected EntityRepository $stylaSynchronizationRepository;
 
     protected function setUp(): void
     {
@@ -29,7 +29,7 @@ abstract class AbstractStylaPagesSynchronizationTestCase extends AbstractTestCas
         $synchronizer = $container->get(StylaPagesSynchronizer::class);
         $this->stylaPagesSynchronizer = $synchronizer;
 
-        /** @var EntityRepositoryInterface $repository */
+        /** @var EntityRepository $repository */
         $repository = $this->getContainer()->get('styla_cms_pages_synchronization.repository');
         $this->stylaSynchronizationRepository = $repository;
 

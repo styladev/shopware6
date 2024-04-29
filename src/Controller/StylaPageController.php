@@ -4,52 +4,82 @@ namespace Styla\CmsIntegration\Controller;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Styla\CmsIntegration\Exception\PageNotFoundException;
 use Styla\CmsIntegration\Exception\SynchronizationIsAlreadyRunning;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
 use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
+use Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @RouteScope(scopes={"api"})
- * @Route(
- *     "api/styla/page"
- * )
+ * @Route(defaults={"_routeScope"={"api"}})
  */
-class StylaPageController
+class StylaPageController extends AbstractController
 {
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
-    private EntityRepositoryInterface $repository;
+    private PagesListSynchronizationProcessor $pagesListSynchronizationProcessor;
+    private EntityRepository $repository;
     private LoggerInterface $logger;
 
     public function __construct(
         StylaPagesInteractor $interactor,
-        EntityRepositoryInterface $repository,
+        EntityRepository $repository,
         StylaPagesSynchronizer $stylaPagesSynchronizer,
+        PagesListSynchronizationProcessor $pagesListSynchronizationProcessor,
         LoggerInterface $logger
     ) {
         $this->stylaPagesInteractor = $interactor;
         $this->repository = $repository;
         $this->stylaPagesSynchronizer = $stylaPagesSynchronizer;
+        $this->pagesListSynchronizationProcessor = $pagesListSynchronizationProcessor;
         $this->logger = $logger;
     }
 
     /**
      * @Route(
-     *     "/_action/schedule-pages-synchronization",
+     *     "api/styla/page/_action/synchronize-pages",
+     *     name="api.styla.page.synchronize-pages",
+     *     methods={"POST"},
+     *     requirements={"version"="\d+"}
+     * )
+     */
+    public function pagesSynchronizationAction(Context $context): JsonResponse
+    {
+        set_time_limit(300);
+        $errorCode = '';
+        $isSynced = false;
+        $responseCode = 200;
+        try {
+            $this->pagesListSynchronizationProcessor->synchronizePages(null, $context);
+            $isSynced = true;
+        } catch (UseCaseInteractorException $exception) {
+            $errorCode = $exception->getErrorCode();
+            $responseCode = 501;
+        } catch (\Throwable $exception) {
+            $errorCode = 'SYNCHRONIZATION_IS_FAILED';
+            $responseCode = 503;
+
+            $this->logger->error('Pages Synchronization failed', ['exception' => $exception]);
+        }
+
+        return new JsonResponse(['isSynced' => $isSynced, 'responseCode' => $responseCode, 'errorCode' => $errorCode], $responseCode);
+    }
+
+    /**
+     * @Route(
+     *     "api/styla/page/_action/schedule-pages-synchronization",
      *     name="api.styla.page.schedule-pages-synchronization",
      *     methods={"POST"},
      *     requirements={"version"="\d+"}
      * )
-     * @return JsonResponse
      */
-    public function schedulePagesSynchronizationAction(Context $context)
+    public function schedulePagesSynchronizationAction(Context $context): JsonResponse
     {
         $errorCode = '';
         $isScheduled = false;
@@ -69,19 +99,18 @@ class StylaPageController
             $this->logger->error('Pages Synchronization schedule failed', ['exception' => $exception]);
         }
 
-        return new JsonResponse(['isScheduled' => $isScheduled, 'errorCode' => $errorCode], $responseCode);
+        return new JsonResponse(['isScheduled' => $isScheduled, 'responseCode' => $responseCode, 'errorCode' => $errorCode], $responseCode);
     }
 
     /**
      * @Route(
-     *     "/_action/refresh-details/{pageId}",
+     *     "api/styla/page/_action/refresh-details/{pageId}",
      *     name="api.styla.page.refresh-details",
      *     methods={"POST"},
      *     requirements={"version"="\d+"}
      * )
-     * @return JsonResponse
      */
-    public function refreshPageDetailsAction(string $pageId, Context $context)
+    public function refreshPageDetailsAction(string $pageId, Context $context): JsonResponse
     {
         $errorCode = '';
         $isSuccess = false;

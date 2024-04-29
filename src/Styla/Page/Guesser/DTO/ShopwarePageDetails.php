@@ -63,14 +63,32 @@ class ShopwarePageDetails implements \JsonSerializable
      *
      * @return ShopwarePageDetails
      */
-    public static function createFromRequest(Request $request, LoggerInterface $logger): ?ShopwarePageDetails
+    public static function createFromRequest(Request $request, LoggerInterface $logger, ?bool $useFullPath = false): ?ShopwarePageDetails
     {
         try {
-            $pathInfo = $request->getPathInfo();
-            $decodedPath = urldecode($pathInfo);
-
+            // Original request uri full path
             $pathBeforeShopwareRewrite = $request->get(RequestTransformer::ORIGINAL_REQUEST_URI);
+
+            // Parsed storefront url with path from shopware
+            $storefrontUrl = $request->get(RequestTransformer::STOREFRONT_URL);
+
+            // Get base path from storefront (for saleschannel url with path)
+            $url = parse_url(isset($storefrontUrl) && $storefrontUrl !== '' ? $storefrontUrl : '');
+            $baseUri = isset($url['path']) ? $url['path'] : '';
+            
+            // Get clean path after saleschannel url with path
+            $hasScBaseUri = $baseUri !== "" && strpos($pathBeforeShopwareRewrite, $baseUri) === 0;
+            $path = $hasScBaseUri ? substr($pathBeforeShopwareRewrite, strlen($baseUri)) : $pathBeforeShopwareRewrite;
+            $decodedPath = urldecode($path);
+
             $decodedPathBeforeShopwareRewrite = urldecode($pathBeforeShopwareRewrite);
+
+            // Shopware always take the sales channel domain url first
+            // In that case path already sliced
+            // so we need to use full path
+            if ($useFullPath) {
+                $decodedPath = urldecode($pathBeforeShopwareRewrite);
+            }
 
             $route = $request->get('_route');
 
@@ -101,11 +119,11 @@ class ShopwarePageDetails implements \JsonSerializable
      */
     private static function resolveContextFromRequest(Request $request): Context
     {
+        $swLanguage = $language = $request->headers->get(PlatformRequest::HEADER_LANGUAGE_ID);
         $languages = [Defaults::LANGUAGE_SYSTEM];
-        if ($request->headers->get(PlatformRequest::HEADER_LANGUAGE_ID)) {
-            $currentLanguageId = $request->headers->get(PlatformRequest::HEADER_LANGUAGE_ID);
-            if (trim($currentLanguageId)) {
-                array_unshift($languages, $currentLanguageId);
+        if ($swLanguage) {
+            if (trim($swLanguage)) {
+                array_unshift($languages, $swLanguage);
             }
         }
 

@@ -3,7 +3,7 @@
 namespace Styla\CmsIntegration\UseCase;
 
 use Psr\Log\LoggerInterface;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -13,12 +13,12 @@ use Styla\CmsIntegration\Styla\Api\DTO\Category\CategoryInfoList;
 
 class CategoryApiActionsInteractor
 {
-    private EntityRepositoryInterface $categoryRepository;
+    private EntityRepository $categoryRepository;
     private CategoryInfoTranslator $translator;
     private LoggerInterface $logger;
 
     public function __construct(
-        EntityRepositoryInterface $categoryRepository,
+        EntityRepository $categoryRepository,
         CategoryInfoTranslator $translator,
         LoggerInterface $logger
     ) {

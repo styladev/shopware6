@@ -1,0 +1,18 @@
+#last-sync-info {
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 40px;
+
+    > span {
+        line-height: 22px;
+    }
+}
+
+#reset-sync-button .sw-loader__container {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+.sync-tooltip {
+    font-size: 10px;
+}

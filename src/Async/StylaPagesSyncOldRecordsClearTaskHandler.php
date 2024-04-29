@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Async;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler;
 use Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper;
 
@@ -17,7 +17,7 @@ class StylaPagesSyncOldRecordsClearTaskHandler extends ScheduledTaskHandler
     private LoggerInterface $logger;
 
     public function __construct(
-        EntityRepositoryInterface $scheduledTaskRepository,
+        EntityRepository $scheduledTaskRepository,
         StylaSynchronizationDalHelper $stylaSynchronizationDalHelper,
         LoggerInterface $logger
     ) {

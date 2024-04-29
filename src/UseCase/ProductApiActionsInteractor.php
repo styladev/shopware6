@@ -8,7 +8,7 @@ use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\ProductAvailableFilter;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\AndFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\ContainsFilter;
@@ -17,7 +17,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NandFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\OrFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Grouping\FieldGrouping;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
-use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Styla\CmsIntegration\Exception\ProductNotFoundException;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
@@ -30,15 +30,15 @@ class ProductApiActionsInteractor
 {
     public const PRODUCT_LIST_DEFAULT_LIMIT = 100;
 
-    protected EntityRepositoryInterface $productRepository;
-    protected SalesChannelRepositoryInterface $productSalesChannelRepository;
+    protected EntityRepository $productRepository;
+    protected SalesChannelRepository $productSalesChannelRepository;
     protected ProductDetailsTranslator $productDetailsTranslator;
     protected ProductInfoTranslator $productInfoTranslator;
     protected LoggerInterface $logger;
 
     public function __construct(
-        EntityRepositoryInterface $entityRepository,
-        SalesChannelRepositoryInterface $productSalesChannelRepository,
+        EntityRepository $entityRepository,
+        SalesChannelRepository $productSalesChannelRepository,
         ProductDetailsTranslator $productDetailsTranslator,
         ProductInfoTranslator $productInfoTranslator,
         LoggerInterface $logger
@@ -166,11 +166,13 @@ class ProductApiActionsInteractor
         }
 
         $parentProductEntitiesHashMap = [];
-        $parentProductsSearchResult = $this->productRepository
-            ->search(new Criteria($parentEntitiesIds), $salesChannelContext->getContext());
-        /** @var ProductEntity $parentProduct */
-        foreach ($parentProductsSearchResult->getEntities() as $parentProduct) {
-            $parentProductEntitiesHashMap[$parentProduct->getId()] = $parentProduct;
+        if (count($parentEntitiesIds) > 0) {
+            $parentProductsSearchResult = $this->productRepository
+                ->search(new Criteria($parentEntitiesIds), $salesChannelContext->getContext());
+            /** @var ProductEntity $parentProduct */
+            foreach ($parentProductsSearchResult->getEntities() as $parentProduct) {
+                $parentProductEntitiesHashMap[$parentProduct->getId()] = $parentProduct;
+            }
         }
 
         $matchedProductsCollection = new ProductCollection();

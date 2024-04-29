@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Styla\Synchronization;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\Aggregate\SalesChannelDomain\SalesChannelDomainEntity;
 use Styla\CmsIntegration\Styla\Page\PageCacheInteractor;
@@ -15,13 +15,13 @@ class CacheInvalidatorFactory
     private PageCacheInteractor $pageCacheInteractor;
     private StoreInterface $httpCacheStore;
     private LoggerInterface $logger;
-    private EntityRepositoryInterface $domainsRepository;
+    private EntityRepository $domainsRepository;
 
     public function __construct(
         PageCacheInteractor $pageCacheInteractor,
         StoreInterface $httpCacheStore,
         LoggerInterface $logger,
-        EntityRepositoryInterface $domainRepository
+        EntityRepository $domainRepository
     ) {
         $this->pageCacheInteractor = $pageCacheInteractor;
         $this->httpCacheStore = $httpCacheStore;

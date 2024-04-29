@@ -9,39 +9,135 @@
                     <div v-if="actualConfigData" class="card-container">
 
                         {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_default %}
-                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultAccountName']"
-                                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultAccountName']"
-                                                :customInheritationCheckFunction="checkTextFieldInheritance">
-                                <template #content="props">
-                                    <sw-text-field name="StylaCmsIntegration.settings.defaultAccountName"
-                                                   :mapInheritance="props"
-                                                   :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.default.label')"
-                                                   :disabled="props.isInherited"
-                                                   :value="props.currentValue"
-                                                   :error="defaultAccountNameErrorState"
-                                                   :required="true"
-                                                   @change="props.updateCurrentValue">
-                                    </sw-text-field>
-                                </template>
-                            </sw-inherit-wrapper>
+                            <div style="display: grid; grid-template-columns: 2fr 2fr; grid-column-gap: 5px">
+                                <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultAccountName']"
+                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultAccountName']"
+                                    :customInheritationCheckFunction="checkTextFieldInheritance"
+                                    >
+                                    <template #content="props">
+                                        <sw-text-field
+                                            name="StylaCmsIntegration.settings.defaultAccountName"
+                                            :mapInheritance="props"
+                                            :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.default.label')"
+                                            :disabled="props.isInherited"
+                                            :value="props.currentValue"
+                                            :error="defaultAccountNameErrorState"
+                                            :required="true"
+                                            @change="props.updateCurrentValue"
+                                        />
+                                    </template>
+                                </sw-inherit-wrapper>
+
+                                <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.defaultDomainUrl']"
+                                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.defaultDomainUrl']"
+                                                    :customInheritationCheckFunction="checkTextFieldInheritance">
+                                    <template #content="props">
+                                        <div class="content-group" style="display: grid; grid-template-columns: 1fr 0fr;">
+                                            <div v-if="searchDomainUrl === 'default'">
+                                                <sw-single-select
+                                                    :label="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.default.label')"
+                                                    :disabled="props.isInherited"
+                                                    labelProperty="label"
+                                                    valueProperty="value"
+                                                    :options="salesChannelDomains"
+                                                    :value="props.currentValue"
+                                                    @change="props.updateCurrentValue"
+                                                />
+                                            </div>
+                                            <div v-else>
+                                                <sw-text-field
+                                                    name="StylaCmsIntegration.settings.defaultDomainUrl"
+                                                    :mapInheritance="props"
+                                                    :label="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.default.label')"
+                                                    :disabled="props.isInherited"
+                                                    :value="props.currentValue"
+                                                    @change="props.updateCurrentValue"
+                                                />
+                                            </div>
+                                            <sw-button
+                                                v-if="searchDomainUrl === 'default'"
+                                                @click="toggleDomainSearch('')"
+                                                title="Edit this url"
+                                            >
+                                                <sw-icon name="regular-pencil-s" size="16" />
+                                            </sw-button>
+                                            <sw-button
+                                                v-else
+                                                variant="ghost"
+                                                @click="toggleDomainSearch('default')"
+                                                title="Pick from domain url list"
+                                            >
+                                                <sw-icon name="regular-list-xs" size="16" />
+                                            </sw-button>
+                                        </div>
+                                    </template>
+                                </sw-inherit-wrapper>
+                            </div>
                         {% endblock %}
 
                         {% block styla_cmsintegration_content_card_channel_config_accounts_card_container_settings_language_accounts %}
                             <template v-for="language in systemLanguages">
+                                <div style="display: grid; grid-template-columns: 2fr 2fr; grid-column-gap: 5px">
+                                    <sw-inherit-wrapper v-model="accountNames[language.id]"
+                                        :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.accountNames'][language.id]"
+                                        :customInheritationCheckFunction="checkTextFieldInheritance"
+                                        >
+                                        <template #content="props">
+                                            <sw-text-field
+                                                :mapInheritance="props"
+                                                :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.language_specific_account_name.label', 0, { name: language.name })"
+                                                :disabled="props.isInherited"
+                                                :value="props.currentValue"
+                                                @change="props.updateCurrentValue"
+                                            ></sw-text-field>
+                                        </template>
+                                    </sw-inherit-wrapper>
 
-                                <sw-inherit-wrapper v-model="accountNames[language.id]"
-                                                    :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.accountNames'][language.id]"
-                                                    :customInheritationCheckFunction="checkTextFieldInheritance">
-                                    <template #content="props">
-                                        <sw-text-field :mapInheritance="props"
-                                                       :label="$tc('styla-cms-integration-plugin.configuration.field.accountNames.language_specific_account_name.label', 0, { name: language.name })"
-                                                       :disabled="props.isInherited"
-                                                       :value="props.currentValue"
-                                                       @change="props.updateCurrentValue">
-                                        </sw-text-field>
-                                    </template>
-                                </sw-inherit-wrapper>
-
+                                    <sw-inherit-wrapper v-model="domainUrls[language.id]"
+                                        :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.domainUrls'][language.id]"
+                                        >
+                                        <template #content="props">
+                                            <div class="content-group" style="display: grid; grid-template-columns: 1fr 0fr;">
+                                                <div v-if="searchDomainUrl === 'lang-'+language.id">
+                                                    <sw-single-select
+                                                        :label="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.language_specific_domain_url.label', 0, { name: language.name })"
+                                                        :disabled="props.isInherited"
+                                                        labelProperty="label"
+                                                        valueProperty="value"
+                                                        :options="salesChannelDomains"
+                                                        :value="props.currentValue"
+                                                        @change="props.updateCurrentValue"
+                                                    />
+                                                </div>
+                                                <div v-else>
+                                                    <sw-text-field
+                                                        name="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.language_specific_domain_url.name', 0, { id: language.id })"
+                                                        :mapInheritance="props"
+                                                        :label="$tc('styla-cms-integration-plugin.configuration.field.domainUrls.language_specific_domain_url.label', 0, { name: language.name })"
+                                                        :disabled="props.isInherited"
+                                                        :value="props.currentValue"
+                                                        @change="props.updateCurrentValue"
+                                                    />
+                                                </div>
+                                                <sw-button
+                                                    v-if="searchDomainUrl === 'lang-'+language.id"
+                                                    @click="toggleDomainSearch('')"
+                                                    title="Edit this url"
+                                                >
+                                                    <sw-icon name="regular-pencil-s" size="16" />
+                                                </sw-button>
+                                                <sw-button
+                                                    v-else
+                                                    variant="ghost"
+                                                    @click="toggleDomainSearch('lang-'+language.id)"
+                                                    title="Pick from domain url list"
+                                                >
+                                                    <sw-icon name="regular-list-xs" size="16" />
+                                                </sw-button>
+                                            </div>
+                                        </template>
+                                    </sw-inherit-wrapper>
+                                </div>
                             </template>
                         {% endblock %}
 

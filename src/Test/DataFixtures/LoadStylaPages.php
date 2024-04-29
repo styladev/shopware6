@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Test\DataFixtures;
 
 use Psr\Container\ContainerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 
 class LoadStylaPages extends AbstractTestDataFixture
 {
@@ -73,7 +73,7 @@ class LoadStylaPages extends AbstractTestDataFixture
 
     public function execute(ContainerInterface $container, ReferencesRegistry $referencesRegistry)
     {
-        /** @var EntityRepositoryInterface $repository */
+        /** @var EntityRepository $repository */
         $repository = $container->get('styla_cms_page.repository');
 
         $preparedPagesData = $this->pagesData;

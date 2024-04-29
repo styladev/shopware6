@@ -4,7 +4,7 @@
             <template #smart-bar-header>
                 <h2>
                     {{ $tc('sw-settings.index.title') }}
-                    <sw-icon name="small-arrow-medium-right" small></sw-icon>
+                    <sw-icon name="solid-long-arrow-right" small></sw-icon>
                     {{ $tc('styla-cms-integration-plugin.configuration.header') }}
                 </h2>
             </template>
@@ -60,7 +60,9 @@
                                                     :allConfigs="allConfigs"
                                                     :selectedSalesChannelId="selectedSalesChannelId"
                                                     :defaultAccountNameErrorState="defaultAccountNameErrorState"
-                                                    :defaultAccountNameFilled="defaultAccountNameFilled">
+                                                    :defaultAccountNameFilled="defaultAccountNameFilled"
+                                                    :salesChannelDomains="salesChannelDomains"
+                                                >
                                                 </styla-cms-integration-settings-accounts>
                                             {% endblock %}
                                             {% block styla_cmsintegration_content_card_channel_config_general %}

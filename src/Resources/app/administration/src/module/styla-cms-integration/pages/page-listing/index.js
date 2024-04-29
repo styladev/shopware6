@@ -1,4 +1,5 @@
 import template from './listing.html.twig';
+import './listing.scss';
 
 const {Component, Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
@@ -25,8 +26,12 @@ Component.register(
                 repository: null,
                 pages: null,
                 lastSuccessSynchronizationDate: null,
+                synchronizationSuccess: false,
+                synchronizationProcessing: false,
                 scheduleSynchronizationSuccess: false,
                 scheduleSynchronizationProcessing: false,
+                resetSynchronizationSuccess: false,
+                resetSynchronizationProcessing: false,
             }
         },
 
@@ -64,7 +69,7 @@ Component.register(
                 )
 
                 let systemConfigurationFetchPromise = this.systemConfigApiService
-                    .getValues('StylaCmsIntegrationPlugin');
+                    .getValues('StylaCmsIntegration');
                 systemConfigurationFetchPromise.then(
                     (result) => {
                         this.settings = result;
@@ -92,7 +97,7 @@ Component.register(
                     .getLastSuccessSynchronizationDate()
                     .then(
                         (result) => {
-                            if (result.data.result) {
+                            if (result?.data?.result) {
                                 this.lastSuccessSynchronizationDate = date(
                                     result.data.result,
                                     {
@@ -147,10 +152,102 @@ Component.register(
                 ];
             },
 
+            resetSynchronizationStatus() {
+                this.resetSynchronizationProcessing = true;
+                const promise = this.stylaSynchronizationApiService.resetSynchronizationStatus();
+
+                promise.then(function (response) {
+                    this.resetSynchronizationProcessing = false;
+                    if (response.data.stuck <= 0) {
+                        this.createNotificationSuccess({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.none'
+                            )
+                        });
+                    } else if (response.data.stuck > 0 && response.data.stuck === response.data.cleared) {
+                        this.createNotificationSuccess({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.success'
+                            )
+                        });
+                    } else if (response.data.stuck > 0 && response.data.cleared > 0 && response.data.stuck > response.data.cleared) {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.partial'
+                            )
+                        });
+                    } else {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.reset-synchronization.message.failed'
+                            )
+                        });
+                    }
+                }.bind(this)).catch(function (error) {
+                    this.resetSynchronizationProcessing = false;
+                    if (error.response.data.errorCode !== undefined) {
+                        console.error(
+                            'Failed to reset synchronization status, error code: '
+                            + error.response.data.errorCode
+                        )
+                    }
+
+                    this.createNotificationError({
+                        message: this.$tc(
+                            'styla-cms-integration-plugin.actions.reset-synchronization.message.failed'
+                        )
+                    });
+                }.bind(this));
+            },
+
+            synchronization() {
+                this.synchronizationProcessing = true;
+                const promise = this.stylaPageApiService.doSynchronization();
+
+                promise.then(function (response) {
+                    this.synchronizationProcessing = false;
+                    if (response.data.isSynced) {
+                        this.createNotificationSuccess({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.pages-synchronization.message.success'
+                            )
+                        });
+                    } else if (response.data.errorCode === 'SYNCHRONIZATION_IS_ALREADY_RUNNING') {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.pages-synchronization.message.is-running'
+                            )
+                        });
+                    } else {
+                        this.createNotificationWarning({
+                            message: this.$tc(
+                                'styla-cms-integration-plugin.actions.pages-synchronization.message.failed'
+                            )
+                        });
+                    }
+                }.bind(this)).catch(function (error) {
+                    this.synchronizationProcessing = false;
+                    if (error.response.data.errorCode !== undefined) {
+                        console.error(
+                            'Failed to sync styla pages, error code: '
+                            + error.response.data.errorCode
+                        )
+                    }
+
+                    this.createNotificationError({
+                        message: this.$tc(
+                            'styla-cms-integration-plugin.actions.pages-synchronization.message.failed'
+                        )
+                    });
+                }.bind(this));
+            },
+
             scheduleSynchronization() {
+                this.scheduleSynchronizationProcessing = true;
                 const promise = this.stylaPageApiService.scheduleSynchronization();
 
                 promise.then(function (response) {
+                    this.scheduleSynchronizationProcessing = false;
                     if (response.data.isScheduled) {
                         this.createNotificationSuccess({
                             message: this.$tc(
@@ -171,6 +268,7 @@ Component.register(
                         });
                     }
                 }.bind(this)).catch(function (error) {
+                    this.scheduleSynchronizationProcessing = false;
                     if (error.response.data.errorCode !== undefined) {
                         console.error(
                             'Failed to schedule styla pages synchronization, error code: '
@@ -239,9 +337,9 @@ Component.register(
                 }
 
                 let matchedLanguageId = null;
-                const accountNames = this.settings['StylaCmsIntegrationPlugin.config.accountNames'];
+                const accountNames = this.settings['StylaCmsIntegration.settings.accountNames'];
                 for (let languageId in accountNames) {
-                    if (value.accountName === accountNames[languageId]) {
+                    if (value.accountName === accountNames[languageId] && accountNames[languageId]) {
                         matchedLanguageId = languageId;
                         break;
                     }
@@ -257,12 +355,28 @@ Component.register(
                 }
 
                 if (!domainEntity) {
-                    domainEntity = this.domainsList[0]
+                    domainEntity = this.domainsList[0];
                 }
 
-                let pathString = '' + value.path;
+                let domainUrl = domainEntity.url;
+                const defaultDomainUrl = this.settings['StylaCmsIntegration.settings.defaultDomainUrl'];
+                if (defaultDomainUrl) {
+                    domainUrl = defaultDomainUrl;
+                }
 
-                const url = domainEntity.url.replace(/\/$/, '') //Trim "/" at the end of the url
+                const domainUrls = this.settings['StylaCmsIntegration.settings.domainUrls'];
+                if (domainUrls && matchedLanguageId) {
+                    for (let languageId in domainUrls) {
+                        if (matchedLanguageId === languageId && domainUrls[languageId]) {
+                            domainUrl = domainUrls[languageId];
+                            break;
+                        }
+                    }
+                }
+
+                let pathString = `${value.path}`;
+
+                const url = domainUrl.replace(/\/$/, '') //Trim "/" at the end of the url
                     + '/'
                     + pathString.replace(/^\//, '') // Trim "/" at the beginning of the path
 
@@ -273,9 +387,17 @@ Component.register(
 
                 return url;
             },
+            resetSynchronizationState() {
+                this.synchronizationSuccess = false;
+                this.synchronizationProcessing = false;
+            },
             resetScheduleSynchronizationState() {
                 this.scheduleSynchronizationSuccess = false;
                 this.scheduleSynchronizationProcessing = false;
+            },
+            resetTheResetSynchronizationState() {
+                this.resetSynchronizationSuccess = false;
+                this.resetSynchronizationProcessing = false;
             }
         }
     }

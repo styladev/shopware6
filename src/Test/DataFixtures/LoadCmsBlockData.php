@@ -3,7 +3,7 @@
 namespace Styla\CmsIntegration\Test\DataFixtures;
 
 use Psr\Container\ContainerInterface;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 
 class LoadCmsBlockData extends AbstractTestDataFixture
 {
@@ -54,7 +54,7 @@ class LoadCmsBlockData extends AbstractTestDataFixture
 
     public function execute(ContainerInterface $container, ReferencesRegistry $referencesRegistry)
     {
-        /** @var EntityRepositoryInterface $cmsBlockRepository */
+        /** @var EntityRepository $cmsBlockRepository */
         $cmsBlockRepository = $container->get('cms_block.repository');
 
         foreach ($this->data as $reference => $record) {

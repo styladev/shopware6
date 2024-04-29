@@ -4,8 +4,10 @@ namespace Styla\CmsIntegration\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Routing\AbstractRouteScope;
+use Shopware\Storefront\Framework\Routing\StorefrontRouteScope;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Shopware\Core\PlatformRequest;
 use Styla\CmsIntegration\Controller\Storefront\StylaPageController;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\Routing\StylaUrlGenerator;
@@ -18,6 +20,8 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Styla\CmsIntegration\Configuration\ConfigurationFactory;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubscriberInterface
 {
@@ -26,20 +30,28 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPageController $stylaPageController;
     private LoggerInterface $logger;
+    private SystemConfigService $systemConfigService;
+    private bool $useFullPath = false;
 
     public function __construct(
         StylaPagesInteractor $stylaPagesInteractor,
         StylaPageController $stylaPageController,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SystemConfigService $systemConfigService
     ) {
         $this->stylaPagesInteractor = $stylaPagesInteractor;
         $this->stylaPageController = $stylaPageController;
         $this->logger = $logger;
+        $this->systemConfigService = $systemConfigService;
+        $this->useFullPath = $this->systemConfigService->getBool(ConfigurationFactory::PREFIX.'useFullPath') || false;
     }
 
     public function resolveControllerArguments(ControllerArgumentsEvent $controllerArgumentsEvent)
     {
         $request = $controllerArgumentsEvent->getRequest();
+        if (!$request->attributes->has(PlatformRequest::ATTRIBUTE_ROUTE_SCOPE)) {
+            $request->attributes->set(PlatformRequest::ATTRIBUTE_ROUTE_SCOPE, [StorefrontRouteScope::ID]);
+        }
         // Disable functionality for any scope except storefront
         if ($this->isUnsupportedScope($request)
             || $controllerArgumentsEvent->getRequestType() !== HttpKernelInterface::MASTER_REQUEST
@@ -47,7 +59,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             return;
         }
 
-        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger);
+        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger, $this->useFullPath);
         if ($shopwarePageDetails === null) {
             return;
         }
@@ -55,6 +67,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         if (!$stylaPage) {
             return;
         }
+        $stylaPage->setUseFullPath($this->useFullPath);
 
         $salesChannelContext = null;
         foreach ($controllerArgumentsEvent->getArguments() as $argument) {
@@ -108,7 +121,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             return;
         }
 
-        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($event->getRequest(), $this->logger);
+        $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger, $this->useFullPath);
         if ($shopwarePageDetails === null) {
             return;
         }
@@ -116,6 +129,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         if (!$stylaPage) {
             return;
         }
+        $stylaPage->setUseFullPath($this->useFullPath);
 
         try {
             $request = $this->duplicateRequest($event->getRequest(), $stylaPage);
@@ -145,6 +159,10 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         $previousAttributes['_controller'] = sprintf('%s::%s', StylaPageController::class, 'renderStylaPage');
         // Added to avoid problems with redirects to this page
         $previousAttributes['_route'] = StylaUrlGenerator::STYLA_CMS_PAGES_ROUTE_PREFIX . $stylaPage->getId();
+        // Force storefront route scope as we never hit the controller to get this route scope
+        if (!isset($previousAttributes[PlatformRequest::ATTRIBUTE_ROUTE_SCOPE])) {
+            $previousAttributes[PlatformRequest::ATTRIBUTE_ROUTE_SCOPE] = [StorefrontRouteScope::ID];
+        }
         $previousAttributes[self::STYLA_PAGE_INSTANCE_ARGUMENT] = $stylaPage;
 
         $request = $request->duplicate(null, null, $previousAttributes);
@@ -188,11 +206,20 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             return !$scope->hasScope('storefront');
         }
 
+        /**
+         * When scope is just a string in array
+         */
+        if (in_array(StorefrontRouteScope::ID, $scope, true)) {
+            return false;
+        }
+
         return true;
     }
 
     public static function getSubscribedEvents()
     {
+        // Priority: the highest means executed first
+        // Exception event by default actually going last
         return [
             KernelEvents::CONTROLLER_ARGUMENTS => ['resolveControllerArguments', -1000],
             KernelEvents::EXCEPTION => [

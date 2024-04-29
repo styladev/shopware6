@@ -4,6 +4,7 @@ namespace Styla\CmsIntegration\Styla\Page\Guesser;
 
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\Styla\Page\Guesser\DTO\ShopwarePageDetails;
+use Styla\CmsIntegration\Routing\StylaUrlGenerator;
 
 class NoRouteFoundStylaPageGuesser extends AbstractStylaPageToReplaceGuesser
 {
@@ -14,6 +15,7 @@ class NoRouteFoundStylaPageGuesser extends AbstractStylaPageToReplaceGuesser
 
     public function isSupported(ShopwarePageDetails $shopwarePageDetails): bool
     {
-        return $shopwarePageDetails->getRoute() === null;
+        return $shopwarePageDetails->getRoute() === null ||
+            str_contains($shopwarePageDetails->getRoute(), StylaUrlGenerator::STYLA_CMS_PAGES_ROUTE_PREFIX);
     }
 }

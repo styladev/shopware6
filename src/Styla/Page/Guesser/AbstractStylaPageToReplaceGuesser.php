@@ -3,7 +3,7 @@
 namespace Styla\CmsIntegration\Styla\Page\Guesser;
 
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\AndFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -11,10 +11,10 @@ use Styla\CmsIntegration\Configuration\ConfigurationInterface;
 
 abstract class AbstractStylaPageToReplaceGuesser implements StylaPageToReplaceGuesserInterface
 {
-    protected EntityRepositoryInterface $stylaPagesRepository;
+    protected EntityRepository $stylaPagesRepository;
     protected ConfigurationInterface $configuration;
 
-    public function __construct(EntityRepositoryInterface $stylaPagesRepository, ConfigurationInterface $configuration)
+    public function __construct(EntityRepository $stylaPagesRepository, ConfigurationInterface $configuration)
     {
         $this->stylaPagesRepository = $stylaPagesRepository;
         $this->configuration = $configuration;

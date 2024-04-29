@@ -25,6 +25,11 @@ interface ConfigurationInterface
     public function getDefinedAccountNames(): array;
 
     /**
+     * @return string[]
+     */
+    public function getDefinedDomainUrls(): array;
+
+    /**
      * @param string $languageId
      *
      * @return string

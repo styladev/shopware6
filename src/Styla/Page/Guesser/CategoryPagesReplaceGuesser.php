@@ -18,7 +18,7 @@ class CategoryPagesReplaceGuesser extends AbstractStylaPageToReplaceGuesser
         }
 
         return $this->getStylaPageByPath(
-            $shopwarePageDetails->getDecodedPathBeforeShopwareRewrite(),
+            $shopwarePageDetails->getDecodedPath(),
             $shopwarePageDetails->getContext()
         );
     }

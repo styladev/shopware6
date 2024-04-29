@@ -7,7 +7,12 @@ services:
             - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
             - '@styla_cms_page.repository'
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
+            - '@Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor'
             - '@logger'
+        tags:
+            - { name: 'controller.service_arguments' }
+        calls:
+            - [setContainer, ["@service_container"]]
         public: true
 
     Styla\CmsIntegration\Controller\StylaSynchronizationController:
@@ -24,6 +29,7 @@ services:
             - '@Shopware\Storefront\Page\GenericPageLoader'
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
+            - [ 'setTwig' , [ '@twig' ] ]
 
     Styla\CmsIntegration\Controller\Storefront\StylaApiController:
         public: true

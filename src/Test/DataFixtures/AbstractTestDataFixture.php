@@ -5,7 +5,7 @@ namespace Styla\CmsIntegration\Test\DataFixtures;
 use Psr\Container\ContainerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
@@ -47,7 +47,7 @@ abstract class AbstractTestDataFixture implements DependentTestDataFixtureInterf
         return $entity->getUniqueIdentifier();
     }
 
-    protected function createEntity(EntityRepositoryInterface $repository, array $record): Entity
+    protected function createEntity(EntityRepository $repository, array $record): Entity
     {
         $event = $repository->create([$record], Context::createDefaultContext());
         $keys = $event->getPrimaryKeys($repository->getDefinition()->getEntityName());
@@ -64,7 +64,7 @@ abstract class AbstractTestDataFixture implements DependentTestDataFixtureInterf
         SalesChannelEntity $salesChannelEntity,
         string $url
     ) {
-        /** @var EntityRepositoryInterface $repository */
+        /** @var EntityRepository $repository */
         $repository = $container->get('seo_url.repository');
 
         $criteria = new Criteria();

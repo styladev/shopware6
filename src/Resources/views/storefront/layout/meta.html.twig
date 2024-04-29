@@ -1,8 +1,17 @@
 {% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
 {%  block layout_head_javascript_feature %}
-    {% if has_styla_elements(page) %}
-        <script type="text/javascript" src="https://engine.styla.com/init.js" async></script>
-    {% endif %}
+    {{ block('styla_page_head') }}
 
     {{ parent() }}
+{% endblock %}
+
+{% block styla_page_head %}
+    {% block styla_page_predefined_head_tags %}
+        <script type="text/javascript" src="https://engine.styla.com/init.js" async></script>
+    {% endblock %}
+
+    {% block styla_page_head_tags %}
+        {{ head|raw }}
+    {% endblock %}
 {% endblock %}

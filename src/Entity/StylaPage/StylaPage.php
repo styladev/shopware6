@@ -17,6 +17,7 @@ class StylaPage extends Entity
     protected ?string $seoTitle = null;
     protected ?int $position = null;
     protected ?\DateTimeInterface $stylaUpdatedAt = null;
+    protected ?bool $useFullPath = false;
 
     public function getId(): ?string
     {
@@ -143,5 +144,15 @@ class StylaPage extends Entity
     public function setStylaUpdatedAt(?\DateTimeInterface $stylaUpdatedAt): void
     {
         $this->stylaUpdatedAt = $stylaUpdatedAt;
+    }
+
+    public function setUseFullPath(?bool $useFullPath): void
+    {
+        $this->useFullPath = $useFullPath;
+    }
+
+    public function getUseFullPath(): bool
+    {
+        return $this->useFullPath;
     }
 }

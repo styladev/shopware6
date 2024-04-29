@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Test\DataFixtures;
 
 use Psr\Container\ContainerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\Tax\TaxEntity;
 
@@ -12,7 +12,7 @@ class RegisterTaxesReferences implements TestDataFixturesInterface
 {
     public function execute(ContainerInterface $container, ReferencesRegistry $referencesRegistry)
     {
-        /** @var EntityRepositoryInterface $taxRepository */
+        /** @var EntityRepository $taxRepository */
         $taxRepository = $container->get('tax.repository');
         $taxes = $taxRepository->search(new Criteria(), Context::createDefaultContext())->getEntities();
 

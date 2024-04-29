@@ -1,35 +1,13 @@
 {% sw_extends '@Storefront/storefront/base.html.twig' %}
 
 {% block base_head %}
-    <head>
-        {{ block('styla_page_head') }}
-    </head>
+    {% include '@StylaCmsIntegration/storefront/layout/meta.html.twig' %}
 {% endblock %}
-
-{% block styla_page_head %}
-    {% block styla_page_predefined_head_tags %}
-        <meta charset="utf-8">
-
-        {% if isHMRMode %}
-            {# CSS will be loaded from the JS automatically #}
-        {% else %}
-            {% set assets = theme_config('assets.css') %}
-            {% for file in assets %}
-                <link rel="stylesheet"
-                      href="{{ asset(file, 'theme') }}">
-            {% endfor %}
-        {% endif %}
-        <script type="text/javascript" src="https://engine.styla.com/init.js" async></script>
-        {% sw_include "@Storefront/storefront/component/feature.html.twig" %}
-        {% sw_include "@Storefront/storefront/component/analytics.html.twig" %}
-    {% endblock %}
-
-    {% block styla_page_head_tags %}
-        {{ stylaPageDetails.head|raw }}
-    {% endblock %}
-{% endblock %}
-
 
 {% block base_content %}
-    <div data-styla-client="{{ stylaPage.accountName }}">{{ stylaPageDetails.body|raw }}</div>
+    {% if fullpath %}
+        <div data-styla-client="{{ client }}">{{ body|raw }}</div>
+    {% else %}
+        <div data-styla-client="{{ client }}" data-styla-content="{{ path }}">{{ body|raw }}</div>
+    {% endif %}
 {% endblock %}

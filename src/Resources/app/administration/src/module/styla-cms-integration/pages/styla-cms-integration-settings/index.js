@@ -19,6 +19,7 @@ Component.register('styla-cms-integration-settings', {
             messageAccountBlankErrorState: null,
             config: null,
             salesChannels: [],
+            salesChannelDomains: [],
         };
     },
 
@@ -35,6 +36,10 @@ Component.register('styla-cms-integration-settings', {
     computed: {
         salesChannelRepository() {
             return this.repositoryFactory.create('sales_channel');
+        },
+
+        salesChannelDomainsRepository() {
+            return this.repositoryFactory.create('sales_channel_domain');
         },
 
         defaultAccountNameErrorState() {
@@ -70,6 +75,7 @@ Component.register('styla-cms-integration-settings', {
     methods: {
         createdComponent() {
             this.isLoading = true;
+            let doneLoading = 0;
 
             const criteria = new Criteria();
             criteria.addFilter(Criteria.equalsAny('typeId', [
@@ -87,7 +93,28 @@ Component.register('styla-cms-integration-settings', {
 
                 this.salesChannels = res;
             }).finally(() => {
-                this.isLoading = false;
+                doneLoading++;
+                if (doneLoading > 1) {
+                    this.isLoading = false;
+                }
+            });
+
+            const domainCriteria = new Criteria();
+            this.salesChannelDomainsRepository.search(domainCriteria, Shopware.Context.api).then(res => {
+                this.salesChannelDomains.push({
+                    label: this.$tc('styla-cms-integration-plugin.configuration.field.domainUrls.no_override'),
+                    value: ''
+                });
+                for (let i = 0; i < res.length; i++) {
+                    if (res?.[i]?.url && this.isValidUrl(res[i].url)) {
+                        this.salesChannelDomains.push({ label: res[i].url, value: res[i].url });
+                    }
+                }
+            }).finally(() => {
+                doneLoading++;
+                if (doneLoading > 1) {
+                    this.isLoading = false;
+                }
             });
 
             this.messageAccountBlankErrorState = {
@@ -112,6 +139,18 @@ Component.register('styla-cms-integration-settings', {
             }).finally(() => {
                 this.isLoading = false;
             });
+        },
+
+        isValidUrl(url) {
+            if (url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch (err) {
+                    return false;
+                }
+            }
+            false;
         },
     }
 });

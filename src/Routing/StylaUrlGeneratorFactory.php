@@ -3,19 +3,19 @@
 namespace Styla\CmsIntegration\Routing;
 
 use Psr\Log\LoggerInterface;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class StylaUrlGeneratorFactory
 {
     private RequestStack $requestStack;
-    private EntityRepositoryInterface $stylaPageRepository;
+    private EntityRepository $stylaPageRepository;
     private LoggerInterface $logger;
 
     public function __construct(
         RequestStack $requestStack,
-        EntityRepositoryInterface $stylaPageRepository,
+        EntityRepository $stylaPageRepository,
         LoggerInterface $logger
     ) {
         $this->requestStack = $requestStack;

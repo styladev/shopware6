@@ -25,12 +25,25 @@ Component.register('styla-cms-integration-settings-general', {
         this.createdComponent();
     },
 
+    computed: {
+        useFullPathOptions: {
+            get: function () {
+                const tc = 'styla-cms-integration-plugin.configuration.field.useFullPath.';
+                return [
+                    { label: this.$tc(tc+'optionNo'), value: false },
+                    { label: this.$tc(tc+'optionYes'), value: true },
+                ];
+            }
+        },
+    },
+
     methods: {
         createdComponent() {
             const configPrefix = 'StylaCmsIntegration.settings.',
                 defaultConfigs = {
                     pagesListSynchronizationInterval: 10,
                     pageCacheDuration: 3600,
+                    useFullPath: false,
                 };
 
             /**

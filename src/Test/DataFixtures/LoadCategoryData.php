@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Test\DataFixtures;
 
 use Psr\Container\ContainerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
@@ -51,7 +51,7 @@ class LoadCategoryData extends AbstractTestDataFixture
 
     public function execute(ContainerInterface $container, ReferencesRegistry $referencesRegistry)
     {
-        /** @var EntityRepositoryInterface $categoryRepository */
+        /** @var EntityRepository $categoryRepository */
         $categoryRepository = $container->get('category.repository');
         $this->registerRootCategoryReference($categoryRepository, $referencesRegistry);
 
@@ -75,7 +75,7 @@ class LoadCategoryData extends AbstractTestDataFixture
         }
     }
 
-    private function registerRootCategoryReference(EntityRepositoryInterface $categoryRepository, ReferencesRegistry $referencesRegistry)
+    private function registerRootCategoryReference(EntityRepository $categoryRepository, ReferencesRegistry $referencesRegistry)
     {
         $criteria = new Criteria();
 

@@ -7,7 +7,7 @@ use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
-class StylaCmsIntegrationPlugin extends Plugin
+class StylaCmsIntegration extends Plugin
 {
     public function deactivate(DeactivateContext $deactivateContext): void
     {

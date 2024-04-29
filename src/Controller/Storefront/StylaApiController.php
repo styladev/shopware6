@@ -2,7 +2,6 @@
 
 namespace Styla\CmsIntegration\Controller\Storefront;
 
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Styla\CmsIntegration\UseCase\CategoryApiActionsInteractor;
 use Styla\CmsIntegration\UseCase\ProductApiActionsInteractor;
@@ -13,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @RouteScope(scopes={"store-api"})
+ * @Route(defaults={"_routeScope"={"store-api"}})
  */
 class StylaApiController
 {
@@ -30,7 +29,7 @@ class StylaApiController
 
     /**
      * @Route(
-     *     "store-api/styla/categories",
+     *     "/store-api/styla/categories",
      *     name="styla.api.categories",
      *     methods={"GET"}
      * )

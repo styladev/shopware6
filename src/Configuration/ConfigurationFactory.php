@@ -19,8 +19,10 @@ class ConfigurationFactory
 
     public function createConfigurationForCurrentContext(): ConfigurationInterface
     {
-        $accountNamesHashMap = $this->systemConfigService->get(self::PREFIX . 'accountNames');
+        $accountNamesHashMap = $this->systemConfigService->get(self::PREFIX . 'accountNames') ?? [];
+        $domainUrlsHashMap = $this->systemConfigService->get(self::PREFIX . 'domainUrls') ?? [];
         $defaultAccountName = trim($this->systemConfigService->getString(self::PREFIX . 'defaultAccountName'));
+        $defaultDomainUrl = trim($this->systemConfigService->getString(self::PREFIX . 'defaultDomainUrl'));
 
         if ($defaultAccountName === '') {
             throw new InvalidConfigurationException(
@@ -34,7 +36,16 @@ class ConfigurationFactory
                 continue;
             }
 
-            $accountNameByLanguageIdMap[$languageId] = $accountName;
+            $accountNameByLanguageIdMap[$languageId] =  $accountName ? $accountName : '';
+        }
+
+        $domainUrlByLanguageIdMap = [];
+        foreach ($domainUrlsHashMap as $languageId => $domainUrl) {
+            if (!$domainUrl || trim($domainUrl) === '') {
+                continue;
+            }
+
+            $domainUrlByLanguageIdMap[$languageId] = $domainUrl ? $domainUrl : '';
         }
 
         $pageDetailsCacheDuration = $this->systemConfigService->getInt(self::PREFIX . 'pageCacheDuration');
@@ -62,7 +73,9 @@ class ConfigurationFactory
 
         return new Configuration(
             $defaultAccountName,
+            $defaultDomainUrl,
             $accountNameByLanguageIdMap,
+            $domainUrlByLanguageIdMap,
             $pageDetailsCacheDuration,
             $pagesListSynchronizationInterval,
             $listOfExtraPagesToOverride

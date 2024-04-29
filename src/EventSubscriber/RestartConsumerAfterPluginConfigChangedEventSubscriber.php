@@ -36,7 +36,7 @@ class RestartConsumerAfterPluginConfigChangedEventSubscriber implements EventSub
         $this->restartSignalCachePool->save($cacheItem);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SystemConfigChangedEvent::class => 'onSystemConfigurationChange'

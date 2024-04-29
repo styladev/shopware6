@@ -10,6 +10,11 @@ class StylaPageApiService {
         return this.httpClient.get('/styla/synchronization/page/_action/get_last_success_date_time', {}, { headers });
     }
 
+    resetSynchronizationStatus() {
+        const headers = this.getHeaders();
+        return this.httpClient.get('/styla/synchronization/page/_action/reset_synchronization_status', {}, { headers });
+    }
+
     getHeaders() {
         return {
             Accept: 'application/json',

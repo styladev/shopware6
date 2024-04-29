@@ -5,7 +5,7 @@ namespace Styla\CmsIntegration\Styla\Api;
 use Shopware\Core\Content\Category\CategoryCollection;
 use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Styla\CmsIntegration\Styla\Api\DTO\Category\CategoryInfo;
@@ -15,9 +15,9 @@ class CategoryInfoTranslator
 {
     public const DEFAULT_MAX_TRANSLATION_NESTING_LEVEL = 500;
 
-    private EntityRepositoryInterface $categoryRepository;
+    private EntityRepository $categoryRepository;
 
-    public function __construct(EntityRepositoryInterface $categoryRepository)
+    public function __construct(EntityRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
     }

@@ -6,7 +6,7 @@ use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Property\Aggregate\PropertyGroupOption\PropertyGroupOptionEntity;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\Currency\CurrencyEntity;
@@ -22,12 +22,12 @@ use Styla\CmsIntegration\Styla\Api\DTO\Product\TaxInfo;
 
 class ProductDetailsTranslator
 {
-    protected EntityRepositoryInterface $productRepository;
-    protected EntityRepositoryInterface $currencyRepository;
+    protected EntityRepository $productRepository;
+    protected EntityRepository $currencyRepository;
 
     public function __construct(
-        EntityRepositoryInterface $productRepository,
-        EntityRepositoryInterface $currencyRepository
+        EntityRepository $productRepository,
+        EntityRepository $currencyRepository
     ) {
         $this->productRepository = $productRepository;
         $this->currencyRepository = $currencyRepository;
@@ -199,9 +199,9 @@ class ProductDetailsTranslator
             $price = $product->getCurrencyPrice($context->getCurrencyId());
 
             $oldPrice = null;
-            if ($product->getCheapestPrice()) {
+            /*if ($product->getCheapestPrice()) {
                 $oldPrice = $product->getCheapestPrice()->getCurrencyPrice($context->getCurrencyId());
-            }
+            }*/
 
             $list->add(
                 new ProductReferenceInfo(

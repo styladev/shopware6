@@ -2,7 +2,6 @@
 
 namespace Styla\CmsIntegration\Controller\Storefront;
 
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Controller\StorefrontController;
 use Shopware\Storefront\Page\GenericPageLoaderInterface;
@@ -12,10 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @RouteScope(scopes={"storefront"})
- * @Route(
- *     "styla/page"
- * )
+ * @Route(defaults={"_routeScope"={"storefront"}})
  */
 class StylaPageController extends StorefrontController
 {
@@ -30,20 +26,31 @@ class StylaPageController extends StorefrontController
 
     /**
      * @Route(
-     *     "/render",
+     *     "/styla/page/render",
      *     name="styla.page.storefront.render",
      *     methods={"GET"}
      * )
      */
-    public function renderStylaPage(StylaPage $stylaPage, Request $request, SalesChannelContext $context)
+    public function renderStylaPage(StylaPage|null $stylaPage, Request $request, SalesChannelContext $context)
     {
+        if (!$stylaPage) {
+            return $this->renderStorefront('@Storefront/storefront/page/error/error-404.html.twig', []);
+        }
+
         $page = $this->genericLoader->load($request, $context);
 
         $pageDetails = $this->stylaPagesInteractor->getPageDetails($stylaPage);
 
         return $this->renderStorefront(
             '@StylaCmsIntegrationPlugin/storefront/styla_page/page.html.twig',
-            ['stylaPage' => $stylaPage, 'stylaPageDetails' => $pageDetails, 'page' => $page]
+            [
+                'page' => $page,
+                'client' => $stylaPage->getAccountName(),
+                'path' => ltrim($stylaPage->getPath(), '/'),
+                'head' => $pageDetails->getHead(),
+                'body' => $pageDetails->getBody(),
+                'fullpath' => $stylaPage->getUseFullPath()
+            ]
         );
     }
 }

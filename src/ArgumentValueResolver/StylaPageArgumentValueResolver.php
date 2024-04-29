@@ -3,7 +3,7 @@
 namespace Styla\CmsIntegration\ArgumentValueResolver;
 
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\AndFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -18,12 +18,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StylaPageArgumentValueResolver implements ArgumentValueResolverInterface
 {
-    public function supports(Request $request, ArgumentMetadata $argument)
+    public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         return $argument->getType() === StylaPage::class;
     }
 
-    public function resolve(Request $request, ArgumentMetadata $argument)
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         yield $request->get(StorefrontRequestControllerSubstituteEventSubscriber::STYLA_PAGE_INSTANCE_ARGUMENT);
     }

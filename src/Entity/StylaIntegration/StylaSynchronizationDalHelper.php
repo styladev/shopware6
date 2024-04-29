@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Exception\InvalidAggregationQueryException;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Aggregation\Metric\CountAggregation;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -21,12 +21,12 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 class StylaSynchronizationDalHelper
 {
     private Connection $connection;
-    private EntityRepositoryInterface $synchronizationsRepository;
+    private EntityRepository $synchronizationsRepository;
     private LoggerInterface $logger;
 
     public function __construct(
         Connection $connection,
-        EntityRepositoryInterface $synchronizationsRepository,
+        EntityRepository $synchronizationsRepository,
         LoggerInterface $logger
     ) {
         $this->connection = $connection;
@@ -74,7 +74,7 @@ class StylaSynchronizationDalHelper
 
     public function createSynchronization(Context $context): string
     {
-        $createEntityResult =$this->synchronizationsRepository->create(
+        $createEntityResult = $this->synchronizationsRepository->create(
             [
                 [
                     'status' => StylaPagesSynchronization::STATUS_NEW,
@@ -178,15 +178,29 @@ class StylaSynchronizationDalHelper
     public function tryMarkSynchronizationAsPending($createdSynchronizationId, Context $context): void
     {
         try {
-            $this->synchronizationsRepository->update(
-                [
+            // Fixed race condition
+            // If it's already set as success before even setting it to pending
+            $criteria = new Criteria();
+            $criteria->setLimit(1);
+            $criteria->addFilter(new EqualsFilter('id', $createdSynchronizationId));
+            $existingSync = $this->synchronizationsRepository->search($criteria, $context)
+                ->getEntities()
+                ->first();
+            if ($existingSync && $existingSync->getStatus() === StylaPagesSynchronization::STATUS_SUCCESS) {
+                $this->logger->info(
+                    sprintf('Synchronization %s status is already SUCCESS', $createdSynchronizationId)
+                );
+            } else {
+                $this->synchronizationsRepository->update(
                     [
-                        'id' => $createdSynchronizationId,
-                        'status' => StylaPagesSynchronization::STATUS_PENDING,
-                    ]
-                ],
-                $context
-            );
+                        [
+                            'id' => $createdSynchronizationId,
+                            'status' => StylaPagesSynchronization::STATUS_PENDING,
+                        ]
+                    ],
+                    $context
+                );
+            }
         } catch (\Throwable $throwable) {
             $this->logger->error(
                 sprintf('Failed to change synchronization %s status to PENDING', $createdSynchronizationId),

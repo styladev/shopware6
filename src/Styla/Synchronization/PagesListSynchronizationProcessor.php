@@ -4,7 +4,7 @@ namespace Styla\CmsIntegration\Styla\Synchronization;
 
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\AndFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
@@ -26,7 +26,7 @@ class PagesListSynchronizationProcessor
 
     private ClientRegistry $clientRegistry;
     private StylaSynchronizationDalHelper $stylaSynchronizationDalHelper;
-    private EntityRepositoryInterface $stylaPagesRepository;
+    private EntityRepository $stylaPagesRepository;
     private ConfigurationInterface $configuration;
     private CacheInvalidatorFactory $cacheInvalidatorFactory;
     private PageDataMapper $pageDataMapper;
@@ -35,7 +35,7 @@ class PagesListSynchronizationProcessor
     public function __construct(
         ClientRegistry $clientRegistry,
         StylaSynchronizationDalHelper $stylaSynchronizationDalHelper,
-        EntityRepositoryInterface $stylaPagesRepository,
+        EntityRepository $stylaPagesRepository,
         ConfigurationInterface $configuration,
         CacheInvalidatorFactory $cacheInvalidatorFactory,
         PageDataMapper $pageDataMapper,
@@ -56,10 +56,13 @@ class PagesListSynchronizationProcessor
      *
      * @throws \Throwable
      */
-    public function synchronizePages(StylaPagesSynchronization $synchronization, Context $context): void
+    public function synchronizePages(StylaPagesSynchronization $synchronization = null, Context $context): void
     {
-        $this->assertSynchronizationEntity($synchronization);
-
+        if (!$synchronization) {
+            $synchronizationId = $this->stylaSynchronizationDalHelper->createSynchronization($context);
+            $synchronization = $this->stylaSynchronizationDalHelper->getSynchronizationById($synchronizationId, $context);
+        }
+        
         $this->stylaSynchronizationDalHelper->markSynchronizationAsInProgress($synchronization, $context);
 
         $isSuccess = true;
