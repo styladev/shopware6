@@ -89,6 +89,7 @@ class ShopwarePageDetails implements \JsonSerializable
             if ($useFullPath) {
                 $decodedPath = urldecode($pathBeforeShopwareRewrite);
             }
+            $decodedPath = strstr($decodedPath, '?', true) ?: $decodedPath;
 
             $route = $request->get('_route');
 
