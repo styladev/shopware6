@@ -111,7 +111,10 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
 
     public function onKernelException(ExceptionEvent $event)
     {
-        if (!$event->getThrowable() instanceof NotFoundHttpException) {
+        if (
+            !$event->getThrowable() instanceof NotFoundHttpException &&
+            !$event->getThrowable() instanceof \Shopware\Core\Content\Category\Exception\CategoryNotFoundException
+        ) {
             return;
         }
 
@@ -164,6 +167,9 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             $previousAttributes[PlatformRequest::ATTRIBUTE_ROUTE_SCOPE] = [StorefrontRouteScope::ID];
         }
         $previousAttributes[self::STYLA_PAGE_INSTANCE_ARGUMENT] = $stylaPage;
+        if (isset($previousAttributes['navigationId'])) {
+            unset($previousAttributes['navigationId']);
+        }
 
         $request = $request->duplicate(null, null, $previousAttributes);
 

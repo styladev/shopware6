@@ -81,7 +81,7 @@ class ShopwarePageDetails implements \JsonSerializable
             $path = $hasScBaseUri ? substr($pathBeforeShopwareRewrite, strlen($baseUri)) : $pathBeforeShopwareRewrite;
             $decodedPath = urldecode($path);
 
-            $decodedPathBeforeShopwareRewrite = urldecode($pathBeforeShopwareRewrite);
+            $decodedPathBeforeShopwareRewrite = urldecode(strstr($pathBeforeShopwareRewrite, '?', true) ?: $pathBeforeShopwareRewrite);
 
             // Shopware always take the sales channel domain url first
             // In that case path already sliced
