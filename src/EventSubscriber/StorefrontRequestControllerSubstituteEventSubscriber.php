@@ -111,7 +111,10 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
 
     public function onKernelException(ExceptionEvent $event)
     {
-        if (!$event->getThrowable() instanceof NotFoundHttpException) {
+        if (
+            !$event->getThrowable() instanceof NotFoundHttpException &&
+            !$event->getThrowable() instanceof \Shopware\Core\Content\Category\Exception\CategoryNotFoundException
+        ) {
             return;
         }
 
@@ -164,6 +167,29 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
             $previousAttributes[PlatformRequest::ATTRIBUTE_ROUTE_SCOPE] = [StorefrontRouteScope::ID];
         }
         $previousAttributes[self::STYLA_PAGE_INSTANCE_ARGUMENT] = $stylaPage;
+        // Modify resolved-uri
+        if (isset($previousAttributes['resolved-uri'])) {
+            $previousAttributes['resolved-uri'] = $stylaPage->path;
+        }
+        // Remove unused attributes for styla page
+        if (isset($previousAttributes['navigationId'])) {
+            unset($previousAttributes['navigationId']);
+        }
+        if (isset($previousAttributes['_route_params'])) {
+            unset($previousAttributes['_route_params']);
+        }
+        if (isset($previousAttributes['sw-context'])) {
+            unset($previousAttributes['sw-context']);
+        }
+        if (isset($previousAttributes['sw-sales-channel-context'])) {
+            unset($previousAttributes['sw-sales-channel-context']);
+        }
+        if (isset($previousAttributes['_httpCache'])) {
+            unset($previousAttributes['_httpCache']);
+        }
+        if (isset($previousAttributes['_cspNonce'])) {
+            unset($previousAttributes['_cspNonce']);
+        }
 
         $request = $request->duplicate(null, null, $previousAttributes);
 

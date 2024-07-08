@@ -11,14 +11,15 @@ class CategoryPagesReplaceGuesser extends AbstractStylaPageToReplaceGuesser
 
     public function guessStylaPage(ShopwarePageDetails $shopwarePageDetails): ?StylaPage
     {
+        $path = $shopwarePageDetails->getDecodedPath();
         if (!$this->isSupported($shopwarePageDetails)) {
             throw new \LogicException(
-                sprintf('Page[path: %s] is not supported', $shopwarePageDetails->getDecodedPath())
+                sprintf('Page[path: %s] is not supported', $path)
             );
         }
 
         return $this->getStylaPageByPath(
-            $shopwarePageDetails->getDecodedPath(),
+            $path,
             $shopwarePageDetails->getContext()
         );
     }
