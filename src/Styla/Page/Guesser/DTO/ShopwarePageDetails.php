@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ShopwarePageDetails implements \JsonSerializable
 {
+    const STYLA_DEBUG_CODE = '_c793fa5b698d6d7e22a3c6b0bb53a1d8';
+
     private string $decodedPath;
     private ?string $decodedPathBeforeShopwareRewrite;
     private ?string $route;
@@ -30,6 +32,12 @@ class ShopwarePageDetails implements \JsonSerializable
         $this->route = $route;
         $this->context = $context;
         $this->originalRequest = $originalRequest;
+    }
+
+    private static function stylaDebug($id, $variable) {
+        if (isset($_GET['_stylaDebug']) && $_GET['_stylaDebug']==$id.self::STYLA_DEBUG_CODE) {
+            dd($id, $variable);
+        }
     }
 
     public function getDecodedPath(): string
@@ -68,6 +76,7 @@ class ShopwarePageDetails implements \JsonSerializable
         try {
             // Original request uri full path
             $pathBeforeShopwareRewrite = $request->get(RequestTransformer::ORIGINAL_REQUEST_URI);
+            self::stylaDebug(9, $pathBeforeShopwareRewrite);
 
             // Parsed storefront url with path from shopware
             $storefrontUrl = $request->get(RequestTransformer::STOREFRONT_URL);
@@ -79,17 +88,18 @@ class ShopwarePageDetails implements \JsonSerializable
             // Get clean path after saleschannel url with path
             $hasScBaseUri = $baseUri !== "" && strpos($pathBeforeShopwareRewrite, $baseUri) === 0;
             $path = $hasScBaseUri ? substr($pathBeforeShopwareRewrite, strlen($baseUri)) : $pathBeforeShopwareRewrite;
-            $decodedPath = urldecode($path);
+            $decodedPath = urldecode(strstr($path, '?', true) ?: $path);
 
             $decodedPathBeforeShopwareRewrite = urldecode(strstr($pathBeforeShopwareRewrite, '?', true) ?: $pathBeforeShopwareRewrite);
+            self::stylaDebug(10, $decodedPathBeforeShopwareRewrite);
 
             // Shopware always take the sales channel domain url first
             // In that case path already sliced
             // so we need to use full path
             if ($useFullPath) {
-                $decodedPath = urldecode($pathBeforeShopwareRewrite);
+                $decodedPath = $decodedPathBeforeShopwareRewrite;
             }
-            $decodedPath = strstr($decodedPath, '?', true) ?: $decodedPath;
+            self::stylaDebug(11, $decodedPath);
 
             $route = $request->get('_route');
 
