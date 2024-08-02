@@ -90,6 +90,11 @@ If you don’t see your Styla pages published on your Shopware frontend, try deb
 
 **IMPORTANT:** Please test any potentially breaking changes on your **local/test/stage environment before releasing them on your production**. Especially, check if Styla content is still visible. Do this before updating Shopware version too. 
 
+## Cron Job
+Customers assume that the syncing would happen automatically. This sync works via a cron job or a worker on the Shopware side. The cron job setup includes two commands: the first to set up the queue and the second to execute the sync based on the time set in the queue or the plugin.
+
+Documentation: https://docs.shopware.com/en/shopware-6-en/tutorials-and-faq/message-queue-and-scheduled-tasks
+
 ## Modular Content
 
 The plugin enables you to include pieces of Styla content inside Shopware full-page content too. As opposed to syncing Styla Pages, this is not a Styla full-page content and is rendered with JavaScript only, not server-side as a static HTML. 
