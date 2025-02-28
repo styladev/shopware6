@@ -38,7 +38,7 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
         $this->logger = $logger;
     }
 
-    public function setStrictRequirements(?bool $enabled)
+    public function setStrictRequirements(?bool $enabled): void
     {
         $this->innerGenerator->setStrictRequirements($enabled);
     }
@@ -48,7 +48,7 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
         return $this->innerGenerator->isStrictRequirements();
     }
 
-    public function setContext(RequestContext $context)
+    public function setContext(RequestContext $context): void
     {
         $this->innerGenerator->setContext($context);
     }

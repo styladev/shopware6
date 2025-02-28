@@ -11,9 +11,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- *  @Route(defaults={"_routeScope"={"storefront"}})
- */
+#[Route(defaults: ["_routeScope" => ["storefront"]])]
 class StylaShoppingCartController
 {
     private ShoppingCartInteractor $shoppingCartInteractor;
@@ -23,14 +21,12 @@ class StylaShoppingCartController
         $this->shoppingCartInteractor = $shoppingCartInteractor;
     }
 
-    /**
-     * @Route(
-     *     "/styla/cart/add",
-     *     name="styla.api.cart.add",
-     *     defaults={"csrf_protected"=false, "XmlHttpRequest"=true},
-     *     methods={"POST"}
-     * )
-     */
+    #[Route(
+        path: "/styla/cart/add",
+        name: "styla.api.cart.add",
+        defaults: [ "csrf_protected" => false, "XmlHttpRequest" => true],
+        methods: ["POST"]
+    )]
     public function addToCartAction(Request $request, Cart $cart, SalesChannelContext $context)
     {
         $productId = $request->request->get('id');

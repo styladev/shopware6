@@ -16,9 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route(defaults={"_routeScope"={"api"}})
- */
+#[Route(defaults: ["_routeScope" => ["api"]])]
 class StylaPageController extends AbstractController
 {
     private StylaPagesInteractor $stylaPagesInteractor;
@@ -41,14 +39,12 @@ class StylaPageController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route(
-     *     "api/styla/page/_action/synchronize-pages",
-     *     name="api.styla.page.synchronize-pages",
-     *     methods={"POST"},
-     *     requirements={"version"="\d+"}
-     * )
-     */
+    #[Route(
+        path: "api/styla/page/_action/synchronize-pages",
+        name: "api.styla.page.synchronize-pages",
+        methods: ["POST"],
+        requirements: ["version" => "\d+"]
+    )]
     public function pagesSynchronizationAction(Context $context): JsonResponse
     {
         set_time_limit(300);
@@ -71,14 +67,12 @@ class StylaPageController extends AbstractController
         return new JsonResponse(['isSynced' => $isSynced, 'responseCode' => $responseCode, 'errorCode' => $errorCode], $responseCode);
     }
 
-    /**
-     * @Route(
-     *     "api/styla/page/_action/schedule-pages-synchronization",
-     *     name="api.styla.page.schedule-pages-synchronization",
-     *     methods={"POST"},
-     *     requirements={"version"="\d+"}
-     * )
-     */
+    #[Route(
+        path: "api/styla/page/_action/schedule-pages-synchronization",
+        name: "api.styla.page.schedule-pages-synchronization",
+        methods: ["POST"],
+        requirements: ["version" => "\d+"]
+    )]
     public function schedulePagesSynchronizationAction(Context $context): JsonResponse
     {
         $errorCode = '';
@@ -102,14 +96,12 @@ class StylaPageController extends AbstractController
         return new JsonResponse(['isScheduled' => $isScheduled, 'responseCode' => $responseCode, 'errorCode' => $errorCode], $responseCode);
     }
 
-    /**
-     * @Route(
-     *     "api/styla/page/_action/refresh-details/{pageId}",
-     *     name="api.styla.page.refresh-details",
-     *     methods={"POST"},
-     *     requirements={"version"="\d+"}
-     * )
-     */
+    #[Route(
+        path: "api/styla/page/_action/refresh-details/{pageId}",
+        name: "api.styla.page.refresh-details",
+        methods: ["POST"],
+        requirements: ["version" => "\d+"]
+    )]
     public function refreshPageDetailsAction(string $pageId, Context $context): JsonResponse
     {
         $errorCode = '';

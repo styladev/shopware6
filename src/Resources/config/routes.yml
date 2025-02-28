@@ -1,7 +1,7 @@
 styla_cms_integration_administration:
     resource: '../../Controller/*Controller.php'
-    type: annotation
+    type: attribute
 
 styla_cms_integration_storefront:
     resource: '../../Controller/Storefront/*Controller.php'
-    type: annotation
+    type: attribute

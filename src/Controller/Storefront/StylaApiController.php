@@ -11,9 +11,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route(defaults={"_routeScope"={"store-api"}})
- */
+#[Route(defaults: ["_routeScope" => ["store-api"]])]
 class StylaApiController
 {
     private CategoryApiActionsInteractor $categoryApiActionsInteractor;
@@ -27,13 +25,11 @@ class StylaApiController
         $this->productApiActionsInteractor = $productApiActionsInteractor;
     }
 
-    /**
-     * @Route(
-     *     "/store-api/styla/categories",
-     *     name="styla.api.categories",
-     *     methods={"GET"}
-     * )
-     */
+    #[Route(
+        path: "/store-api/styla/categories",
+        name: "styla.api.categories",
+        methods: ["GET"]
+    )]
     public function categoriesListAction(Request $request, SalesChannelContext $context)
     {
         try {
@@ -49,13 +45,11 @@ class StylaApiController
         }
     }
 
-    /**
-     * @Route(
-     *     "/store-api/styla/products",
-     *     name="styla.api.products",
-     *     methods={"GET"}
-     * )
-     */
+    #[Route(
+        path: "/store-api/styla/products",
+        name: "styla.api.products",
+        methods: ["GET"]
+    )]
     public function productSearchAction(Request $request, SalesChannelContext $context)
     {
         try {
@@ -73,13 +67,11 @@ class StylaApiController
         }
     }
 
-    /**
-     * @Route(
-     *     "/store-api/styla/product",
-     *     name="styla.api.product.details",
-     *     methods={"GET"}
-     * )
-     */
+    #[Route(
+        path: "/store-api/styla/product",
+        name: "styla.api.product.details",
+        methods: ["GET"]
+    )]
     public function productDetailsAction(Request $request, SalesChannelContext $context)
     {
         $productId = $request->get('id');

@@ -17,7 +17,7 @@ class StylaPage extends Entity
     protected ?string $seoTitle = null;
     protected ?int $position = null;
     protected ?\DateTimeInterface $stylaUpdatedAt = null;
-    protected ?bool $useFullPath = false;
+    protected bool $useFullPath = false;
 
     public function getId(): ?string
     {

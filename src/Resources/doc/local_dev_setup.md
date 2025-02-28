@@ -15,8 +15,8 @@ version: "3"
 services:
 
     shopware:
-      # use either tag "latest" or any other version like "6.5.7.3", ...
-      image: dockware/dev:6.5.7.3
+      # use either tag "latest" or any other version like "6.6.10.0", ...
+      image: dockware/dev:6.6.10.0
       container_name: shopware
       ports:
          - "80:80"
@@ -35,7 +35,7 @@ services:
          # default = 0, recommended to be OFF for frontend devs
          - XDEBUG_ENABLED=1
          # default = latest PHP, optional = specific version
-         - PHP_VERSION=8.1
+         - PHP_VERSION=8.2
 
 volumes:
   db_volume:
@@ -120,7 +120,9 @@ $stylaPage = $this->stylaPageRepository->search(
 
 ### Run message queue
 
-`bin/console messenger:consume async low_priority``
+`bin/console messenger:consume async low_priority`
+(need to explicitly configured)
+
 
 ### Editing process
 

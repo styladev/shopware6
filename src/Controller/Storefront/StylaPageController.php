@@ -10,9 +10,7 @@ use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route(defaults={"_routeScope"={"storefront"}})
- */
+#[Route(defaults: ["_routeScope" => ["storefront"]])]
 class StylaPageController extends StorefrontController
 {
     private StylaPagesInteractor $stylaPagesInteractor;
@@ -24,13 +22,11 @@ class StylaPageController extends StorefrontController
         $this->genericLoader = $genericLoader;
     }
 
-    /**
-     * @Route(
-     *     "/styla/page/render",
-     *     name="styla.page.storefront.render",
-     *     methods={"GET"}
-     * )
-     */
+    #[Route(
+        path: "/styla/page/render",
+        name: "styla.page.storefront.render",
+        methods: ["GET"]
+    )]
     public function renderStylaPage(StylaPage|null $stylaPage, Request $request, SalesChannelContext $context)
     {
         if (!$stylaPage) {

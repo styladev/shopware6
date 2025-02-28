@@ -12,11 +12,11 @@ use Styla\CmsIntegration\Configuration\ConfigurationInterface;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\EventSubscriber\StorefrontRequestControllerSubstituteEventSubscriber;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class StylaPageArgumentValueResolver implements ArgumentValueResolverInterface
+class StylaPageArgumentValueResolver implements ValueResolverInterface
 {
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {

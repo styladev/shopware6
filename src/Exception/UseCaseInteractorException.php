@@ -12,7 +12,7 @@ class UseCaseInteractorException extends \Exception implements StylaExceptionInt
     public const CODE_FAILED_TO_GET_CATEGORIES_LIST = 'FAILED_TO_GET_CATEGORIES_LIST';
     public const CODE_FAILED_TO_ADD_ITEM_TO_CART = 'FAILED_TO_ADD_ITEM_TO_CART';
 
-    protected ?string $errorCode = '';
+    protected string $errorCode = '';
 
     public function __construct(string $message, ?string $code = null, \Throwable $previous = null)
     {

@@ -3,9 +3,11 @@
 namespace Styla\CmsIntegration\Async;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Styla\CmsIntegration\Async\StylaPagesListSynchronizationMessage;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
 
+#[AsMessageHandler]
 class StylaPagesListSynchronizationMessageHandler {
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
     private LoggerInterface $logger;

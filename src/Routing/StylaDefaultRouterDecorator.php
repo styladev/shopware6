@@ -18,7 +18,7 @@ class StylaDefaultRouterDecorator extends Router
 
     public function getGenerator(): UrlGeneratorInterface
     {
-        if (null === $this->generator) {
+        if (!isset($this->generator) || null === $this->generator) {
             $generator = parent::getGenerator();
             $decoratedGenerator = $this->generatorDecoratorFactory->create($generator);
             $this->generator = $decoratedGenerator;

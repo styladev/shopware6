@@ -6,8 +6,10 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper;
 
+#[AsMessageHandler(handles: StylaPagesSyncOldRecordsClearTask::class)]
 class StylaPagesSyncOldRecordsClearTaskHandler extends ScheduledTaskHandler
 {
     private const START_CLEAR_AFTER_SYNCHRONIZATIONS_QUANTITY_REACH = 30000;
@@ -24,11 +26,6 @@ class StylaPagesSyncOldRecordsClearTaskHandler extends ScheduledTaskHandler
         parent::__construct($scheduledTaskRepository);
         $this->stylaSynchronizationDalHelper = $stylaSynchronizationDalHelper;
         $this->logger = $logger;
-    }
-
-    public static function getHandledMessages(): iterable
-    {
-        return [StylaPagesSyncOldRecordsClearTask::class];
     }
 
     public function run(): void

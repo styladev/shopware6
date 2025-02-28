@@ -6,8 +6,10 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
 
+#[AsMessageHandler(handles: StylaPagesListSyncScheduledTask::class)]
 class StylaPagesListSyncScheduledTaskHandler extends ScheduledTaskHandler
 {
     private StylaPagesSynchronizer $stylaPagesSynchronizer;
@@ -21,11 +23,6 @@ class StylaPagesListSyncScheduledTaskHandler extends ScheduledTaskHandler
         parent::__construct($scheduledTaskRepository);
         $this->stylaPagesSynchronizer = $stylaPagesSynchronizer;
         $this->logger = $logger;
-    }
-
-    public static function getHandledMessages(): iterable
-    {
-        return [StylaPagesListSyncScheduledTask::class];
     }
 
     public function run(): void

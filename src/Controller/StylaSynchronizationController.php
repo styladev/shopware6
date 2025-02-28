@@ -15,10 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-/**
- * @Route(defaults={"_routeScope"={"api"}})
- */
+#[Route(defaults: ["_routeScope" => ["api"]])]
 class StylaSynchronizationController
 {
     private EntityRepository $synchronizationRepository;
@@ -30,14 +27,12 @@ class StylaSynchronizationController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route(
-     *     "api/styla/synchronization/page/_action/get_last_success_date_time", 
-     *     name="api.styla.synchronization.page.get-last-success-date-time",
-     *     methods={"GET"},
-     *     requirements={"version"="\d+"}
-     * )
-     */
+    #[Route(
+        path: "api/styla/synchronization/page/_action/get_last_success_date_time",
+        name: "api.styla.synchronization.page.get-last-success-date-time",
+        methods: ["GET"],
+        requirements: ["version" => "\d+"]
+    )]
     public function getLastsSuccessPageSynchronizationDateAction(Context $context): JsonResponse
     {
         try {
@@ -70,14 +65,12 @@ class StylaSynchronizationController
         }
     }
 
-    /**
-     * @Route(
-     *     "api/styla/synchronization/page/_action/reset_synchronization_status", 
-     *     name="api.styla.synchronization.page.reset-syncrhronization-status",
-     *     methods={"GET"},
-     *     requirements={"version"="\d+"}
-     * )
-     */
+    #[Route(
+        path: "api/styla/synchronization/page/_action/reset_synchronization_status",
+        name: "api.styla.synchronization.page.reset-syncrhronization-status",
+        methods: ["GET"],
+        requirements: ["version" => "\d+"]
+    )]
     public function resetSynchronizationStatus(Context $context): JsonResponse
     {
         $stuck = 0;
