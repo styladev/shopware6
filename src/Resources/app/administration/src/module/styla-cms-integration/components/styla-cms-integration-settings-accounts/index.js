@@ -1,10 +1,9 @@
 import template from './styla-cms-integration-settings-accounts.html.twig';
 import './styla-cms-integration-settings-accounts.scss';
 
-const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
 
-Component.register('styla-cms-integration-settings-accounts', {
+Shopware.Component.register('styla-cms-integration-settings-accounts', {
     template,
 
     inject: [

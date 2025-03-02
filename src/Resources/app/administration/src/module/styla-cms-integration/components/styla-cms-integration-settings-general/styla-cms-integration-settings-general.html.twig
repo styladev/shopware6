@@ -10,75 +10,78 @@
 
                         {% block styla_cmsintegration_content_card_channel_config_pages %}
                             <sw-inherit-wrapper
-                                v-model="actualConfigData['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
-                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
+                                v-model:value="actualConfigData['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
+                                :inherited-value="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.extraPagesAllowedToOverride']"
                                 :customInheritationCheckFunction="checkTextFieldInheritance"
                             >
-                                <template #content="props">
-                                    <sw-textarea-field
+                                <template #content="{ currentValue, updateCurrentValue, isInherited }">
+                                    <mt-textarea
                                         name="StylaCmsIntegration.settings.extraPagesAllowedToOverride"
-                                        :mapInheritance="props"
+                                        :map-inheritance="props"
                                         :label="$tc('styla-cms-integration-plugin.configuration.field.extraPages.label')"
                                         :helpText="$tc('styla-cms-integration-plugin.configuration.field.extraPages.helpText')"
-                                        :disabled="props.isInherited"
-                                        :value="props.currentValue"
-                                        @change="props.updateCurrentValue">
-                                    </sw-textarea-field>
+                                        :disabled="isInherited"
+                                        :model-value="currentValue"
+                                        @update:model-value="updateCurrentValue"
+                                    />
                                 </template>
                             </sw-inherit-wrapper>
                         {% endblock %}
                         {% block styla_cmsintegration_content_card_channel_config_interval %}
-                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.pagesListSynchronizationInterval']"
-                                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.pagesListSynchronizationInterval']">
-                                <template #content="props">
-                                    <sw-field name="StylaCmsIntegration.settings.pagesListSynchronizationInterval"
-                                        type="number"
+                            <sw-inherit-wrapper
+                                v-model:value="actualConfigData['StylaCmsIntegration.settings.pagesListSynchronizationInterval']"
+                                :inherited-value="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.pagesListSynchronizationInterval']">
+                                <template #content="{ currentValue, updateCurrentValue, isInherited }">
+                                    <mt-number-field
+                                        name="StylaCmsIntegration.settings.pagesListSynchronizationInterval"
                                         number-type="int"
                                         :min="1"
-                                        :mapInheritance="props"
+                                        :map-inheritance="props"
                                         :label="$tc('styla-cms-integration-plugin.configuration.field.syncInterval.label')"
                                         :helpText="$tc('styla-cms-integration-plugin.configuration.field.syncInterval.helpText')"
-                                        :disabled="props.isInherited"
-                                        :value="props.currentValue"
-                                        :required="true"
-                                        @change="props.updateCurrentValue">
-                                    </sw-field>
+                                        :disabled="isInherited"
+                                        :model-value="currentValue"
+                                        :size="small"
+                                        :placeholder=""
+                                        @update:model-value="updateCurrentValue"
+                                    />
                                 </template>
                             </sw-inherit-wrapper>
                         {% endblock %}
                         {% block styla_cmsintegration_content_card_channel_config_cache_lifetime %}
-                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.pageCacheDuration']"
-                                                :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.pageCacheDuration']">
-                                <template #content="props">
-                                    <sw-field name="StylaCmsIntegration.settings.pageCacheDuration"
-                                        type="number"
+                            <sw-inherit-wrapper
+                                v-model:value="actualConfigData['StylaCmsIntegration.settings.pageCacheDuration']"
+                                :inherited-value="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.pageCacheDuration']">
+                                <template #content="{ currentValue, updateCurrentValue, isInherited }">
+                                    <mt-number-field
+                                        name="StylaCmsIntegration.settings.pageCacheDuration"
                                         number-type="int"
                                         :min="1"
-                                        :mapInheritance="props"
+                                        :map-inheritance="props"
                                         :label="$tc('styla-cms-integration-plugin.configuration.field.pageCache.label')"
                                         :helpText="$tc('styla-cms-integration-plugin.configuration.field.pageCache.helpText')"
-                                        :disabled="props.isInherited"
-                                        :value="props.currentValue"
-                                        :required="true"
-                                        @change="props.updateCurrentValue">
-                                    </sw-field>
+                                        :disabled="isInherited"
+                                        :model-value="currentValue"
+                                        :size="small"
+                                        :placeholder=""
+                                        @update:model-value="updateCurrentValue"
+                                    />
                                 </template>
                             </sw-inherit-wrapper>
                         {% endblock %}
                         {% block styla_cmsintegration_content_card_channel_config_use_full_path %}
-                            <sw-inherit-wrapper v-model="actualConfigData['StylaCmsIntegration.settings.useFullPath']"
-                                            :inheritedValue="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.useFullPath']">
-                                <template #content="props">
+                            <sw-inherit-wrapper
+                                v-model:value="actualConfigData['StylaCmsIntegration.settings.useFullPath']"
+                                :inherited-value="selectedSalesChannelId === null ? null : allConfigs['null']['StylaCmsIntegration.settings.useFullPath']">
+                                <template #content="{ currentValue, updateCurrentValue, isInherited }">
                                     <sw-single-select
                                         :label="$tc('styla-cms-integration-plugin.configuration.field.useFullPath.label')"
                                         :helpText="$tc('styla-cms-integration-plugin.configuration.field.useFullPath.helpText')"
-                                        :disabled="props.isInherited"
-                                        labelProperty="label"
-                                        valueProperty="value"
+                                        :disabled="isInherited"
                                         :options="useFullPathOptions"
-                                        :value="props.currentValue"
+                                        :value="currentValue"
                                         :disableSearchFunction="true"
-                                        @change="props.updateCurrentValue"
+                                        @update:value="updateCurrentValue"
                                     />
                                 </template>
                             </sw-inherit-wrapper>

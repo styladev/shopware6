@@ -8,7 +8,7 @@
                         style="padding:0 5px;line-height:12px;font-size:8px;"
                         :isLoading="resetSynchronizationProcessing"
                         :processSuccess="resetSynchronizationSuccess"
-                        @process-finish="resetTheResetSynchronizationState"
+                        @update:processSuccess="resetTheResetSynchronizationState"
                         @click="resetSynchronizationStatus"
                     >
                         {{ $tc('styla-cms-integration-plugin.actions.reset-synchronization.button.label') }}
@@ -23,7 +23,7 @@
                 {% block styla_page_actions_sync %}
                 <sw-button-process
                     :disabled="synchronizationProcessing"
-                    @process-finish="resetSynchronizationState"
+                    @update:processSuccess="resetSynchronizationState"
                     @click="synchronization"
                     :isLoading="synchronizationProcessing"
                     variant="primary"
@@ -55,7 +55,7 @@
                         <sw-context-menu-item
                             :disabled="scheduleSynchronizationProcessing"
                             :isLoading="scheduleSynchronizationProcessing"
-                            @process-finish="resetScheduleSynchronizationState"
+                            @update:processSuccess="resetScheduleSynchronizationState"
                             @click="scheduleSynchronization"
                         >
                             {{ $tc('styla-cms-integration-plugin.actions.schedule-pages-synchronization.button.label') }}

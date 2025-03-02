@@ -62,7 +62,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
         // Disable functionality for any scope except storefront
         if ($this->isUnsupportedScope($request)
-            || $controllerArgumentsEvent->getRequestType() !== HttpKernelInterface::MASTER_REQUEST
+            || $controllerArgumentsEvent->getRequestType() !== HttpKernelInterface::MAIN_REQUEST
             || strpos($request->getPathInfo(), '/admin') === 0) {
             return;
         }
@@ -131,7 +131,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
 
         // Disable functionality for any scope except storefront
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST ||
+        if ($event->getRequestType() !== HttpKernelInterface::MAIN_REQUEST ||
             strpos($event->getRequest()->getPathInfo(), '/admin') === 0) {
             return;
         }

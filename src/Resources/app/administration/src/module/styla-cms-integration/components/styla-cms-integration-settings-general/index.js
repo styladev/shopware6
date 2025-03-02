@@ -1,8 +1,6 @@
 import template from './styla-cms-integration-settings-general.html.twig';
 
-const { Component } = Shopware;
-
-Component.register('styla-cms-integration-settings-general', {
+Shopware.Component.register('styla-cms-integration-settings-general', {
     template,
 
     props: {
@@ -19,6 +17,14 @@ Component.register('styla-cms-integration-settings-general', {
             required: false,
             default: null,
         },
+    },
+
+    data() {
+        return {
+            pagesListSynchronizationInterval: 10,
+            pageCacheDuration: 3600,
+            useFullPath: false,
+        };
     },
 
     created() {

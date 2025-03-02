@@ -12,12 +12,14 @@
         {% block styla_cmsintegration_actions %}
             <template #smart-bar-actions>
                 {% block styla_cmsintegration_actions_save %}
-                    <sw-button-process v-model="isSaveSuccessful"
-                                       class="sw-settings-login-registration__save-action"
-                                       variant="primary"
-                                       :isLoading="isLoading"
-                                       :disabled="isLoading"
-                                       @click="onSave">
+                    <sw-button-process
+                        v-model:process-success="isSaveSuccessful"
+                        class="sw-settings-login-registration__save-action"
+                        variant="primary"
+                        :is-loading="isLoading"
+                        :disabled="isLoading"
+                        @click.prevent="onSave"
+                    >
                         {{ $tc('global.default.save') }}
                     </sw-button-process>
                 {% endblock %}
@@ -28,9 +30,10 @@
                 {% block styla_cmsintegration_content_card %}
                     <sw-card-view>
                         {% block styla_cmsintegration_content_card_channel_config %}
-                            <sw-sales-channel-config v-model="config"
-                                                     ref="configComponent"
-                                                     domain="StylaCmsIntegration.settings">
+                            <sw-sales-channel-config
+                                v-model:value="config"
+                                ref="configComponent"
+                                domain="StylaCmsIntegration.settings">
                                 {% block styla_cmsintegration_content_card_channel_config_sales_channel %}
                                     <template #select="{ onInput, selectedSalesChannelId }">
                                         {% block styla_cmsintegration_content_card_channel_config_sales_channel_card %}
@@ -38,13 +41,14 @@
                                                      :title="$tc('global.entities.sales_channel', 2)">
                                                 <div class="card-container">
                                                     {% block styla_cmsintegration_content_card_channel_config_sales_channel_card_title %}
-                                                        <sw-single-select v-model="selectedSalesChannelId"
-                                                                          labelProperty="translated.name"
-                                                                          valueProperty="id"
-                                                                          :isLoading="isLoading"
-                                                                          :options="salesChannels"
-                                                                          @change="onInput">
-                                                        </sw-single-select>
+                                                        <sw-single-select
+                                                            v-model:value="selectedSalesChannelId"
+                                                            labelProperty="translated.name"
+                                                            valueProperty="id"
+                                                            :isLoading="isLoading"
+                                                            :options="salesChannels"
+                                                            @update:value="onInput"
+                                                        />
                                                     {% endblock %}
                                                 </div>
                                             </sw-card>
