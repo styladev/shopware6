@@ -1,0 +1,25 @@
+{
+  "base": "/bundles/stylacmsintegration/administration/",
+  "entryPoints": {
+    "styla-cms-integration": {
+      "css": [
+        "/bundles/stylacmsintegration/administration/assets/styla-cms-integration-QSU7ItHC.css"
+      ],
+      "dynamic": [],
+      "js": [
+        "/bundles/stylacmsintegration/administration/assets/styla-cms-integration-BufMmrIf.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}
