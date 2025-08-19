@@ -1,0 +1,9 @@
+monolog:
+  channels: ['stylaCmsIntegration']
+
+  handlers:
+    stylaCmsIntegrationLogHandler:
+        type: rotating_file
+        path: "%kernel.logs_dir%/stylaCmsIntegration_%kernel.environment%.log"
+        level: error
+        channels: [ "stylaCmsIntegration"]

@@ -3,12 +3,10 @@
 namespace Styla\CmsIntegration\Entity\StylaPage;
 
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
 class StylaPage extends Entity
 {
-    use EntityIdTrait;
-
+    protected ?string $id = null;
     protected ?string $name = null;
     protected ?string $accountName = null;
     protected ?string $domain = null;

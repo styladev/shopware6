@@ -19,12 +19,12 @@ services:
             - '@styla.cms_integration.guzzle_client'
             - '@Styla\CmsIntegration\Styla\Client\Translator\PagesListResponseDataTranslator'
             - '@Styla\CmsIntegration\Styla\Client\Translator\PageDetailsResponseDataTranslator'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
             - '%styla.cms_integration.pages_list.api_endpoint.url%'
             - '%styla.cms_integration.page_details.api_endpoint.url%'
 
     Styla\CmsIntegration\Styla\Client\Translator\PagesListResponseDataTranslator:
         arguments:
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\Styla\Client\Translator\PageDetailsResponseDataTranslator: ~

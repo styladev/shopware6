@@ -1,7 +1,7 @@
 services:
     Styla\CmsIntegration\Twig\Extension\StylaModuleContentTwigExtension:
         arguments:
-            $logger: '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
         tags:
             - { name: "twig.extension" }
 
@@ -29,6 +29,6 @@ services:
 
     Styla\CmsIntegration\Routing\StylaUrlGeneratorFactory:
         arguments:
-            $requestStack: '@request_stack'
-            $stylaPageRepository: '@styla_cms_page.repository'
-            $logger: '@logger'
+            - '@request_stack'
+            - '@styla_cms_page.repository'
+            - '@monolog.logger.stylaCmsIntegration'

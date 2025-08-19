@@ -34,7 +34,7 @@ class StylaPagesSynchronizer
         PagesListSynchronizationProcessor $pagesListSynchronizationProcessor,
         MessageBusInterface $messageBus,
         ConfigurationInterface $configuration,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->stylaSynchronizationDalHelper = $stylaSynchronizationDalHelper;
         $this->stuckSynchronizationSpecification = $stuckSynchronizationSpecification;

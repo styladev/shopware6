@@ -105,13 +105,13 @@ Shopware.Component.register('styla-cms-integration-settings-accounts', {
                  * Here is a trick: we are using "accountNames" computed prop only for reading data in template
                  * and creating config entry here to make it reactive, cuz our account config is an object.
                  */
-                this.$set(this.allConfigs[this.selectedSalesChannelId], this.configAccountName, {});
+                this.allConfigs[this.selectedSalesChannelId][this.configAccountName] = {};
             }
             if (
                 this.allConfigs[this.selectedSalesChannelId][this.configDomainUrl] === undefined ||
                 Array.isArray(this.allConfigs[this.selectedSalesChannelId][this.configDomainUrl])
             ) {
-                this.$set(this.allConfigs[this.selectedSalesChannelId], this.configDomainUrl, {});
+                this.allConfigs[this.selectedSalesChannelId][this.configDomainUrl] = {};
             }
         },
 

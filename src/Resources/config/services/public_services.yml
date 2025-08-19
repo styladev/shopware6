@@ -8,7 +8,7 @@ services:
             - '@styla_cms_page.repository'
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
             - '@Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
         tags:
             - { name: 'controller.service_arguments' }
         calls:
@@ -18,7 +18,7 @@ services:
     Styla\CmsIntegration\Controller\StylaSynchronizationController:
         arguments:
             - '@styla_cms_pages_synchronization.repository'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
         public: true
 
 
@@ -29,7 +29,6 @@ services:
             - '@Shopware\Storefront\Page\GenericPageLoader'
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
-            - [ 'setTwig' , [ '@twig' ] ]
 
     Styla\CmsIntegration\Controller\Storefront\StylaApiController:
         public: true
@@ -46,7 +45,7 @@ services:
         arguments:
             - '@category.repository'
             - '@Styla\CmsIntegration\Styla\Api\CategoryInfoTranslator'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\UseCase\ProductApiActionsInteractor:
         arguments:
@@ -54,7 +53,7 @@ services:
             - '@sales_channel.product.repository'
             - '@Styla\CmsIntegration\Styla\Api\ProductDetailsTranslator'
             - '@Styla\CmsIntegration\Styla\Api\ProductInfoTranslator'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\UseCase\ShoppingCartInteractor:
         arguments:
@@ -62,14 +61,14 @@ services:
             - '@event_dispatcher'
             - '@Shopware\Core\Checkout\Cart\CartCalculator'
             - '@Shopware\Core\Checkout\Cart\CartPersister'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\UseCase\StylaPagesInteractor:
         arguments:
             - '@Styla\CmsIntegration\Styla\Client\ClientRegistry'
             - '@Styla\CmsIntegration\Styla\Page\Guesser\VirtualStylaPageToReplaceGuesser'
             - '@Styla\CmsIntegration\Styla\Page\PageCacheInteractor'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\UseCase\StylaPagesSynchronizer:
         public: true
@@ -77,6 +76,6 @@ services:
             - '@Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper'
             - '@Styla\CmsIntegration\Entity\Specification\StuckSyncSpecification'
             - '@Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor'
-            - '@messenger.bus.shopware'
+            - '@messenger.default_bus'
             - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'

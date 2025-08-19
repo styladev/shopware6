@@ -3,7 +3,7 @@
         <template #smart-bar-actions> {# slots check vue.js documentation #}
             <div v-if="lastSuccessSynchronizationDate">
                 <sw-label id="last-sync-info" variant="info" :dismissable="false">
-                    {{ $tc('styla-cms-integration-plugin.actions.get-last-success-date.text', 0, {'dateTime': lastSuccessSynchronizationDate}) }}
+                    {{ $tc('styla-cms-integration-plugin.actions.get-last-success-date.text', {'dateTime': lastSuccessSynchronizationDate}, 0) }}
                     <sw-button-process id="reset-sync-button" variant="ghost" size="x-small"
                         style="padding:0 5px;line-height:12px;font-size:8px;"
                         :isLoading="resetSynchronizationProcessing"

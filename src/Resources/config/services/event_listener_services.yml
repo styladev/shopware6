@@ -3,7 +3,7 @@ services:
         arguments:
             - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
             - '@Styla\CmsIntegration\Controller\Storefront\StylaPageController'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
             - '@Shopware\Core\System\SystemConfig\SystemConfigService'
         tags:
             - { 'name': 'kernel.event_subscriber' }

@@ -1,6 +1,5 @@
 import './pages/styla-cms-integration-settings';
 import './pages/page-listing';
-import './components/styla-plugin-settings-icon';
 import './components/styla-cms-integration-settings-accounts';
 import './components/styla-cms-integration-settings-general';
 

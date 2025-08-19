@@ -57,7 +57,7 @@ Shopware.Component.register('styla-cms-integration-settings-general', {
              */
             for (const [key, defaultValue] of Object.entries(defaultConfigs)) {
                 if (this.allConfigs['null'][configPrefix + key] === undefined) {
-                    this.$set(this.allConfigs['null'], configPrefix + key, defaultValue);
+                    this.allConfigs['null'][configPrefix + key] = defaultValue;
                 }
             }
         },

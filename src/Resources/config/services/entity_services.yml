@@ -20,4 +20,4 @@ services:
         arguments:
             - '@Doctrine\DBAL\Connection'
             - '@styla_cms_pages_synchronization.repository'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'

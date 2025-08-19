@@ -27,7 +27,7 @@ services:
         arguments:
             - '@cache.object'
             - '@Styla\CmsIntegration\Configuration\ConfigurationInterface'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\Styla\Page\Guesser\AbstractStylaPageToReplaceGuesser:
         arguments:

@@ -2,6 +2,7 @@
 
 namespace Styla\CmsIntegration\Styla\Synchronization;
 
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -39,7 +40,7 @@ class PagesListSynchronizationProcessor
         ConfigurationInterface $configuration,
         CacheInvalidatorFactory $cacheInvalidatorFactory,
         PageDataMapper $pageDataMapper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->clientRegistry = $clientRegistry;
         $this->stylaSynchronizationDalHelper = $stylaSynchronizationDalHelper;
@@ -62,7 +63,7 @@ class PagesListSynchronizationProcessor
             $synchronizationId = $this->stylaSynchronizationDalHelper->createSynchronization($context);
             $synchronization = $this->stylaSynchronizationDalHelper->getSynchronizationById($synchronizationId, $context);
         }
-        
+
         $this->stylaSynchronizationDalHelper->markSynchronizationAsInProgress($synchronization, $context);
 
         $isSuccess = true;
@@ -76,6 +77,7 @@ class PagesListSynchronizationProcessor
                         $context,
                         $cacheInvalidator
                     );
+
                     $cacheInvalidator->invalidateCaches();
                 },
                 function (\Throwable $exception) use ($cacheInvalidator, $accountName) {
@@ -144,6 +146,7 @@ class PagesListSynchronizationProcessor
             }
 
             $shopwareStylaPageEntity = $this->findExistingPage($generalPageInfo, $context);
+
             if ($shopwareStylaPageEntity) {
                 $foundPageIds[] = $shopwareStylaPageEntity->getId();
             } else {

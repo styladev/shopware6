@@ -2,7 +2,7 @@ services:
     Styla\CmsIntegration\Async\StylaPagesListSynchronizationMessageHandler:
         arguments:
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
         tags:
             - { name: 'messenger.message_handler' }
 
@@ -14,7 +14,7 @@ services:
         arguments:
             - '@scheduled_task.repository'
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
         tags:
             - { name: 'messenger.message_handler' }
 
@@ -26,6 +26,6 @@ services:
         arguments:
             - '@scheduled_task.repository'
             - '@Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper'
-            - '@logger'
+            - '@monolog.logger.stylaCmsIntegration'
         tags:
             - { name: 'messenger.message_handler' }

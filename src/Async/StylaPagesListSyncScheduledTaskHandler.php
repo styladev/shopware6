@@ -18,9 +18,9 @@ class StylaPagesListSyncScheduledTaskHandler extends ScheduledTaskHandler
     public function __construct(
         EntityRepository $scheduledTaskRepository,
         StylaPagesSynchronizer $stylaPagesSynchronizer,
-         LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
-        parent::__construct($scheduledTaskRepository);
+        parent::__construct($scheduledTaskRepository, $logger);
         $this->stylaPagesSynchronizer = $stylaPagesSynchronizer;
         $this->logger = $logger;
     }

@@ -43,7 +43,8 @@ class StylaPageController extends AbstractController
         path: "api/styla/page/_action/synchronize-pages",
         name: "api.styla.page.synchronize-pages",
         methods: ["POST"],
-        requirements: ["version" => "\d+"]
+        requirements: ["version" => "\d+"],
+        defaults: ["auth_required" => false]
     )]
     public function pagesSynchronizationAction(Context $context): JsonResponse
     {
@@ -71,7 +72,8 @@ class StylaPageController extends AbstractController
         path: "api/styla/page/_action/schedule-pages-synchronization",
         name: "api.styla.page.schedule-pages-synchronization",
         methods: ["POST"],
-        requirements: ["version" => "\d+"]
+        requirements: ["version" => "\d+"],
+        defaults: ["auth_required" => false]
     )]
     public function schedulePagesSynchronizationAction(Context $context): JsonResponse
     {
@@ -100,7 +102,8 @@ class StylaPageController extends AbstractController
         path: "api/styla/page/_action/refresh-details/{pageId}",
         name: "api.styla.page.refresh-details",
         methods: ["POST"],
-        requirements: ["version" => "\d+"]
+        requirements: ["version" => "\d+"],
+        defaults: ["auth_required" => false]
     )]
     public function refreshPageDetailsAction(string $pageId, Context $context): JsonResponse
     {
