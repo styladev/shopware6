@@ -258,7 +258,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         return true;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         // Priority: the highest means executed first
         // Exception event by default actually going last

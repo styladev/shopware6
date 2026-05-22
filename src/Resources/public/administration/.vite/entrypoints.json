@@ -3,11 +3,11 @@
   "entryPoints": {
     "styla-cms-integration": {
       "css": [
-        "/bundles/stylacmsintegration/administration/assets/styla-cms-integration-QSU7ItHC.css"
+        "/bundles/stylacmsintegration/administration/assets/styla-cms-integration-D1Jx-yV4.css"
       ],
       "dynamic": [],
       "js": [
-        "/bundles/stylacmsintegration/administration/assets/styla-cms-integration-BufMmrIf.js"
+        "/bundles/stylacmsintegration/administration/assets/styla-cms-integration-4wfsqcko.js"
       ],
       "legacy": false,
       "preload": []

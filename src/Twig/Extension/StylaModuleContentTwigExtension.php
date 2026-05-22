@@ -22,7 +22,7 @@ class StylaModuleContentTwigExtension extends AbstractExtension
         $this->logger = $logger;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('has_styla_elements', [$this, 'hasStylaElements']),

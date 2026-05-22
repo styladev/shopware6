@@ -9,6 +9,8 @@ class ConfigurationFactory
 {
     public const PREFIX = 'StylaCmsIntegration.settings.';
     public const PAGES_LIST_SYNCHRONIZATION_INTERVAL_CONFIG_KEY = self::PREFIX . 'pagesListSynchronizationInterval';
+    public const DEFAULT_PAGE_CACHE_DURATION = 3600;
+    public const DEFAULT_PAGES_LIST_SYNCHRONIZATION_INTERVAL = 10;
 
     private SystemConfigService $systemConfigService;
 
@@ -49,18 +51,15 @@ class ConfigurationFactory
         }
 
         $pageDetailsCacheDuration = $this->systemConfigService->getInt(self::PREFIX . 'pageCacheDuration');
-        if (!$pageDetailsCacheDuration) {
-            throw new InvalidConfigurationException(
-                'Styla CMS Integration Page details Cache Duration configuration is not defined'
-            );
+        if ($pageDetailsCacheDuration <= 0) {
+            $pageDetailsCacheDuration = self::DEFAULT_PAGE_CACHE_DURATION;
         }
 
-        $pagesListSynchronizationInterval = $this->systemConfigService
-            ->getString(self::PAGES_LIST_SYNCHRONIZATION_INTERVAL_CONFIG_KEY);
-        if (!$pagesListSynchronizationInterval) {
-            throw new InvalidConfigurationException(
-                'Styla CMS Integration Page list synchronization interval configuration is not defined'
-            );
+        $pagesListSynchronizationInterval = $this->systemConfigService->getInt(
+            self::PAGES_LIST_SYNCHRONIZATION_INTERVAL_CONFIG_KEY
+        );
+        if ($pagesListSynchronizationInterval <= 0) {
+            $pagesListSynchronizationInterval = self::DEFAULT_PAGES_LIST_SYNCHRONIZATION_INTERVAL;
         }
 
         $listOfExtraPagesToOverride = [];

@@ -141,6 +141,14 @@
                             </template>
                         {% endblock %}
 
+                        {% block styla_cmsintegration_content_card_channel_config_general_embedded %}
+                            <styla-cms-integration-settings-general
+                                :actualConfigData="actualConfigData"
+                                :allConfigs="allConfigs"
+                                :selectedSalesChannelId="selectedSalesChannelId">
+                            </styla-cms-integration-settings-general>
+                        {% endblock %}
+
                     </div>
                 {% endblock %}
             </sw-container>
