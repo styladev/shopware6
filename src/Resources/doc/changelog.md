@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.4.3
+
+* Fix modular content slot ID field in Shopping Experiences for Shopware 6.7 (`sw-field` → `mt-text-field`)
+
 ### v1.3
 
 * Support up to shopware core v6.6.10.1
