@@ -5,7 +5,7 @@
 * Fix Store API routes answering with 500 (e.g. routes with a `Criteria` argument): the Styla page argument resolver now only resolves `StylaPage` arguments
 * Fix Styla pages rendered for unknown URLs redirecting (301) to themselves on Shopware 6.7
 * Fix scheduled task `StylaPagesSyncOldRecordsClearTask` failing on Shopware 6.7 (missing logger in handler constructor)
-* Fix Styla scheduled task handlers being executed for every scheduled task of the shop
+* Register the Styla scheduled task handlers explicitly for their own task classes
 
 ### v1.4.3
 
