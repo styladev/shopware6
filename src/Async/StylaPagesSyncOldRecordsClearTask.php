@@ -6,7 +6,7 @@ use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTask;
 
 class StylaPagesSyncOldRecordsClearTask extends ScheduledTask
 {
-    private const EXECUTION_INTERVAL = '86400';
+    private const EXECUTION_INTERVAL = 86400;
 
     public static function getTaskName(): string
     {
