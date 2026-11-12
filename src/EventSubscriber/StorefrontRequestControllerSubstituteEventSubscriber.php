@@ -211,6 +211,9 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         // Without this flag Shopware's HttpKernel transforms the sub request again and the
         // CanonicalRedirectService answers with a 301 to the same URL.
         $previousAttributes[self::SKIP_TRANSFORMER_ATTRIBUTE] = true;
+        // The main request's canonical link belongs to the Shopware page that was not found, not to
+        // the Styla page. Drop it on purpose so no wrong Link: rel="canonical" header is sent
+        // (updateMasterRequest() copies these attributes back to the main request).
         unset($previousAttributes[SalesChannelRequest::ATTRIBUTE_CANONICAL_LINK]);
         $this->stylaDebug(8, $previousAttributes);
 
