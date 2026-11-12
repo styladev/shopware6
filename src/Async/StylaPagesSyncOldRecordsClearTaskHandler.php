@@ -23,7 +23,7 @@ class StylaPagesSyncOldRecordsClearTaskHandler extends ScheduledTaskHandler
         StylaSynchronizationDalHelper $stylaSynchronizationDalHelper,
         LoggerInterface $logger
     ) {
-        parent::__construct($scheduledTaskRepository);
+        parent::__construct($scheduledTaskRepository, $logger);
         $this->stylaSynchronizationDalHelper = $stylaSynchronizationDalHelper;
         $this->logger = $logger;
     }
