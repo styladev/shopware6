@@ -16,7 +16,9 @@ services:
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
             - '@monolog.logger.stylaCmsIntegration'
         tags:
-            - { name: 'messenger.message_handler' }
+            # "handles" is required: without it Symfony guesses the base ScheduledTask class from __invoke()
+            # and this handler would run for every scheduled task of the shop
+            - { name: 'messenger.message_handler', handles: 'Styla\CmsIntegration\Async\StylaPagesListSyncScheduledTask' }
 
     Styla\CmsIntegration\Async\StylaPagesSyncOldRecordsClearTask:
         tags:
@@ -28,4 +30,4 @@ services:
             - '@Styla\CmsIntegration\Entity\StylaIntegration\StylaSynchronizationDalHelper'
             - '@monolog.logger.stylaCmsIntegration'
         tags:
-            - { name: 'messenger.message_handler' }
+            - { name: 'messenger.message_handler', handles: 'Styla\CmsIntegration\Async\StylaPagesSyncOldRecordsClearTask' }

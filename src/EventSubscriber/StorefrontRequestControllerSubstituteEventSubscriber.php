@@ -8,6 +8,7 @@ use Shopware\Storefront\Framework\Routing\StorefrontRouteScope;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\PlatformRequest;
+use Shopware\Core\SalesChannelRequest;
 use Styla\CmsIntegration\Controller\Storefront\StylaPageController;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\Routing\StylaUrlGenerator;
@@ -27,6 +28,7 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
 {
     const STYLA_PAGE_INSTANCE_ARGUMENT = '_styla_cms_page_instance';
     const STYLA_DEBUG_CODE = '_c793fa5b698d6d7e22a3c6b0bb53a1d8';
+    const SKIP_TRANSFORMER_ATTRIBUTE = 'sw-skip-transformer';
 
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPageController $stylaPageController;
@@ -205,6 +207,11 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         if (isset($previousAttributes['_cspNonce'])) {
             unset($previousAttributes['_cspNonce']);
         }
+        // The attributes above were already resolved by the RequestTransformer for the main request.
+        // Without this flag Shopware's HttpKernel transforms the sub request again and the
+        // CanonicalRedirectService answers with a 301 to the same URL.
+        $previousAttributes[self::SKIP_TRANSFORMER_ATTRIBUTE] = true;
+        unset($previousAttributes[SalesChannelRequest::ATTRIBUTE_CANONICAL_LINK]);
         $this->stylaDebug(8, $previousAttributes);
 
         $request = $request->duplicate(null, null, $previousAttributes);
