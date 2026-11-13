@@ -12,8 +12,7 @@ services:
     Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory:
         arguments:
             - '@Styla\CmsIntegration\Styla\Page\PageCacheInteractor'
-            - '@Symfony\Component\HttpKernel\HttpCache\StoreInterface'
+            - '@Shopware\Core\Framework\Adapter\Cache\CacheInvalidator'
             - '@monolog.logger.stylaCmsIntegration'
-            - '@sales_channel_domain.repository'
 
     Styla\CmsIntegration\Styla\Synchronization\PageDataMapper: ~

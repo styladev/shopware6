@@ -2,48 +2,33 @@
 
 namespace Styla\CmsIntegration\UseCase;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
-use Shopware\Core\Checkout\Cart\CartCalculator;
-use Shopware\Core\Checkout\Cart\CartPersister;
-use Shopware\Core\Checkout\Cart\Event\AfterLineItemAddedEvent;
-use Shopware\Core\Checkout\Cart\Event\BeforeLineItemAddedEvent;
-use Shopware\Core\Checkout\Cart\Event\CartChangedEvent;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\LineItemFactoryRegistry;
+use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
 
 class ShoppingCartInteractor
 {
     private LineItemFactoryRegistry $lineItemFactory;
-    private EventDispatcherInterface $eventDispatcher;
-    private CartCalculator $cartCalculator;
-    private CartPersister $cartPersister;
+    private CartService $cartService;
     private LoggerInterface $logger;
 
     public function __construct(
         LineItemFactoryRegistry $lineItemFactory,
-        EventDispatcherInterface $eventDispatcher,
-        CartCalculator $cartCalculator,
-        CartPersister $cartPersister,
+        CartService $cartService,
         LoggerInterface $logger
     ) {
         $this->lineItemFactory = $lineItemFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->cartCalculator = $cartCalculator;
-        $this->cartPersister = $cartPersister;
+        $this->cartService = $cartService;
         $this->logger = $logger;
     }
 
     /**
-     * Should be in sync with @see \Shopware\Core\Checkout\Cart\SalesChannel\CartItemAddRoute::add
-     *
-     * @param string $productId
-     * @param int $qty
-     * @param Cart $cart
-     * @param SalesChannelContext $salesChannelContext
+     * Adds the product through Shopware's CartService, so the regular add-to-cart flow runs
+     * (cart rules, purchase limits, calculation, persisting and the cart events).
      *
      * @throws UseCaseInteractorException
      */
@@ -52,29 +37,19 @@ class ShoppingCartInteractor
         int $qty,
         Cart $cart,
         SalesChannelContext $salesChannelContext
-    ) {
+    ): Cart {
         try {
-            $item = [
-                'id' => $productId,
-                'referencedId' => $productId,
-                'quantity' => $qty,
-                'type' => LineItem::PRODUCT_LINE_ITEM_TYPE
-            ];
-            $lineItem = $this->lineItemFactory->create($item, $salesChannelContext);
+            $lineItem = $this->lineItemFactory->create(
+                [
+                    'id' => $productId,
+                    'referencedId' => $productId,
+                    'quantity' => $qty,
+                    'type' => LineItem::PRODUCT_LINE_ITEM_TYPE,
+                ],
+                $salesChannelContext
+            );
 
-            $alreadyExists = $cart->has($lineItem->getId());
-            $cart->add($lineItem);
-
-            $this->eventDispatcher
-                ->dispatch(new BeforeLineItemAddedEvent($lineItem, $cart, $salesChannelContext, $alreadyExists));
-
-            $cart->markModified();
-
-            $cart = $this->cartCalculator->calculate($cart, $salesChannelContext);
-            $this->cartPersister->save($cart, $salesChannelContext);
-
-            $this->eventDispatcher->dispatch(new AfterLineItemAddedEvent([$lineItem], $cart, $salesChannelContext));
-            $this->eventDispatcher->dispatch(new CartChangedEvent($cart, $salesChannelContext));
+            return $this->cartService->add($cart, $lineItem, $salesChannelContext);
         } catch (\Throwable $exception) {
             $message = sprintf(
                 'Could not add line item[id: %s, qty: %s] to the cart, reason: %s',
@@ -82,7 +57,6 @@ class ShoppingCartInteractor
                 $qty,
                 $exception->getMessage()
             );
-
             $this->logger->error($message, ['exception' => $exception]);
 
             throw new UseCaseInteractorException(

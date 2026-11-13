@@ -34,7 +34,7 @@ class StylaSynchronizationDalHelper
         $this->logger = $logger;
     }
 
-    public function transactional(\Closure $workDelegate, \Closure $onFailDelegate = null, &$transactionalWorkResult = null): bool
+    public function transactional(\Closure $workDelegate, ?\Closure $onFailDelegate = null, &$transactionalWorkResult = null): bool
     {
         $transactionActive = false;
         try {

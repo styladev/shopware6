@@ -13,7 +13,7 @@ use Styla\CmsIntegration\Styla\Api\DTO\Category\CategoryInfoList;
 
 class CategoryInfoTranslator
 {
-    public const DEFAULT_MAX_TRANSLATION_NESTING_LEVEL = 500;
+    public const DEFAULT_MAX_TRANSLATION_NESTING_LEVEL = 20;
 
     private EntityRepository $categoryRepository;
 
@@ -61,6 +61,7 @@ class CategoryInfoTranslator
         $criteria = new Criteria();
 
         $criteria->addFilter(new EqualsFilter('parentId', $categoryEntity->getId()));
+        $criteria->addFilter(new EqualsFilter('active', true));
 
         $result = $this->categoryRepository->search($criteria, $context);
 

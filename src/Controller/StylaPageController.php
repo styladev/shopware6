@@ -11,9 +11,10 @@ use Styla\CmsIntegration\Exception\SynchronizationIsAlreadyRunning;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
 use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
+use Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory;
 use Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route(defaults: ["_routeScope" => ["api"]])]
@@ -24,14 +25,17 @@ class StylaPageController extends AbstractController
     private PagesListSynchronizationProcessor $pagesListSynchronizationProcessor;
     private EntityRepository $repository;
     private LoggerInterface $logger;
+    private CacheInvalidatorFactory $cacheInvalidatorFactory;
 
     public function __construct(
         StylaPagesInteractor $interactor,
         EntityRepository $repository,
         StylaPagesSynchronizer $stylaPagesSynchronizer,
         PagesListSynchronizationProcessor $pagesListSynchronizationProcessor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CacheInvalidatorFactory $cacheInvalidatorFactory
     ) {
+        $this->cacheInvalidatorFactory = $cacheInvalidatorFactory;
         $this->stylaPagesInteractor = $interactor;
         $this->repository = $repository;
         $this->stylaPagesSynchronizer = $stylaPagesSynchronizer;
@@ -43,8 +47,7 @@ class StylaPageController extends AbstractController
         path: "api/styla/page/_action/synchronize-pages",
         name: "api.styla.page.synchronize-pages",
         methods: ["POST"],
-        requirements: ["version" => "\d+"],
-        defaults: ["auth_required" => false]
+        requirements: ["version" => "\d+"]
     )]
     public function pagesSynchronizationAction(Context $context): JsonResponse
     {
@@ -72,8 +75,7 @@ class StylaPageController extends AbstractController
         path: "api/styla/page/_action/schedule-pages-synchronization",
         name: "api.styla.page.schedule-pages-synchronization",
         methods: ["POST"],
-        requirements: ["version" => "\d+"],
-        defaults: ["auth_required" => false]
+        requirements: ["version" => "\d+"]
     )]
     public function schedulePagesSynchronizationAction(Context $context): JsonResponse
     {
@@ -102,8 +104,7 @@ class StylaPageController extends AbstractController
         path: "api/styla/page/_action/refresh-details/{pageId}",
         name: "api.styla.page.refresh-details",
         methods: ["POST"],
-        requirements: ["version" => "\d+"],
-        defaults: ["auth_required" => false]
+        requirements: ["version" => "\d+"]
     )]
     public function refreshPageDetailsAction(string $pageId, Context $context): JsonResponse
     {
@@ -119,7 +120,12 @@ class StylaPageController extends AbstractController
                 throw new \RuntimeException('Page entity was not found');
             }
 
-            $this->stylaPagesInteractor->refreshPageDetails($searchResult->first());
+            $page = $searchResult->first();
+            // Drop the cached page details and the http cache entries of the page, then load fresh details
+            $cacheInvalidator = $this->cacheInvalidatorFactory->create($context);
+            $cacheInvalidator->addPageForCacheInvalidation($page);
+            $cacheInvalidator->invalidateCaches();
+            $this->stylaPagesInteractor->refreshPageDetails($page);
             $isSuccess = true;
         } catch (PageNotFoundException $exception) {
             $errorCode = 'PAGE_NOT_FOUND';
