@@ -29,6 +29,8 @@ use Styla\CmsIntegration\Styla\Api\ProductInfoTranslator;
 class ProductApiActionsInteractor
 {
     public const PRODUCT_LIST_DEFAULT_LIMIT = 100;
+    public const MAX_SEARCH_TERM_LENGTH = 100;
+    public const MAX_SEARCH_TERM_WORDS = 10;
 
     protected EntityRepository $productRepository;
     protected SalesChannelRepository $productSalesChannelRepository;
@@ -133,7 +135,12 @@ class ProductApiActionsInteractor
             )
         );
 
-        $terms = explode(' ', $term);
+        // Every word becomes three LIKE conditions, so the public search term is bounded
+        $terms = array_slice(
+            array_filter(explode(' ', mb_substr($term, 0, self::MAX_SEARCH_TERM_LENGTH)), static fn (string $word) => trim($word) !== ''),
+            0,
+            self::MAX_SEARCH_TERM_WORDS
+        );
 
         $termsFilter = new AndFilter();
         foreach ($terms as $term) {
