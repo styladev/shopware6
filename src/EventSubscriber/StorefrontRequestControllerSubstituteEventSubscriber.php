@@ -3,6 +3,7 @@
 namespace Styla\CmsIntegration\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
+use Shopware\Core\Framework\Adapter\Cache\Event\AddCacheTagEvent;
 use Shopware\Core\Framework\Routing\AbstractRouteScope;
 use Shopware\Storefront\Framework\Routing\StorefrontRouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -12,8 +13,10 @@ use Styla\CmsIntegration\Controller\Storefront\StylaPageController;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\Routing\StylaUrlGenerator;
 use Styla\CmsIntegration\Styla\Page\Guesser\DTO\ShopwarePageDetails;
+use Styla\CmsIntegration\Styla\Synchronization\CacheInvalidator;
 use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -32,14 +35,17 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
     private StylaPageController $stylaPageController;
     private LoggerInterface $logger;
     private SystemConfigService $systemConfigService;
+    private EventDispatcherInterface $eventDispatcher;
     private bool $useFullPath = false;
 
     public function __construct(
         StylaPagesInteractor $stylaPagesInteractor,
         StylaPageController $stylaPageController,
         LoggerInterface $logger,
-        SystemConfigService $systemConfigService
+        SystemConfigService $systemConfigService,
+        EventDispatcherInterface $eventDispatcher
     ) {
+        $this->eventDispatcher = $eventDispatcher;
         $this->stylaPagesInteractor = $stylaPagesInteractor;
         $this->stylaPageController = $stylaPageController;
         $this->logger = $logger;
@@ -64,6 +70,11 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         if ($shopwarePageDetails === null) {
             return;
         }
+        // Tag the cached Shopware page with its path, so a Styla page published for this path later
+        // can invalidate it (see CacheInvalidator::addPageForHttpCacheInvalidation())
+        $this->eventDispatcher->dispatch(
+            new AddCacheTagEvent(CacheInvalidator::httpCachePathTag($shopwarePageDetails->getDecodedPath()))
+        );
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
         if (!$stylaPage) {
             return;

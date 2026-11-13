@@ -11,6 +11,7 @@ use Styla\CmsIntegration\Exception\SynchronizationIsAlreadyRunning;
 use Styla\CmsIntegration\Exception\UseCaseInteractorException;
 use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Styla\CmsIntegration\UseCase\StylaPagesSynchronizer;
+use Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory;
 use Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,14 +25,17 @@ class StylaPageController extends AbstractController
     private PagesListSynchronizationProcessor $pagesListSynchronizationProcessor;
     private EntityRepository $repository;
     private LoggerInterface $logger;
+    private CacheInvalidatorFactory $cacheInvalidatorFactory;
 
     public function __construct(
         StylaPagesInteractor $interactor,
         EntityRepository $repository,
         StylaPagesSynchronizer $stylaPagesSynchronizer,
         PagesListSynchronizationProcessor $pagesListSynchronizationProcessor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CacheInvalidatorFactory $cacheInvalidatorFactory
     ) {
+        $this->cacheInvalidatorFactory = $cacheInvalidatorFactory;
         $this->stylaPagesInteractor = $interactor;
         $this->repository = $repository;
         $this->stylaPagesSynchronizer = $stylaPagesSynchronizer;
@@ -116,7 +120,12 @@ class StylaPageController extends AbstractController
                 throw new \RuntimeException('Page entity was not found');
             }
 
-            $this->stylaPagesInteractor->refreshPageDetails($searchResult->first());
+            $page = $searchResult->first();
+            // Drop the cached page details and the http cache entries of the page, then load fresh details
+            $cacheInvalidator = $this->cacheInvalidatorFactory->create($context);
+            $cacheInvalidator->addPageForCacheInvalidation($page);
+            $cacheInvalidator->invalidateCaches();
+            $this->stylaPagesInteractor->refreshPageDetails($page);
             $isSuccess = true;
         } catch (PageNotFoundException $exception) {
             $errorCode = 'PAGE_NOT_FOUND';

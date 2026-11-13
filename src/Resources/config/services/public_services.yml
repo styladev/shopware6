@@ -9,6 +9,7 @@ services:
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
             - '@Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor'
             - '@monolog.logger.stylaCmsIntegration'
+            - '@Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory'
         tags:
             - { name: 'controller.service_arguments' }
         calls:
