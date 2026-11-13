@@ -3,33 +3,42 @@
 namespace Styla\CmsIntegration\Styla\Synchronization;
 
 use Psr\Log\LoggerInterface;
+use Shopware\Core\Framework\Adapter\Cache\CacheInvalidator as ShopwareCacheInvalidator;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPageCollection;
 use Styla\CmsIntegration\Styla\Page\PageCacheInteractor;
-use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
 
+/**
+ * Collects changed Styla pages during a synchronization and invalidates
+ * - the cached Styla page details (object cache) and
+ * - the Shopware HTTP cache entries of the rendered Styla pages (cache tag per page, see self::httpCacheTag()).
+ */
 class CacheInvalidator
 {
-    private PageCacheInteractor $pageCacheInteractor;
-    private StoreInterface $httpCacheStore;
-    private LoggerInterface $logger;
-    private array $domainsList;
+    public const HTTP_CACHE_TAG_PREFIX = 'styla-page-';
 
-    private array $pagePathToCacheInvalidateList;
-    private array $pageIdsToCacheInvalidateList;
+    private PageCacheInteractor $pageCacheInteractor;
+    private ShopwareCacheInvalidator $shopwareCacheInvalidator;
+    private LoggerInterface $logger;
+    /** @var array<string, string> */
+    private array $pageIdsToDetailsCacheInvalidateList;
+    /** @var array<string, string> */
+    private array $pageIdsToHttpCacheInvalidateList;
 
     public function __construct(
         PageCacheInteractor $pageCacheInteractor,
-        StoreInterface $httpCacheStore,
-        LoggerInterface $logger,
-        array $domainsList
+        ShopwareCacheInvalidator $shopwareCacheInvalidator,
+        LoggerInterface $logger
     ) {
         $this->pageCacheInteractor = $pageCacheInteractor;
-        $this->httpCacheStore = $httpCacheStore;
+        $this->shopwareCacheInvalidator = $shopwareCacheInvalidator;
         $this->logger = $logger;
-        $this->domainsList = $domainsList;
-
         $this->clearState();
+    }
+
+    public static function httpCacheTag(string $pageId): string
+    {
+        return self::HTTP_CACHE_TAG_PREFIX . $pageId;
     }
 
     public function addPagesForCacheInvalidation(StylaPageCollection $collection)
@@ -41,51 +50,42 @@ class CacheInvalidator
 
     public function addPageForCacheInvalidation(StylaPage $page)
     {
-        $this->addPageForDetailsCacheInvalidation($page);
-        $this->addPageForHttpCacheInvalidation($page);
-    }
-
-    private function addPageForDetailsCacheInvalidation(StylaPage $page)
-    {
         $id = $page->getId();
-        $this->pageIdsToCacheInvalidateList[$id] = $id;
+        $this->pageIdsToDetailsCacheInvalidateList[$id] = $id;
+        $this->addPageForHttpCacheInvalidation($page);
     }
 
     public function addPageForHttpCacheInvalidation(StylaPage $page)
     {
-        $path = $page->getPath();
-        $this->pagePathToCacheInvalidateList[$path] = $path;
+        $id = $page->getId();
+        $this->pageIdsToHttpCacheInvalidateList[$id] = $id;
     }
 
     public function invalidateCaches()
     {
-        if ($this->pageIdsToCacheInvalidateList) {
-            $this->pageCacheInteractor->removeCacheEntryByPageIds($this->pageIdsToCacheInvalidateList);
+        if ($this->pageIdsToDetailsCacheInvalidateList) {
+            $this->pageCacheInteractor->removeCacheEntryByPageIds($this->pageIdsToDetailsCacheInvalidateList);
         }
-        $this->invalidateHttpCacheByPagePaths();
+        $this->invalidateHttpCache();
         $this->clearState();
     }
 
-    private function invalidateHttpCacheByPagePaths()
+    private function invalidateHttpCache(): void
     {
+        if (!$this->pageIdsToHttpCacheInvalidateList) {
+            return;
+        }
+
         try {
-            foreach ($this->domainsList as $domain) {
-                foreach ($this->pagePathToCacheInvalidateList as $pagePath) {
-                    $pageUri = sprintf(
-                        'http://%s/%s',
-                        rtrim($domain, '/\\'),
-                        ltrim($pagePath, '/\\')
-                    );
-                    $this->httpCacheStore->purge($pageUri);
-                }
-            }
+            $this->shopwareCacheInvalidator->invalidate(
+                array_values(array_map([self::class, 'httpCacheTag'], $this->pageIdsToHttpCacheInvalidateList))
+            );
         } catch (\Throwable $exception) {
             $this->logger->error(
-                'Could not clear http cache for pages',
+                'Could not invalidate http cache for styla pages',
                 [
                     'exception' => $exception,
-                    'pages' => $this->pagePathToCacheInvalidateList,
-                    'domains' => $this->domainsList
+                    'pageIds' => array_values($this->pageIdsToHttpCacheInvalidateList),
                 ]
             );
         }
@@ -93,7 +93,7 @@ class CacheInvalidator
 
     public function clearState()
     {
-        $this->pageIdsToCacheInvalidateList = [];
-        $this->pagePathToCacheInvalidateList = [];
+        $this->pageIdsToDetailsCacheInvalidateList = [];
+        $this->pageIdsToHttpCacheInvalidateList = [];
     }
 }

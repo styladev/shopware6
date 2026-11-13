@@ -9,11 +9,10 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Styla\CmsIntegration\Entity\StylaIntegration\StylaPagesSynchronization;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(defaults: ["_routeScope" => ["api"]])]
 class StylaSynchronizationController
@@ -31,8 +30,7 @@ class StylaSynchronizationController
         path: "api/styla/synchronization/page/_action/get_last_success_date_time",
         name: "api.styla.synchronization.page.get-last-success-date-time",
         methods: ["GET"],
-        requirements: ["version" => "\d+"],
-        defaults: ["auth_required" => false]
+        requirements: ["version" => "\d+"]
     )]
     public function getLastsSuccessPageSynchronizationDateAction(Context $context): JsonResponse
     {
@@ -69,9 +67,8 @@ class StylaSynchronizationController
     #[Route(
         path: "api/styla/synchronization/page/_action/reset_synchronization_status",
         name: "api.styla.synchronization.page.reset-syncrhronization-status",
-        methods: ["GET"],
-        requirements: ["version" => "\d+"],
-        defaults: ["auth_required" => false]
+        methods: ["POST"],
+        requirements: ["version" => "\d+"]
     )]
     public function resetSynchronizationStatus(Context $context): JsonResponse
     {
