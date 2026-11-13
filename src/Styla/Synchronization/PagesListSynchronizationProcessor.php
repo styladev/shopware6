@@ -57,7 +57,7 @@ class PagesListSynchronizationProcessor
      *
      * @throws \Throwable
      */
-    public function synchronizePages(StylaPagesSynchronization $synchronization = null, Context $context): void
+    public function synchronizePages(?StylaPagesSynchronization $synchronization, Context $context): void
     {
         if (!$synchronization) {
             $synchronizationId = $this->stylaSynchronizationDalHelper->createSynchronization($context);

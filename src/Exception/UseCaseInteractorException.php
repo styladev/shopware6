@@ -14,7 +14,7 @@ class UseCaseInteractorException extends \Exception implements StylaExceptionInt
 
     protected string $errorCode = '';
 
-    public function __construct(string $message, ?string $code = null, \Throwable $previous = null)
+    public function __construct(string $message, ?string $code = null, ?\Throwable $previous = null)
     {
         $this->errorCode = $code ?? '';
 

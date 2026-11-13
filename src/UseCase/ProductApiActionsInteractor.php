@@ -224,7 +224,8 @@ class ProductApiActionsInteractor
                 ->addAssociation('options.translation')
                 ->addAssociation('options.group.translation');
 
-            $result = $this->productRepository->search($criteria, $salesChannelContext->getContext());
+            // The sales channel repository only returns active products that are visible in the sales channel
+            $result = $this->productSalesChannelRepository->search($criteria, $salesChannelContext);
             if ($result->getTotal() === 0) {
                 throw new ProductNotFoundException(sprintf('Product[id: %s] not found', $productId));
             }
