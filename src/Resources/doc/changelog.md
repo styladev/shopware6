@@ -9,7 +9,7 @@
 * Styla pages replace Shopware pages also when the paths only differ by a trailing slash (e.g. category URL `/Clothing/` and Styla path `/Clothing`)
 * Fix the Slot ID placeholder in the Shopping Experiences element preview
 * Add to cart from Styla pages goes through Shopware's cart service; `id` and `quantity` are validated (quantity defaults to 1)
-* Styla Store API: `limit` is capped at 100; categories only from the sales channel's navigation tree and active; product details only for active products visible in the sales channel; search terms are limited to 10 words / 100 characters
+* Styla Store API: `limit` is capped at 100; categories only from the sales channel's main navigation tree (footer and service navigation are no longer returned; `limit`/`offset` no longer apply) and active only; product details only for active products visible in the sales channel; search terms are limited to 10 words / 100 characters
 * Logs no longer contain the sales channel context (context token)
 * Timeouts for requests to the Styla APIs (3s connect, 10s total)
 * Use Symfony route attributes and explicit nullable types (PHP 8.4)
