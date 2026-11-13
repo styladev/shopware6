@@ -51,13 +51,20 @@ class CacheInvalidator
     public function addPageForCacheInvalidation(StylaPage $page)
     {
         $id = $page->getId();
-        $this->pageIdsToDetailsCacheInvalidateList[$id] = $id;
+        if ($id) {
+            $this->pageIdsToDetailsCacheInvalidateList[$id] = $id;
+        }
         $this->addPageForHttpCacheInvalidation($page);
     }
 
     public function addPageForHttpCacheInvalidation(StylaPage $page)
     {
         $id = $page->getId();
+        // A page that is new in this synchronization has no id yet and no tagged cache entry either.
+        // A Shopware page cached under the same path keeps its own cache lifetime.
+        if (!$id) {
+            return;
+        }
         $this->pageIdsToHttpCacheInvalidateList[$id] = $id;
     }
 
