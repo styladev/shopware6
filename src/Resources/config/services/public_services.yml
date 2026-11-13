@@ -9,6 +9,7 @@ services:
             - '@Styla\CmsIntegration\UseCase\StylaPagesSynchronizer'
             - '@Styla\CmsIntegration\Styla\Synchronization\PagesListSynchronizationProcessor'
             - '@monolog.logger.stylaCmsIntegration'
+            - '@Styla\CmsIntegration\Styla\Synchronization\CacheInvalidatorFactory'
         tags:
             - { name: 'controller.service_arguments' }
         calls:
@@ -27,6 +28,7 @@ services:
         arguments:
             - '@Styla\CmsIntegration\UseCase\StylaPagesInteractor'
             - '@Shopware\Storefront\Page\GenericPageLoader'
+            - '@event_dispatcher'
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
@@ -58,9 +60,7 @@ services:
     Styla\CmsIntegration\UseCase\ShoppingCartInteractor:
         arguments:
             - '@Shopware\Core\Checkout\Cart\LineItemFactoryRegistry'
-            - '@event_dispatcher'
-            - '@Shopware\Core\Checkout\Cart\CartCalculator'
-            - '@Shopware\Core\Checkout\Cart\CartPersister'
+            - '@Shopware\Core\Checkout\Cart\SalesChannel\CartService'
             - '@monolog.logger.stylaCmsIntegration'
 
     Styla\CmsIntegration\UseCase\StylaPagesInteractor:

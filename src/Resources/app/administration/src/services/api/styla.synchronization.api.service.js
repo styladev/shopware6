@@ -7,12 +7,12 @@ class StylaPageApiService {
 
     getLastSuccessSynchronizationDate() {
         const headers = this.getHeaders();
-        return this.httpClient.get('/styla/synchronization/page/_action/get_last_success_date_time', {}, { headers });
+        return this.httpClient.get('/styla/synchronization/page/_action/get_last_success_date_time', { headers });
     }
 
     resetSynchronizationStatus() {
         const headers = this.getHeaders();
-        return this.httpClient.get('/styla/synchronization/page/_action/reset_synchronization_status', {}, { headers });
+        return this.httpClient.post('/styla/synchronization/page/_action/reset_synchronization_status', {}, { headers });
     }
 
     getHeaders() {

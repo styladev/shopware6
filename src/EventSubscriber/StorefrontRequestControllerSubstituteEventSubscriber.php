@@ -3,9 +3,9 @@
 namespace Styla\CmsIntegration\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
+use Shopware\Core\Framework\Adapter\Cache\Event\AddCacheTagEvent;
 use Shopware\Core\Framework\Routing\AbstractRouteScope;
 use Shopware\Storefront\Framework\Routing\StorefrontRouteScope;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\SalesChannelRequest;
@@ -13,8 +13,10 @@ use Styla\CmsIntegration\Controller\Storefront\StylaPageController;
 use Styla\CmsIntegration\Entity\StylaPage\StylaPage;
 use Styla\CmsIntegration\Routing\StylaUrlGenerator;
 use Styla\CmsIntegration\Styla\Page\Guesser\DTO\ShopwarePageDetails;
+use Styla\CmsIntegration\Styla\Synchronization\CacheInvalidator;
 use Styla\CmsIntegration\UseCase\StylaPagesInteractor;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -27,21 +29,23 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubscriberInterface
 {
     const STYLA_PAGE_INSTANCE_ARGUMENT = '_styla_cms_page_instance';
-    const STYLA_DEBUG_CODE = '_c793fa5b698d6d7e22a3c6b0bb53a1d8';
     const SKIP_TRANSFORMER_ATTRIBUTE = 'sw-skip-transformer';
 
     private StylaPagesInteractor $stylaPagesInteractor;
     private StylaPageController $stylaPageController;
     private LoggerInterface $logger;
     private SystemConfigService $systemConfigService;
+    private EventDispatcherInterface $eventDispatcher;
     private bool $useFullPath = false;
 
     public function __construct(
         StylaPagesInteractor $stylaPagesInteractor,
         StylaPageController $stylaPageController,
         LoggerInterface $logger,
-        SystemConfigService $systemConfigService
+        SystemConfigService $systemConfigService,
+        EventDispatcherInterface $eventDispatcher
     ) {
+        $this->eventDispatcher = $eventDispatcher;
         $this->stylaPagesInteractor = $stylaPagesInteractor;
         $this->stylaPageController = $stylaPageController;
         $this->logger = $logger;
@@ -49,16 +53,9 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         $this->useFullPath = $this->systemConfigService->getBool(ConfigurationFactory::PREFIX.'useFullPath') || false;
     }
 
-    private function stylaDebug($id, $variable) {
-        if (isset($_GET['_stylaDebug']) && $_GET['_stylaDebug']==$id.self::STYLA_DEBUG_CODE) {
-            dd($id, $variable);
-        }
-    }
-
     public function resolveControllerArguments(ControllerArgumentsEvent $controllerArgumentsEvent)
     {
         $request = $controllerArgumentsEvent->getRequest();
-        $this->stylaDebug(0, $request->attributes);
         if (!$request->attributes->has(PlatformRequest::ATTRIBUTE_ROUTE_SCOPE)) {
             $request->attributes->set(PlatformRequest::ATTRIBUTE_ROUTE_SCOPE, [StorefrontRouteScope::ID]);
         }
@@ -70,12 +67,15 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
 
         $shopwarePageDetails = ShopwarePageDetails::createFromRequest($request, $this->logger, $this->useFullPath);
-        $this->stylaDebug(1, $shopwarePageDetails);
         if ($shopwarePageDetails === null) {
             return;
         }
+        // Tag the cached Shopware page with its path, so a Styla page published for this path later
+        // can invalidate it (see CacheInvalidator::addPageForHttpCacheInvalidation())
+        $this->eventDispatcher->dispatch(
+            new AddCacheTagEvent(CacheInvalidator::httpCachePathTag($shopwarePageDetails->getDecodedPath()))
+        );
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
-        $this->stylaDebug(2, $stylaPage);
         if (!$stylaPage) {
             return;
         }
@@ -87,7 +87,6 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
                 $salesChannelContext = $argument;
             }
         }
-        $this->stylaDebug(3, $salesChannelContext);
         if ($salesChannelContext === null) {
             $this->logger->error(
                 sprintf(
@@ -124,7 +123,6 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
 
     public function onKernelException(ExceptionEvent $event)
     {
-        $this->stylaDebug(4, $event->getThrowable());
         if (
             !$event->getThrowable() instanceof NotFoundHttpException &&
             !$event->getThrowable() instanceof \Shopware\Core\Content\Category\Exception\CategoryNotFoundException
@@ -139,19 +137,16 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
 
         $shopwarePageDetails = ShopwarePageDetails::createFromRequest($event->getRequest(), $this->logger, $this->useFullPath);
-        $this->stylaDebug(5, $shopwarePageDetails);
         if ($shopwarePageDetails === null) {
             return;
         }
         $stylaPage = $this->stylaPagesInteractor->guessPageToReplaceShopwarePage($shopwarePageDetails);
-        $this->stylaDebug(6, $stylaPage);
         if (!$stylaPage) {
             return;
         }
         $stylaPage->setUseFullPath($this->useFullPath);
 
         try {
-            $this->stylaDebug(7, $event->getRequest());
             $request = $this->duplicateRequest($event->getRequest(), $stylaPage);
             $response = $event->getKernel()
                 ->handle($request, HttpKernelInterface::SUB_REQUEST, false);
@@ -215,7 +210,6 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         // the Styla page. Drop it on purpose so no wrong Link: rel="canonical" header is sent
         // (updateMasterRequest() copies these attributes back to the main request).
         unset($previousAttributes[SalesChannelRequest::ATTRIBUTE_CANONICAL_LINK]);
-        $this->stylaDebug(8, $previousAttributes);
 
         $request = $request->duplicate(null, null, $previousAttributes);
 
@@ -251,17 +245,9 @@ class StorefrontRequestControllerSubstituteEventSubscriber implements EventSubsc
         }
 
         /**
-         * Divided because actually they does not implement the same
-         * interface and method names are the same by coincidence
-         */
-        if ($scope instanceof RouteScope) {
-            return !$scope->hasScope('storefront');
-        }
-
-        /**
          * When scope is just a string in array
          */
-        if (in_array(StorefrontRouteScope::ID, $scope, true)) {
+        if (is_array($scope) && in_array(StorefrontRouteScope::ID, $scope, true)) {
             return false;
         }
 

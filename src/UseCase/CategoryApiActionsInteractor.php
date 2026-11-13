@@ -43,7 +43,9 @@ class CategoryApiActionsInteractor
         try {
             $criteria = new Criteria();
 
-            $criteria->addFilter(new EqualsFilter('parentId', null));
+            // Only the calling sales channel's navigation tree, active categories only
+            $criteria->addFilter(new EqualsFilter('id', $salesChannelContext->getSalesChannel()->getNavigationCategoryId()));
+            $criteria->addFilter(new EqualsFilter('active', true));
 
             if ($limit) {
                 $criteria->setLimit($limit);
@@ -64,7 +66,9 @@ class CategoryApiActionsInteractor
                 $message,
                 [
                     'exception' => $exception,
-                    'context' => $salesChannelContext
+                    // Never log the SalesChannelContext itself: it contains the context token and customer data
+                    'salesChannelId' => $salesChannelContext->getSalesChannelId(),
+                    'languageId' => $salesChannelContext->getLanguageId(),
                 ]
             );
 

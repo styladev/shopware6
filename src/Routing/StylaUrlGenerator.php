@@ -112,7 +112,7 @@ class StylaUrlGenerator implements UrlGeneratorInterface, ConfigurableRequiremen
 
     private function generateAbsoluteUrl(string $pagePath)
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         $basePath = '';
         $salesChannelBaseUrl = '';
         if ($request) {
